@@ -1,0 +1,224 @@
+<title>독서주특기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* layout: a reading desk - sticky contents rail on the left, each body of writing gets its own "room": sermons as cards + Bible bookshelf, poems as four anthologies, pensées as a numbered notebook, reading as four shelves */
+:root{
+  --paper:#f6f5f0; --sheet:#fffefa; --ink:#1f2a2e; --muted:#62706f; --rule:#dcd8cc;
+  --green:#2f5d50; --gold:#a07b32; --tint:#ecebe3;
+  --display:"Nanum Myeongjo","Batang",serif; --body:"IBM Plex Sans KR","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;--tint:#20282a;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;--tint:#20282a;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.7;padding-inline:16px;padding-block:0}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.wrap{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:56px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-block:48px;display:grid;gap:16px}
+.mono{width:60px;height:60px;border-radius:50%;background:var(--green);color:var(--paper);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.3rem}
+.blogname{font-family:var(--display);font-weight:800;font-size:1.15rem}
+nav ol{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:.92rem}
+nav ol a{text-decoration:none;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+nav ol a small{font-variant-numeric:tabular-nums;color:var(--rule)}
+nav ol a:hover{color:var(--green)}
+main{display:grid;gap:84px;padding-block:48px 64px}
+.eyebrow{font-size:.75rem;letter-spacing:.14em;color:var(--gold);font-weight:600}
+h1,h2,h3{font-family:var(--display);font-weight:800;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.3rem,6vw,4rem);line-height:1.18}
+h2{font-size:1.8rem}
+h4{margin:0}
+.hero{display:grid;gap:20px}
+.who{font-size:1.05rem;color:var(--muted);margin:0;max-width:38em}
+.hero blockquote{margin:0;font-family:var(--display);font-size:1.2rem;line-height:1.85;max-width:34em;border-left:3px solid var(--gold);padding-left:18px}
+.stats{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--rule)}
+.stats a{display:grid;grid-template-columns:auto 1fr;align-items:baseline;column-gap:4px;padding:16px 12px;text-decoration:none}
+.stats li+li a{border-left:1px solid var(--rule)}
+.stats b{font-family:var(--display);font-size:1.9rem;font-variant-numeric:tabular-nums}
+.stats small{color:var(--muted)}
+.stats span{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.stats a:hover b{color:var(--green)}
+section{display:grid;gap:24px;scroll-margin-top:24px}
+.head{display:grid;gap:6px}
+.head .row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.head .row a{font-size:.9rem;color:var(--green)}
+.lede{margin:0;color:var(--muted);max-width:40em}
+.cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.card a{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;height:100%;padding:20px;background:var(--sheet);text-decoration:none}
+.card a:hover h4{color:var(--green)}
+.ref{font-size:.78rem;color:var(--gold);font-weight:600}
+.card h4{font-family:var(--display);font-size:1.12rem;line-height:1.45}
+.card p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.6}
+.meta{font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.theory{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline;background:var(--tint);padding:18px 20px;text-decoration:none}
+.theory .ref{grid-row:span 2}
+.theory strong{font-family:var(--display);font-size:1.1rem}
+.theory span.q{color:var(--muted);font-size:.9rem}
+.theory:hover strong{color:var(--green)}
+.shelf{display:grid;gap:8px}
+.shelf h3{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weight:600;letter-spacing:.08em}
+.books-scroll{overflow-x:auto;padding-bottom:4px}
+.books{list-style:none;margin:0;padding:0;display:flex;gap:3px;align-items:flex-end;border-bottom:3px solid var(--ink);width:max-content;min-width:100%}
+.spine{width:22px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:5px 0 4px;font-size:.62rem;color:var(--muted);background:var(--rule);border-radius:2px 2px 0 0;text-decoration:none}
+.spine span{writing-mode:vertical-rl;overflow:hidden;max-height:calc(100% - 16px)}
+.spine.on{background:var(--green);color:var(--paper)}
+.spine.on:hover{background:var(--gold)}
+.spine b{font-size:.6rem;font-variant-numeric:tabular-nums}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:28px}
+.pcol,.rcol{display:grid;gap:10px;align-content:start;border-top:2px solid var(--ink);padding-top:14px}
+.pcol-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pcol-h h4{font-family:var(--display);font-size:1.15rem}
+.n{font-size:.8rem;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+.sub{margin:0;font-size:.82rem;color:var(--muted)}
+.pcol ul,.rcol ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.pcol li a{display:grid;gap:2px;text-decoration:none}
+.pcol li strong{font-family:var(--display);font-size:1.02rem}
+.pcol li span{font-family:var(--display);font-size:.88rem;color:var(--muted);line-height:1.6}
+.pcol li a:hover strong,.rcol li a:hover{color:var(--green)}
+.rcol li{display:grid;gap:0}
+.rcol li a{text-decoration:none;font-weight:500}
+.more{font-size:.85rem;color:var(--green)}
+.notebook{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 32px}
+.notebook a{display:grid;grid-template-columns:3.2rem 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none}
+.notebook .num{font-family:var(--display);font-size:1.7rem;color:var(--gold);line-height:1.1;font-variant-numeric:tabular-nums}
+.notebook h4{font-family:var(--display);font-size:1.08rem}
+.notebook p{margin:2px 0 0;color:var(--muted);font-size:.87rem;line-height:1.6}
+.notebook a:hover h4{color:var(--green)}
+.vids{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px 18px}
+.vid a{display:grid;gap:8px;text-decoration:none}
+.thumb{position:relative;display:block;aspect-ratio:16/9;background:var(--tint);overflow:hidden;border-radius:3px}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.play{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;background:var(--green);color:var(--paper);display:grid;place-items:center;font-size:.8rem;padding-left:2px}
+.vid h4{font-family:var(--display);font-size:1.05rem}
+.vid a:hover h4{color:var(--green)}
+.btn{justify-self:start;display:inline-block;padding:10px 18px;border:1px solid var(--green);color:var(--green);text-decoration:none;border-radius:2px;font-weight:600;font-size:.92rem}
+.btn:hover{background:var(--green);color:var(--paper)}
+.stories{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.stories a{display:inline-block;padding:6px 14px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;font-size:.9rem;background:var(--sheet)}
+.stories a:hover{border-color:var(--green);color:var(--green)}
+.works{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.work{display:grid;gap:8px;align-content:start}
+.work img{width:100%;height:auto;display:block;border:1px solid var(--rule)}
+.song{aspect-ratio:2/3;border:1px solid var(--rule);background:var(--sheet);display:grid;place-content:center;gap:8px;text-align:center;padding:20px}
+.song .clef{font-family:var(--display);font-size:2.6rem;color:var(--gold);line-height:1}
+.song strong{font-family:var(--display);font-size:1.3rem}
+.work h4{font-size:1rem}
+.work p{margin:0;font-size:.85rem;color:var(--muted)}
+.church{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;background:var(--sheet);border:1px solid var(--rule);padding:28px}
+.church dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:.95rem}
+.church dt{color:var(--muted)}
+.church dd{margin:0;font-variant-numeric:tabular-nums}
+footer{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+@media (max-width:860px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0}
+  nav{position:static;padding-block:28px 0;grid-template-columns:auto 1fr;align-items:center}
+  nav ol{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 16px}
+  nav ol a small{display:none}
+  main{padding-block:32px 48px;gap:64px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stats li:nth-child(3) a{border-left:0}
+  .stats li:nth-child(n+3) a{border-top:1px solid var(--rule)}
+}
+@media (prefers-reduced-motion:no-preference){a{transition:color .15s,background .15s,border-color .15s}}
+</style>
+<div class="wrap">
+<nav aria-label="목차">
+  <div class="mono" aria-hidden="true">재선</div>
+  <div class="blogname">독서주특기</div>
+  <ol>
+    <li><a href="#about">소개</a></li>
+    <li><a href="#sermon">설교 <small>1,175</small></a></li>
+    <li><a href="#youtube">유튜브 <small>43</small></a></li>
+    <li><a href="#poems">시 <small>194</small></a></li>
+    <li><a href="#pensees">팡세 <small>43</small></a></li>
+    <li><a href="#reading">독후감 <small>381</small></a></li>
+    <li><a href="#stories">예화 <small>38</small></a></li>
+    <li><a href="#works">작품</a></li>
+    <li><a href="#church">새암교회</a></li>
+  </ol>
+</nav>
+<main>
+  <header class="hero" id="about">
+    <span class="eyebrow">새암교회 · 30년 설교자</span>
+    <h1>읽고, 묵상하고,<br>삶으로 남기다</h1>
+    <p class="who">이재선 목사가 말씀을 전하고, 시를 쓰고, 생각을 적고, 책을 읽은 기록 1,870편을 한곳에 모았습니다.</p>
+    <blockquote>독서는 취미가 아닙니다. 특기이며, 특기를 넘어 주특기가 됩니다. 독서로 나의 세계를 바꾸기를 희망하며……</blockquote>
+    <ul class="stats"><li><a href="#sermon"><b>1,175</b><small>편</small><span>설교와 성경연구</span></a></li><li><a href="#reading"><b>381</b><small>권</small><span>독후감</span></a></li><li><a href="#poems"><b>194</b><small>편</small><span>시</span></a></li><li><a href="#pensees"><b>43</b><small>편</small><span>팡세</span></a></li></ul>
+  </header>
+
+  <section id="sermon" aria-labelledby="sermon-h">
+    <div class="head"><span class="eyebrow">성경연구와 설교</span><div class="row"><h2 id="sermon-h">강단에서 전한 말씀</h2><a href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=101" target="_blank" rel="noopener">설교 전체 1,175편 →</a></div>
+    <p class="lede">주일낮예배와 금요기도회에서 전한 설교입니다. 아래 책장에서 성경 권별로 찾아 읽을 수 있습니다.</p></div>
+    <a class="theory" href="https://blog.naver.com/saechang888/223883401325" target="_blank" rel="noopener"><span class="ref">나의 설교론</span><strong>설교는 성경을 전하는 행위다</strong><span class="q">오늘 부터 나는 30년을 설교한 목사로서 나의 설교론을 정리하고자 한다. 1. 설교는 성경을 전하는 것이다. 설교는 내 사상,…</span></a>
+    <ul class="cards"><li class="card"><a href="https://blog.naver.com/saechang888/224329648099" target="_blank" rel="noopener">
+<span class="ref">삼상24장</span><h4>옷자락을 베고 마음에 찔리니라</h4><p>다윗은 어떻게 자신을 그토록 괴롭히고 죽이려 하는 사울의 옷자락만을 베고도 오히려 마음이 찔렸을까요? 우리는 나를 괴롭히는 사람에 대하여 참지…</p><span class="meta">미라클금요기도회 · 2026년 3월 27일(금)</span></a></li><li class="card"><a href="https://blog.naver.com/saechang888/224329645364" target="_blank" rel="noopener">
+<span class="ref">마21장</span><h4>나귀 새끼를 타신 다윗의 자손</h4><p>고통을 아는 영혼 환란은 성장의 법칙이요 우리의 신앙은 이 세계의 폭풍우와 긴장 속에서 만들어진다. 뷔엔나의 어떤 유명한 음악 교사가 자기 문하…</p><span class="meta">새암교회장년주일낮예배 · 2026년 3월 29일(주일)</span></a></li><li class="card"><a href="https://blog.naver.com/saechang888/224329641328" target="_blank" rel="noopener">
+<span class="ref">왕상1-18장</span><h4>두 번씩이나 나타나셨다</h4><p>많은 것에서 오는 교만 농촌에 교회가 세워지고 예수 믿는 사람들의 생활을 본 그 동네 유지 한 사람이 예수를 믿기로 작정하고 나온지 얼마 지나지…</p><span class="meta">새암교회장년주일낮예배 · 2026년 3월 22일(주일)</span></a></li><li class="card"><a href="https://blog.naver.com/saechang888/224329638587" target="_blank" rel="noopener">
+<span class="ref">사사기7장</span><h4>보리떡 한 덩이 기드온</h4><p>기드온은 300용사로 유명합니다. 300이라는 영화와는 다른 인물입니다. 아니 전혀 다른 스토리입니다. 영화 **&lt;300&gt;**은 기원전 480년…</p><span class="meta">새암교회금요기도회 · 2026년 3월 13일(금)</span></a></li><li class="card"><a href="https://blog.naver.com/saechang888/224328771121" target="_blank" rel="noopener">
+<span class="ref">왕상7-10장</span><h4>만민이 기도하는 집</h4><p>교회는 구원의 우물 예수님께서 부활하신 후에는 그 육신의 몸이 신령한 몸으로 변했습니다. 그 신령한 몸이 40일 동안 제자들과 같이 있다가 마지…</p><span class="meta">새암교회장년주일낮예배 · 2026년 3월 15일(주일)</span></a></li><li class="card"><a href="https://blog.naver.com/saechang888/224328764704" target="_blank" rel="noopener">
+<span class="ref">민14장</span><h4>제멋대로 이스라엘</h4><p>하나님이 중요시 여기는 것은 무엇일까요? 순종?, 타이밍?, 방향?, 중심? 오늘 본문은 여러 것을 시사하고 있습니다. 1. 정탐군의 정확한 보…</p><span class="meta">새암교회금요기도회 · 2026년 2월 13일(금)</span></a></li></ul>
+    <div class="shelf"><h3>구약 39권 · 성경 책장</h3><div class="books-scroll"><ul class="books"><li><a class="spine on" style="height:52px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=179" target="_blank" rel="noopener" title="나의 설교론 1편"><span>나의 설교론</span><b>1</b></a></li><li><a class="spine on" style="height:138px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=102" target="_blank" rel="noopener" title="창세기 87편"><span>창세기</span><b>87</b></a></li><li><a class="spine on" style="height:105px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=103" target="_blank" rel="noopener" title="출애굽기 41편"><span>출애굽기</span><b>41</b></a></li><li><a class="spine on" style="height:79px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=104" target="_blank" rel="noopener" title="레위기 16편"><span>레위기</span><b>16</b></a></li><li><a class="spine on" style="height:87px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=105" target="_blank" rel="noopener" title="민수기 23편"><span>민수기</span><b>23</b></a></li><li><a class="spine on" style="height:97px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=106" target="_blank" rel="noopener" title="신명기 33편"><span>신명기</span><b>33</b></a></li><li><a class="spine on" style="height:99px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=107" target="_blank" rel="noopener" title="여호수아 35편"><span>여호수아</span><b>35</b></a></li><li><a class="spine on" style="height:79px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=108" target="_blank" rel="noopener" title="사사기 16편"><span>사사기</span><b>16</b></a></li><li><a class="spine on" style="height:66px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=109" target="_blank" rel="noopener" title="룻기 7편"><span>룻기</span><b>7</b></a></li><li><a class="spine on" style="height:99px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=110" target="_blank" rel="noopener" title="사무엘상 35편"><span>사무엘상</span><b>35</b></a></li><li><a class="spine on" style="height:75px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=181" target="_blank" rel="noopener" title="사무엘하 13편"><span>사무엘하</span><b>13</b></a></li><li><a class="spine on" style="height:82px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=111" target="_blank" rel="noopener" title="열왕기상 18편"><span>열왕기상</span><b>18</b></a></li><li><a class="spine on" style="height:73px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=182" target="_blank" rel="noopener" title="열왕기하 11편"><span>열왕기하</span><b>11</b></a></li><li><a class="spine on" style="height:94px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=112" target="_blank" rel="noopener" title="역대상 29편"><span>역대상</span><b>29</b></a></li><li><a class="spine on" style="height:56px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=189" target="_blank" rel="noopener" title="역대하 2편"><span>역대하</span><b>2</b></a></li><li><a class="spine on" style="height:68px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=113" target="_blank" rel="noopener" title="에스라 8편"><span>에스라</span><b>8</b></a></li><li><a class="spine on" style="height:74px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=114" target="_blank" rel="noopener" title="느헤미야 12편"><span>느헤미야</span><b>12</b></a></li><li><a class="spine on" style="height:64px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=115" target="_blank" rel="noopener" title="에스더 6편"><span>에스더</span><b>6</b></a></li><li><a class="spine on" style="height:74px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=116" target="_blank" rel="noopener" title="욥기 12편"><span>욥기</span><b>12</b></a></li><li><a class="spine on" style="height:114px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=117" target="_blank" rel="noopener" title="시편 52편"><span>시편</span><b>52</b></a></li><li><a class="spine on" style="height:71px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=118" target="_blank" rel="noopener" title="잠언 10편"><span>잠언</span><b>10</b></a></li><li><a class="spine on" style="height:77px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=119" target="_blank" rel="noopener" title="전도서 14편"><span>전도서</span><b>14</b></a></li><li><a class="spine on" style="height:68px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=120" target="_blank" rel="noopener" title="아가서 8편"><span>아가서</span><b>8</b></a></li><li><a class="spine on" style="height:98px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=121" target="_blank" rel="noopener" title="이사야 34편"><span>이사야</span><b>34</b></a></li><li><a class="spine on" style="height:83px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=122" target="_blank" rel="noopener" title="예레미야 19편"><span>예레미야</span><b>19</b></a></li><li><a class="spine on" style="height:52px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=123" target="_blank" rel="noopener" title="예레미야애가 1편"><span>예레미야애가</span><b>1</b></a></li><li><a class="spine on" style="height:77px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=124" target="_blank" rel="noopener" title="에스겔 14편"><span>에스겔</span><b>14</b></a></li><li><a class="spine on" style="height:70px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=125" target="_blank" rel="noopener" title="다니엘 9편"><span>다니엘</span><b>9</b></a></li><li><a class="spine on" style="height:68px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=126" target="_blank" rel="noopener" title="호세아 8편"><span>호세아</span><b>8</b></a></li><li><a class="spine on" style="height:68px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=127" target="_blank" rel="noopener" title="요엘 8편"><span>요엘</span><b>8</b></a></li><li><a class="spine on" style="height:56px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=128" target="_blank" rel="noopener" title="아모스 2편"><span>아모스</span><b>2</b></a></li><li><a class="spine on" style="height:64px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=130" target="_blank" rel="noopener" title="요나 6편"><span>요나</span><b>6</b></a></li><li><a class="spine on" style="height:60px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=131" target="_blank" rel="noopener" title="미가 4편"><span>미가</span><b>4</b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=178" target="_blank" rel="noopener" title="나훔 0편"><span>나훔</span><b></b></a></li><li><a class="spine on" style="height:58px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=134" target="_blank" rel="noopener" title="하박국 3편"><span>하박국</span><b>3</b></a></li><li><a class="spine on" style="height:52px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=135" target="_blank" rel="noopener" title="스바냐 1편"><span>스바냐</span><b>1</b></a></li><li><a class="spine on" style="height:66px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=136" target="_blank" rel="noopener" title="학개 7편"><span>학개</span><b>7</b></a></li><li><a class="spine on" style="height:63px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=137" target="_blank" rel="noopener" title="스가랴 5편"><span>스가랴</span><b>5</b></a></li><li><a class="spine on" style="height:56px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=138" target="_blank" rel="noopener" title="말라기 2편"><span>말라기</span><b>2</b></a></li></ul></div></div>
+    <div class="shelf"><h3>신약 27권</h3><div class="books-scroll"><ul class="books"><li><a class="spine on" style="height:146px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=139" target="_blank" rel="noopener" title="마태복음 100편"><span>마태복음</span><b>100</b></a></li><li><a class="spine on" style="height:92px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=140" target="_blank" rel="noopener" title="마가복음 27편"><span>마가복음</span><b>27</b></a></li><li><a class="spine on" style="height:135px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=141" target="_blank" rel="noopener" title="누가복음 83편"><span>누가복음</span><b>83</b></a></li><li><a class="spine on" style="height:127px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=142" target="_blank" rel="noopener" title="요한복음 70편"><span>요한복음</span><b>70</b></a></li><li><a class="spine on" style="height:143px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=143" target="_blank" rel="noopener" title="사도행전 95편"><span>사도행전</span><b>95</b></a></li><li><a class="spine on" style="height:96px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=144" target="_blank" rel="noopener" title="로마서 32편"><span>로마서</span><b>32</b></a></li><li><a class="spine on" style="height:96px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=145" target="_blank" rel="noopener" title="고린도전서 32편"><span>고린도전서</span><b>32</b></a></li><li><a class="spine on" style="height:52px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=183" target="_blank" rel="noopener" title="고린도후서 1편"><span>고린도후서</span><b>1</b></a></li><li><a class="spine on" style="height:73px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=146" target="_blank" rel="noopener" title="갈라디아서 11편"><span>갈라디아서</span><b>11</b></a></li><li><a class="spine on" style="height:74px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=147" target="_blank" rel="noopener" title="에베소서 12편"><span>에베소서</span><b>12</b></a></li><li><a class="spine on" style="height:86px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=148" target="_blank" rel="noopener" title="빌립보서 22편"><span>빌립보서</span><b>22</b></a></li><li><a class="spine on" style="height:66px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=149" target="_blank" rel="noopener" title="골로새서 7편"><span>골로새서</span><b>7</b></a></li><li><a class="spine on" style="height:68px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=151" target="_blank" rel="noopener" title="데살로니가전서 8편"><span>데살로니가전서</span><b>8</b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=184" target="_blank" rel="noopener" title="데살로니가후서 0편"><span>데살로니가후서</span><b></b></a></li><li><a class="spine on" style="height:81px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=152" target="_blank" rel="noopener" title="디모데전서 17편"><span>디모데전서</span><b>17</b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=185" target="_blank" rel="noopener" title="디모데후서 0편"><span>디모데후서</span><b></b></a></li><li><a class="spine on" style="height:52px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=153" target="_blank" rel="noopener" title="디도서 1편"><span>디도서</span><b>1</b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=154" target="_blank" rel="noopener" title="빌레몬서 0편"><span>빌레몬서</span><b></b></a></li><li><a class="spine on" style="height:70px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=155" target="_blank" rel="noopener" title="히브리서 9편"><span>히브리서</span><b>9</b></a></li><li><a class="spine on" style="height:63px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=163" target="_blank" rel="noopener" title="야고보서 5편"><span>야고보서</span><b>5</b></a></li><li><a class="spine on" style="height:66px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=156" target="_blank" rel="noopener" title="베드로전서 7편"><span>베드로전서</span><b>7</b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=186" target="_blank" rel="noopener" title="베드로후서 0편"><span>베드로후서</span><b></b></a></li><li><a class="spine on" style="height:73px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=157" target="_blank" rel="noopener" title="요한일서 11편"><span>요한일서</span><b>11</b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=187" target="_blank" rel="noopener" title="요한이서 0편"><span>요한이서</span><b></b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=188" target="_blank" rel="noopener" title="요한삼서 0편"><span>요한삼서</span><b></b></a></li><li><a class="spine" style="height:46px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=158" target="_blank" rel="noopener" title="유다서 0편"><span>유다서</span><b></b></a></li><li><a class="spine on" style="height:75px" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=159" target="_blank" rel="noopener" title="요한계시록 13편"><span>요한계시록</span><b>13</b></a></li></ul></div></div>
+    <p class="lede">66권 가운데 58권을 설교했습니다. 책등이 높을수록 글이 많고, 책을 누르면 그 권의 설교 목록이 열립니다.</p>
+  </section>
+
+  <section id="youtube" aria-labelledby="youtube-h">
+    <div class="head"><span class="eyebrow">유튜브 · 어음성경</span><div class="row"><h2 id="youtube-h">들으면서 읽는 성경</h2><a href="https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0" target="_blank" rel="noopener">채널 바로가기 · 영상 43편 →</a></div>
+    <p class="lede">창세기부터 요한계시록까지 성경 66권 전 장을 음악으로 만드는 통독 프로젝트입니다. 자막의 말씀을 따라 읽거나, 큐티와 기도 시간에 틀어 두고 들을 수 있습니다.</p></div>
+    <ul class="vids"><li class="vid"><a href="https://www.youtube.com/watch?v=MU-C7trAp10" target="_blank" rel="noopener">
+<span class="thumb"><img src="https://i.ytimg.com/vi/MU-C7trAp10/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="play" aria-hidden="true">▶</span></span>
+<h4>누가복음18-24장</h4><span class="meta">2026.10.03</span></a></li><li class="vid"><a href="https://www.youtube.com/watch?v=W_TQao5_j7o" target="_blank" rel="noopener">
+<span class="thumb"><img src="https://i.ytimg.com/vi/W_TQao5_j7o/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="play" aria-hidden="true">▶</span></span>
+<h4>누가복음11-17장</h4><span class="meta">2026.10.03</span></a></li><li class="vid"><a href="https://www.youtube.com/watch?v=2FnT8t0XH5Y" target="_blank" rel="noopener">
+<span class="thumb"><img src="https://i.ytimg.com/vi/2FnT8t0XH5Y/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="play" aria-hidden="true">▶</span></span>
+<h4>누가복음1-10장</h4><span class="meta">2026.10.03</span></a></li><li class="vid"><a href="https://www.youtube.com/watch?v=m_UPhfPFpCo" target="_blank" rel="noopener">
+<span class="thumb"><img src="https://i.ytimg.com/vi/m_UPhfPFpCo/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="play" aria-hidden="true">▶</span></span>
+<h4>나훔서1-3장</h4><span class="meta">2026.09.05</span></a></li><li class="vid"><a href="https://www.youtube.com/watch?v=UciZpanfJGY" target="_blank" rel="noopener">
+<span class="thumb"><img src="https://i.ytimg.com/vi/UciZpanfJGY/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="play" aria-hidden="true">▶</span></span>
+<h4>미가서1-7장</h4><span class="meta">2026.09.05</span></a></li><li class="vid"><a href="https://www.youtube.com/watch?v=kEWtRIgeyaU" target="_blank" rel="noopener">
+<span class="thumb"><img src="https://i.ytimg.com/vi/kEWtRIgeyaU/mqdefault.jpg" alt="" width="320" height="180" loading="lazy"><span class="play" aria-hidden="true">▶</span></span>
+<h4>요나서1-4장</h4><span class="meta">2026.09.04</span></a></li></ul>
+    <a class="btn" href="https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0?sub_confirmation=1" target="_blank" rel="noopener">구독하고 새 영상 받기</a>
+  </section>
+
+  <section id="poems" aria-labelledby="poems-h">
+    <div class="head"><span class="eyebrow">시</span><div class="row"><h2 id="poems-h">네 권의 시집</h2><a href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=44" target="_blank" rel="noopener">시 전체 194편 →</a></div></div>
+    <div class="cols"><div class="pcol"><div class="pcol-h"><h4>자연시</h4><span class="n">50편</span></div><p class="sub">자연을 노래하다</p><ul><li><a href="https://blog.naver.com/saechang888/223713659421" target="_blank" rel="noopener"><strong>가을 나무</strong><span>짓 푸름 옷 벗고 잿빛 낙엽 외투로 갈아입은 가을 나무 외출복 벗고 잠옷 입듯 그렇…</span></a></li><li><a href="https://blog.naver.com/saechang888/223713648295" target="_blank" rel="noopener"><strong>단풍(丹楓)</strong><span>북풍(北風) 대낮 아직 열기 머금은 대지(大地) 중병(重病) 걸려 숨 떨어진 입새…</span></a></li><li><a href="https://blog.naver.com/saechang888/223713646491" target="_blank" rel="noopener"><strong>매미</strong><span>초가을 한 풀 꺽인 매미의 울음 ‘나 오늘 밤이 마지막이라오’ ‘내 하소연 들어 주…</span></a></li></ul><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=91" target="_blank" rel="noopener">더 읽기 →</a></div><div class="pcol"><div class="pcol-h"><h4>생활시</h4><span class="n">67편</span></div><p class="sub">삶의 자리에서</p><ul><li><a href="https://blog.naver.com/saechang888/223713657222" target="_blank" rel="noopener"><strong>주고 잡아서</strong><span>기뚱기뚱 꼬무락 꼬무락 어무이의 서툰 손놀림 아들 주고 잡아 씨암탉 다듬고 마늘 듬…</span></a></li><li><a href="https://blog.naver.com/saechang888/223713655322" target="_blank" rel="noopener"><strong>아버지 자리</strong><span>아버지가 앉던 식탁에 앉으니 어무이 차려 내 받은 밥상 아버지 자리 소파 앉아 쉬던…</span></a></li><li><a href="https://blog.naver.com/saechang888/223713650825" target="_blank" rel="noopener"><strong>친구</strong><span>더워 옷 벗어 어깨 맨 것 아니오 비 두려워 우산 집어든 것 아니라니까 손 허전해…</span></a></li></ul><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=92" target="_blank" rel="noopener">더 읽기 →</a></div><div class="pcol"><div class="pcol-h"><h4>자아성찰시</h4><span class="n">51편</span></div><p class="sub">나를 돌아보다</p><ul><li><a href="https://blog.naver.com/saechang888/223713641601" target="_blank" rel="noopener"><strong>시인</strong><span>시는 다리다 사물과 인간을 잇는다 존재와 질문에 답한다 시는 답을 쓰는 것이다 답을…</span></a></li><li><a href="https://blog.naver.com/saechang888/223713639587" target="_blank" rel="noopener"><strong>눈의 물</strong><span>갓 난 아이의 신호탄 눈물 엄마와 생이별 아가의 청천벽력 눈물 생애 첫 걸음 실패를…</span></a></li><li><a href="https://blog.naver.com/saechang888/223696344124" target="_blank" rel="noopener"><strong>두려운 자유자</strong><span>누가 나를 미워 한단다 뭐가 두려운가 내가 나를 사랑하는데 누가 나를 잘 못 한단다…</span></a></li></ul><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=93" target="_blank" rel="noopener">더 읽기 →</a></div><div class="pcol"><div class="pcol-h"><h4>기탄잘리(찬양시)</h4><span class="n">19편</span></div><p class="sub">하나님께 드리는 노래</p><ul><li><a href="https://blog.naver.com/saechang888/223713653113" target="_blank" rel="noopener"><strong>어느 목사의 기도</strong><span>주여! 나를 높여주옵소서! 나를 성공케 하옵소서! 나를 잘나게 하옵소서! 나를 알려…</span></a></li><li><a href="https://blog.naver.com/saechang888/223707714775" target="_blank" rel="noopener"><strong>성령충만한 교회의 빠알간 십자가</strong><span>빠알간 십자가 (히 12:4) 너희가 죄와 싸우되 아직 피흘리기까지는 대항하지 아니…</span></a></li><li><a href="https://blog.naver.com/saechang888/223331927567" target="_blank" rel="noopener"><strong>저출산의 위기 중에도 희망을 가질 생명의 모체</strong><span>생명의 모체 떠오르는 태양, 불덩어리 눈에 넣어주시고 수 억경 에너지 몸에 채워 주…</span></a></li></ul><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=94" target="_blank" rel="noopener">더 읽기 →</a></div></div>
+  </section>
+
+  <section id="pensees" aria-labelledby="pensees-h">
+    <div class="head"><span class="eyebrow">나의 팡세</span><div class="row"><h2 id="pensees-h">생각의 노트</h2><a href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=36" target="_blank" rel="noopener">팡세 전체 43편 →</a></div>
+    <p class="lede">목회와 신앙, 삶에 대해 떠오른 생각을 번호를 매겨 적어 온 노트입니다.</p></div>
+    <ol class="notebook"><li><a href="https://blog.naver.com/saechang888/223695385650" target="_blank" rel="noopener"><span class="num">42</span><div><h4>몰랐습니다</h4><p>나는 늘 바른 말을 했습니다. 진취적이고 적극적이었습니다. 좋은 의견을 냈고, 창의적인 생각을 앞서 말했습니다. 아이디어 뱅크…</p></div></a></li><li><a href="https://blog.naver.com/saechang888/223687128339" target="_blank" rel="noopener"><span class="num">42</span><div><h4>사역자의 자세</h4><p>우리는 희생하면 안 된다. 드려야 한다. 사역자와 목사는 희생이나 헌신을 하는 것이 아니다. 주님의 십자가로 구속받은 내 몸과…</p></div></a></li><li><a href="https://blog.naver.com/saechang888/223687126340" target="_blank" rel="noopener"><span class="num">41</span><div><h4>문학가의 자세</h4><p>2012년 9월 14일 문학가들이 작품에 자신의 생각을 넣지 않는다고 한다 나는 나의 작품에 내 생각을 강하게 넣는다 집요하게…</p></div></a></li><li><a href="https://blog.naver.com/saechang888/223685591073" target="_blank" rel="noopener"><span class="num">40</span><div><h4>작은 교회들의 생존법</h4><p>2012년 9월 13일(목) 작은 교회들이 사는 법은 큰 교회들의 반대로 하면 된다. -돈 주고 방송 출현하지 않기 -돈 주고…</p></div></a></li><li><a href="https://blog.naver.com/saechang888/223327781813" target="_blank" rel="noopener"><span class="num">39</span><div><h4>두려워하라</h4><p>두려워하지는 말되 두려움 자체를 피하지는 말라. 두려움은 믿음을 낳는다. 큰 두려움은 큰 믿음을 낳고 작은 두려움은 작은 믿음…</p></div></a></li><li><a href="https://blog.naver.com/saechang888/223320782221" target="_blank" rel="noopener"><span class="num">38</span><div><h4>1월에</h4><p>오색찬란 단풍 즐기는 새 혹한의 겨울 준비 한창인 나무 한겨울 한파에도 벌써 싹틔울 준비 옷 다 벗어 던지고 바람 적게 맞으려…</p></div></a></li></ol>
+  </section>
+
+  <section id="reading" aria-labelledby="reading-h">
+    <div class="head"><span class="eyebrow">독서 마당</span><div class="row"><h2 id="reading-h">읽은 책, 남긴 생각</h2><a href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=38" target="_blank" rel="noopener">독후감 전체 381편 →</a></div></div>
+    <div class="cols"><div class="rcol"><div class="pcol-h"><h4>신학/신앙서적</h4><span class="n">123권</span></div><p class="sub">신앙과 신학</p><ol><li><a href="https://blog.naver.com/saechang888/224052739710" target="_blank" rel="noopener">오가닉 리더십(11-19장)</a><span class="meta">2025.10.24</span></li><li><a href="https://blog.naver.com/saechang888/224044706152" target="_blank" rel="noopener">오가닉 리더십(8-10장)</a><span class="meta">2025.10.17</span></li><li><a href="https://blog.naver.com/saechang888/224041087371" target="_blank" rel="noopener">오가닉 리더십</a><span class="meta">2025.10.14</span></li></ol><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=46" target="_blank" rel="noopener">목록 보기 →</a></div><div class="rcol"><div class="pcol-h"><h4>일반서적</h4><span class="n">198권</span></div><p class="sub">세상을 읽다</p><ol><li><a href="https://blog.naver.com/saechang888/223970135376" target="_blank" rel="noopener">스티브 잡스</a><span class="meta">2025.08.14</span></li><li><a href="https://blog.naver.com/saechang888/223970080549" target="_blank" rel="noopener">스키너의 마지막 강의</a><span class="meta">2025.08.14</span></li><li><a href="https://blog.naver.com/saechang888/223970077278" target="_blank" rel="noopener">스물 일곱 이건희처럼</a><span class="meta">2025.08.14</span></li></ol><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=47" target="_blank" rel="noopener">목록 보기 →</a></div><div class="rcol"><div class="pcol-h"><h4>이지성 인문고전</h4><span class="n">27권</span></div><p class="sub">고전에서 배우다</p><ol><li><a href="https://blog.naver.com/saechang888/223737222911" target="_blank" rel="noopener">성학집요-2</a><span class="meta">2025.01.24</span></li><li><a href="https://blog.naver.com/saechang888/223737218597" target="_blank" rel="noopener">성학집요-1</a><span class="meta">2025.01.24</span></li><li><a href="https://blog.naver.com/saechang888/223722602307" target="_blank" rel="noopener">서경(書經)2</a><span class="meta">2025.01.11</span></li></ol><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=45" target="_blank" rel="noopener">목록 보기 →</a></div><div class="rcol"><div class="pcol-h"><h4>자녀교육도서</h4><span class="n">25권</span></div><p class="sub">자녀를 키우는 책</p><ol><li><a href="https://blog.naver.com/saechang888/223736990635" target="_blank" rel="noopener">섬기는 부모가 자녀를 큰 사람으로 키운다</a><span class="meta">2025.01.24</span></li><li><a href="https://blog.naver.com/saechang888/223720130773" target="_blank" rel="noopener">삶을 위한 수업3(9-10장)</a><span class="meta">2025.01.09</span></li><li><a href="https://blog.naver.com/saechang888/223720126352" target="_blank" rel="noopener">삶을 위한 수업2(3-4장)</a><span class="meta">2025.01.09</span></li></ol><a class="more" href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=90" target="_blank" rel="noopener">목록 보기 →</a></div></div>
+  </section>
+
+  <section id="stories" aria-labelledby="stories-h">
+    <div class="head"><span class="eyebrow">은혜되는 예화</span><div class="row"><h2 id="stories-h">설교에 쓰는 이야기</h2><a href="https://blog.naver.com/PostList.naver?blogId=saechang888&categoryNo=161" target="_blank" rel="noopener">예화 전체 38편 →</a></div></div>
+    <ul class="stories"><li><a href="https://blog.naver.com/saechang888/223891358235" target="_blank" rel="noopener">기도에 대한 짧은 명언</a></li><li><a href="https://blog.naver.com/saechang888/223872054893" target="_blank" rel="noopener">죽음</a></li><li><a href="https://blog.naver.com/saechang888/223868557478" target="_blank" rel="noopener">불을 밝히는 교회</a></li><li><a href="https://blog.naver.com/saechang888/223868526284" target="_blank" rel="noopener">영생</a></li><li><a href="https://blog.naver.com/saechang888/223868524156" target="_blank" rel="noopener">긍정적 마인드</a></li></ul>
+  </section>
+
+  <section id="works" aria-labelledby="works-h">
+    <div class="head"><span class="eyebrow">작품</span><h2 id="works-h">만든 것들</h2></div>
+    <ul class="works">
+      <li class="work"><img src="assets/invite.jpg" alt="행복나눔축제 초대장: 12월 6일 주일 오전 11시 새암교회 본당, 특별강사 이성미 집사" width="480" height="720"><h4>행복나눔축제 초대장</h4><p>2026 전도집회 · 새암교회 본당</p></li>
+      <li class="work"><img src="assets/poster.jpg" alt="행복나눔축제 포스터: 함께 음식을 나누는 가족과 이웃 일러스트" width="480" height="679"><h4>행복나눔축제 포스터</h4><p>A3 인쇄용 · 일러스트</p></li>
+      <li class="work"><div class="song"><span class="clef" aria-hidden="true">𝄞</span><strong>태초에 말씀이</strong><span class="meta">요한복음 1장 · G · ♩=76</span></div><h4>찬양 「태초에 말씀이」</h4><p>요한복음 1장 CCM 찬양</p></li>
+    </ul>
+  </section>
+
+  <section id="church" aria-labelledby="church-h">
+    <div class="head"><span class="eyebrow">섬기는 교회</span><h2 id="church-h">새암교회</h2></div>
+    <div class="church">
+      <dl><dt>교단</dt><dd>대한예수교장로회(합동)</dd><dt>주소</dt><dd>경기도 용인시 수지구 고기로 165<br>(동천동)</dd><dt>전화</dt><dd>031-262-3440</dd></dl>
+      <dl><dt>주일예배</dt><dd>오전 11시</dd><dt>새벽기도회</dt><dd>매일 오전 6시</dd><dt>금요기도회</dt><dd>금요일 오후 8시 30분</dd></dl>
+    </div>
+  </section>
+
+  <footer><span>독서주특기 · 이재선</span><a href="https://blog.naver.com/saechang888" target="_blank" rel="noopener">blog.naver.com/saechang888</a></footer>
+</main>
+</div>
