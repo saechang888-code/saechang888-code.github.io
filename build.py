@@ -110,7 +110,7 @@ page = f'''<title>독서주특기</title>
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;--tint:#20282a;color-scheme:dark}}}}
 :root[data-theme="dark"]{{--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;--tint:#20282a;color-scheme:dark}}
 *{{box-sizing:border-box}}
-body{{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.7;padding-inline:16px;padding-block:0}}
+body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.7;padding-inline:16px;padding-block:0}}
 a{{color:inherit}}
 a:focus-visible{{outline:2px solid var(--green);outline-offset:3px}}
 .wrap{{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:56px}}
@@ -303,5 +303,9 @@ footer{{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);fon
   <footer><span>독서주특기 · 이재선</span><a href="{BLOG}" target="_blank" rel="noopener">blog.naver.com/saechang888</a></footer>
 </main>
 </div>'''
+if not PREVIEW:
+    page = ('<!doctype html>\n<html lang="ko">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+            '<meta name="description" content="이재선 목사의 설교·시·팡세·독후감과 유튜브 어음성경">\n'
+            + page.replace('</style>', '</style>\n</head>\n<body>', 1) + '\n</body>\n</html>\n')
 open(os.path.join(D, 'index.html'), 'w', encoding='utf-8').write(page)
 print('ok total', TOTAL, 'bible books covered', covered, 'of', len(bible))
