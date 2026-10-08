@@ -31,12 +31,17 @@ jobs:
         continue-on-error: true
       - name: Build page
         run: python build.py
+      # 저장소에 최신 글 목록을 남긴다(실패해도 배포는 계속한다)
       - name: Save updated blog data
+        continue-on-error: true
         run: |
           git config user.name "homepage-bot"
           git config user.email "homepage-bot@users.noreply.github.com"
           git add blog.json index.html
-          git diff --cached --quiet || git commit -m "블로그 새 글 반영" && git push
+          if ! git diff --cached --quiet; then
+            git commit -m "블로그 새 글 반영"
+            git pull --rebase -X ours origin main && git push
+          fi
       - name: Prepare site
         run: mkdir -p _site && cp -r index.html assets _site/
       - uses: actions/upload-pages-artifact@v3
