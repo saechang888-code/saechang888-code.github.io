@@ -8,7 +8,7 @@ posts = [p for p in json.load(open(os.path.join(D, 'posts.json'), encoding='utf-
 posts.sort(key=lambda p: (p['date'], p['id']), reverse=True)
 
 def esc(s): return html.escape(s, quote=True)
-KIND_LABEL = {'설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세·예화'}
+KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세·예화'}
 
 HEAD = '''<!doctype html>
 <html lang="ko">

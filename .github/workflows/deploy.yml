@@ -34,6 +34,9 @@ jobs:
       # 예약일(한국 시간)이 된 글만 공개
       - name: Publish scheduled writings
         run: python writings.py
+      # 행복나눔축제 안내 페이지 + 첫 화면 배너(행사일까지)
+      - name: Event page
+        run: python event.py
       # 저장소에 최신 글 목록을 남긴다(실패해도 배포는 계속한다)
       - name: Save updated blog data
         continue-on-error: true
@@ -46,7 +49,7 @@ jobs:
             git pull --rebase -X ours origin main && git push
           fi
       - name: Prepare site
-        run: mkdir -p _site && cp -r index.html assets writings _site/
+        run: mkdir -p _site && cp -r index.html event.html assets writings _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
