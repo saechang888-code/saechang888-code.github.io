@@ -31,6 +31,9 @@ jobs:
         continue-on-error: true
       - name: Build page
         run: python build.py
+      # 예약일(한국 시간)이 된 글만 공개
+      - name: Publish scheduled writings
+        run: python writings.py
       # 저장소에 최신 글 목록을 남긴다(실패해도 배포는 계속한다)
       - name: Save updated blog data
         continue-on-error: true
@@ -43,7 +46,7 @@ jobs:
             git pull --rebase -X ours origin main && git push
           fi
       - name: Prepare site
-        run: mkdir -p _site && cp -r index.html assets _site/
+        run: mkdir -p _site && cp -r index.html assets writings _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
