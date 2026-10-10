@@ -1,0 +1,42 @@
+# 매일 아침 예약일이 된 글을 구글 블로거(독서주특기)에 올린다. 홈페이지 배포와 따로 돌아서 실패해도 홈페이지에는 영향이 없다.
+name: blogger-post
+
+on:
+  schedule:
+    - cron: "30 21 * * *"   # 매일 06:30 KST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: blogger
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Post to Blogger
+        env:
+          BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+          BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+          BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+        run: python blogger.py
+      # 올린 글 목록을 저장해 다음 날 같은 글을 다시 올리지 않게 한다
+      - name: Save posted list
+        if: always()
+        run: |
+          git config user.name "homepage-bot"
+          git config user.email "homepage-bot@users.noreply.github.com"
+          if [ -f blogger_done.json ]; then
+            git add blogger_done.json
+            if ! git diff --cached --quiet; then
+              git commit -m "블로거 게시 기록"
+              git pull --rebase -X ours origin main && git push
+            fi
+          fi
