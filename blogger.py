@@ -173,14 +173,21 @@ for j in due[:MAX_PER_RUN]:
     body = dict(kind='blogger#post', title=j['title'], content=j['render'](), labels=j['labels'])
     if j['date'] < TODAY:                        # 밀린 글은 원래 날짜 아침으로 (블로그 글 순서 유지)
         body['published'] = f'{j["date"]}T07:{n % 60:02d}:00+09:00'
-    try:
-        r = call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/posts/', json.dumps(body, ensure_ascii=False).encode('utf-8'), AUTH, 'POST')
-    except urllib.error.HTTPError as e:
-        print('blogger: 실패', j['id'], e.code, e.read()[:300].decode('utf-8', 'replace'))
-        if e.code in (401, 403, 429): break
+    r, code = None, 0
+    for wait in (120, 300, 600, 900, 0):        # 블로거는 짧은 시간에 글을 많이 올리면 429를 준다 → 쉬었다가 다시
+        try:
+            r = call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/posts/', json.dumps(body, ensure_ascii=False).encode('utf-8'), AUTH, 'POST')
+            break
+        except urllib.error.HTTPError as e:
+            code = e.code
+            print('blogger: 실패', j['id'], code, e.read()[:300].decode('utf-8', 'replace'))
+            if code != 429 or not wait: break
+            print('blogger: 잠시 쉼', wait, '초'); time.sleep(wait)
+    if r is None:
+        if code in (401, 403, 429): break
         continue
     done[j['id']] = r.get('url', '')
     n += 1
     json.dump(done, open(done_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
-    time.sleep(3)
+    time.sleep(45)
 print('blogger: today', TODAY, 'posted', n, '· waiting', len(due) - n, '· total done', len(done))
