@@ -1,0 +1,127 @@
+/* 독서주특기 구글 블로그 디자인 (홈페이지 저장소에서 관리) */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* ── 바탕: 단풍·주황 배경을 걷어 내고 홈페이지와 같은 크림색 ── */
+html,body{min-width:0!important;overflow-x:hidden}
+body{background:#f7f4ec!important;color:#1f2a2e!important;font:16px/1.8 "Pretendard Variable",Pretendard,"Malgun Gothic",sans-serif!important;word-break:keep-all;-webkit-font-smoothing:antialiased}
+.body-fauxcolumn-outer,.body-fauxcolumns,.content-fauxcolumns,.fauxcolumn-outer,.cap-top,.cap-bottom{background:none!important;display:none!important}
+.content-outer,.content-inner,.main-outer,.footer-outer,.header-outer,.tabs-outer,.region-inner,.fauxborder-left,.fauxborder-right{background:none!important;border:0!important;box-shadow:none!important}
+.content-outer{max-width:1180px!important;margin:0 auto!important}
+.content-inner{padding:0 20px!important}
+#navbar,#Navbar1,.navbar,#Attribution1,.Attribution,.feed-links,.ReportAbuse,.sidebar .PageList,.sidebar .Profile{display:none!important}
+a:link,a:visited{color:#2f5d50;text-decoration:none}
+a:hover{color:#b08a3e}
+.header-outer{display:none!important}           /* 옛 제목은 감추고 아래 새 대문을 씁니다 */
+#crosscol,#crosscol-overflow,.tabs-inner{padding:0!important;margin:0!important}
+#crosscol .widget{margin:0!important;padding:0!important}
+
+/* ── 위쪽 막대 ── */
+#dj-top{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(247,244,236,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid #e4ddcd}
+#dj-top .in{max-width:1180px;margin:0 auto;padding:0 20px;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#dj-top .brand{display:flex;align-items:center;gap:12px;color:#1f2a2e!important}
+#dj-top .mono{width:38px;height:38px;border-radius:50%;background:#23443a;color:#f6efe0;display:grid;place-items:center;font:900 14px "Noto Serif KR",serif}
+#dj-top .brand b{display:block;font:900 19px/1.1 "Noto Serif KR",serif}
+#dj-top .brand small{color:#66726f;font-size:12px}
+#dj-top nav{display:flex;flex-wrap:wrap;gap:2px}
+#dj-top nav a{padding:8px 13px;border-radius:99px;color:#1f2a2e!important;font-size:15px;font-weight:600}
+#dj-top nav a:hover{background:#f6efe0;color:#23443a!important}
+#dj-top nav a.hp{background:#23443a;color:#f6efe0!important}
+body{padding-top:66px!important}
+
+/* ── 대문 ── */
+#dj-hero{display:none;position:relative;left:50%;width:100vw;margin-left:-50vw;overflow:hidden;color:#f6efe0;
+  background:#173229 url(https://saechang888-code.github.io/assets/hero.jpg) center right/cover no-repeat}
+.dj-home #dj-hero{display:block}
+#dj-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,38,31,.94) 0%,rgba(16,38,31,.78) 45%,rgba(16,38,31,.25) 100%)}
+#dj-hero .in{position:relative;max-width:1180px;margin:0 auto;padding:84px 20px 96px}
+#dj-hero .eb{display:inline-flex;align-items:center;gap:12px;font-size:13px;letter-spacing:.28em;color:#d9b86a;font-weight:700}
+#dj-hero .eb:before{content:"";width:44px;height:1px;background:#d9b86a}
+#dj-hero h2{margin:18px 0 0;font:900 clamp(36px,6vw,66px)/1.18 "Noto Serif KR",serif;letter-spacing:-.03em;color:#f6efe0;border:0;background:none;padding:0;text-transform:none}
+#dj-hero h2 em{font-style:normal;color:#d9b86a}
+#dj-hero p{margin:20px 0 0;max-width:560px;font-size:18px;color:rgba(246,239,224,.86)}
+#dj-hero .cta{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
+#dj-hero .cta a{display:inline-flex;padding:13px 22px;border-radius:99px;font-weight:700;font-size:15px;border:1px solid rgba(246,239,224,.5);color:#f6efe0!important}
+#dj-hero .cta a.gold{background:#d9b86a;border-color:#d9b86a;color:#1b2a24!important}
+#dj-tiles{display:none;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:-46px 0 40px;position:relative;z-index:2}
+.dj-home #dj-tiles{display:grid}
+#dj-tiles a{background:#fffdf8;border:1px solid #e4ddcd;border-radius:18px;padding:20px 22px;box-shadow:0 14px 34px rgba(35,68,58,.1);color:#1f2a2e!important;transition:transform .2s}
+#dj-tiles a:hover{transform:translateY(-3px)}
+#dj-tiles i{font-style:normal;font-size:24px}
+#dj-tiles b{display:block;margin-top:6px;font:700 19px "Noto Serif KR",serif}
+#dj-tiles span{display:block;color:#66726f;font-size:13.5px}
+.dj-new{display:none;margin:0 0 18px;font:900 26px "Noto Serif KR",serif;color:#1f2a2e}
+.dj-home .dj-new{display:block}
+
+/* ── 글 카드 ── */
+.main-inner{padding-top:30px!important}
+.main-inner .column-center-inner{padding:0!important}
+.date-outer{border:0!important;margin:0 0 22px!important;padding:0!important}
+h2.date-header{display:none!important}
+.post-outer{background:#fffdf8!important;border:1px solid #e4ddcd!important;border-radius:20px;padding:30px 34px!important;box-shadow:0 6px 22px rgba(35,68,58,.06)}
+h3.post-title,h3.post-title a{font:900 26px/1.4 "Noto Serif KR",serif!important;color:#1f2a2e!important;letter-spacing:-.02em;margin:0 0 10px!important}
+h3.post-title a:hover{color:#2f5d50!important}
+.post-body{font-size:17px!important;line-height:1.95!important;color:#1f2a2e!important}
+.post-footer{background:none!important;border-top:1px solid #ece5d6!important;margin:22px 0 0!important;padding:14px 0 0!important;color:#66726f!important;font-size:13.5px!important}
+.post-share-buttons,.post-footer-line-3{display:none!important}
+.post-labels a{display:inline-block;margin:0 4px 4px 0;padding:2px 11px;border:1px solid #b08a3e;border-radius:99px;color:#b08a3e!important;font-size:12.5px}
+.dj-home .post-body{max-height:260px;overflow:hidden;position:relative}
+.dj-home .post-body:after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(rgba(255,253,248,0),#fffdf8)}
+.dj-home .post-body>div>p:first-child,.dj-home .post-body h2{display:none!important}
+.dj-more{display:inline-block;margin-top:12px;font-weight:700;color:#2f5d50!important}
+.dj-more:after{content:" →"}
+#blog-pager{margin:30px 0!important}
+#blog-pager a{display:inline-block;padding:11px 20px;border-radius:99px;background:#23443a;color:#f6efe0!important;font-weight:700}
+
+/* ── 오른쪽 칸 ── */
+.main-inner .column-right-inner{padding-left:28px!important}
+.sidebar .widget,.main-inner .column-right-inner .widget{background:#fffdf8;border:1px solid #e4ddcd;border-radius:18px;padding:22px!important;margin:0 0 20px!important}
+.sidebar .widget h2,.column-right-inner .widget h2{font:700 18px "Noto Serif KR",serif!important;color:#23443a!important;background:none!important;border:0!important;margin:0 0 12px!important;padding:0!important;text-transform:none!important;letter-spacing:0!important}
+.section-columns,.section-columns tbody,.section-columns tr,.section-columns td{display:block!important;width:auto!important;padding:0!important}
+.Label ul li{display:inline-block;padding:0!important;margin:0 4px 8px 0;border:0!important}
+.Label ul li a{display:inline-block;padding:4px 11px;border-radius:99px;background:#f7f4ec;border:1px solid #e4ddcd;color:#1f2a2e!important;font-size:13px}
+.Label ul li a:hover{border-color:#b08a3e;color:#b08a3e!important}
+.BlogSearch input[type=text],.gsc-input{width:100%;border:1px solid #e4ddcd!important;border-radius:12px;padding:9px 12px!important;background:#f7f4ec}
+.BlogSearch input[type=submit],.gsc-search-button input{border:0;border-radius:99px;background:#23443a;color:#f6efe0;padding:8px 16px;font-weight:700;cursor:pointer}
+#dj-about{background:#23443a!important;border:0!important;color:#f6efe0}
+#dj-about h2{color:#d9b86a!important}
+#dj-about p{margin:0 0 12px;font-size:14.5px;color:rgba(246,239,224,.86)}
+#dj-about a{color:#d9b86a!important;font-weight:700}
+
+/* ── 맨 아래 ── */
+#dj-foot{position:relative;left:50%;width:100vw;margin:50px 0 0 -50vw;background:#13261f;color:rgba(246,239,224,.75);padding:44px 20px 50px;font-size:14px}
+#dj-foot .in{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+#dj-foot b{font:900 20px "Noto Serif KR",serif;color:#f6efe0}
+#dj-foot a{color:#d9b86a!important}
+#dj-up{position:fixed;right:18px;bottom:18px;width:46px;height:46px;border-radius:50%;background:#23443a;color:#f6efe0;border:0;font-size:18px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.18);z-index:998}
+
+/* ── 분류표(홈페이지처럼) ── */
+.sidebar .Label,#Label1{display:none!important}
+#dj-cats h2{margin-bottom:6px!important}
+#dj-cats details{border-top:1px solid #ece5d6}
+#dj-cats details:first-of-type{border-top:0}
+#dj-cats summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 2px}
+#dj-cats summary::-webkit-details-marker{display:none}
+#dj-cats summary b{font:700 16px "Noto Serif KR",serif;color:#1f2a2e;flex:1}
+#dj-cats summary em{font-style:normal;font-size:12.5px;color:#66726f;background:#f7f4ec;border-radius:99px;padding:1px 9px}
+#dj-cats summary:after{content:"+";color:#b08a3e;font-weight:700;width:14px;text-align:center}
+#dj-cats details[open] summary:after{content:"–"}
+#dj-cats .dj-box{padding:0 0 14px}
+#dj-cats .dj-all{margin:0 0 8px;font-size:13.5px;font-weight:700}
+#dj-cats .dj-sub{margin:10px 0 6px;font-size:12px;letter-spacing:.2em;color:#b08a3e;font-weight:700}
+#dj-cats .dj-chips{display:flex;flex-wrap:wrap;gap:6px}
+#dj-cats .dj-chips a{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#f7f4ec;border:1px solid #e4ddcd;color:#1f2a2e!important;font-size:13px}
+#dj-cats .dj-chips a:hover{border-color:#b08a3e;color:#b08a3e!important}
+#dj-cats .dj-chips small{color:#8a948f;font-size:11px}
+
+@media (max-width:960px){
+  .main-inner .columns{padding-right:0!important}
+  .main-inner .column-right-outer{width:auto!important;margin-right:0!important;float:none!important}
+  .main-inner .column-center-outer{float:none!important}
+  .main-inner .column-right-inner{padding-left:0!important}
+  .columns-inner{padding:0!important}
+}
+@media (max-width:600px){
+  .post-outer{padding:22px 18px!important;border-radius:16px}
+  h3.post-title,h3.post-title a{font-size:22px!important}
+  #dj-top nav a{padding:6px 9px;font-size:14px}
+}
