@@ -1,4 +1,4 @@
-# 매일 아침 블로그 새 글을 반영해 홈페이지를 다시 만들고 GitHub Pages에 배포한다.
+﻿# 매일 아침 블로그 새 글을 반영해 홈페이지를 다시 만들고 GitHub Pages에 배포한다.
 name: build-and-deploy
 
 on:
@@ -34,6 +34,9 @@ jobs:
       # 예약일(한국 시간)이 된 글만 공개
       - name: Publish scheduled writings
         run: python writings.py
+      # 예화 전체를 주제별로 (가 편 ~ 하 편)
+      - name: Illustrations by topic
+        run: python yehwa_site.py
       # 행복나눔축제 안내 페이지 + 첫 화면 배너(행사일까지)
       - name: Event page
         run: python event.py
@@ -49,7 +52,7 @@ jobs:
             git pull --rebase -X ours origin main && git push
           fi
       - name: Prepare site
-        run: mkdir -p _site && cp -r index.html event.html privacy.html assets writings _site/
+        run: mkdir -p _site && cp -r index.html event.html privacy.html assets writings yehwa _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
