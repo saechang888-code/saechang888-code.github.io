@@ -1,4 +1,4 @@
-# 예약일(한국 시간)이 된 글을 구글 블로거에 올린다. 올린 글은 blogger_done.json에 남겨 두 번 올리지 않는다.
+﻿# 예약일(한국 시간)이 된 글을 구글 블로거에 올린다. 올린 글은 blogger_done.json에 남겨 두 번 올리지 않는다.
 #  - posts.json: 설교·독후감·팡세·교회 소식 (예화 '묶음' 글은 블로거에는 올리지 않는다)
 #  - blogger_yehwa.json: 예화를 한 편씩, 하루 3편
 # 열쇠(BLOGGER_CLIENT_ID / BLOGGER_CLIENT_SECRET / BLOGGER_REFRESH_TOKEN)가 없으면 아무것도 하지 않는다.
@@ -10,7 +10,7 @@ BLOG = '5791371153360346841'
 SITE = 'https://saechang888-code.github.io/'
 MAX_PER_RUN = int(os.environ.get('BLOGGER_MAX', '12'))       # 밀린 글이 많아도 하루에 이만큼만 (스팸 판정 방지)
 TODAY = os.environ.get('TODAY') or (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)).strftime('%Y-%m-%d')
-KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세'}
+KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세', '시': '시'}
 # 블로그 카테고리(= 첫 번째 라벨). 글 맨 위 메뉴도 이 순서로 보인다
 CATS = ['예화', '설교', '묵상', '팡세', '독후감', '시', '기타']
 CAT_OF = {'예화': '예화', '설교': '설교', '독후감': '독후감', '팡세/예화': '팡세', '묵상': '묵상', '시': '시', '행사': '기타'}
@@ -140,11 +140,16 @@ queues = {}
 for p in sorted(posts, key=lambda p: (p['date'], p['id'])):
     if p['kind'] != '행사': queues.setdefault(CAT_OF.get(p['kind'], '기타'), []).append(p)
 bdate = {p['id']: p['date'] for p in posts if p['kind'] == '행사'}
-for q in queues.values():
-    for i, p in enumerate(q): bdate[p['id']] = (BSTART + datetime.timedelta(days=i // PER_CAT)).isoformat()
-jobs = [dict(id=p['id'], date=bdate[p['id']], title=p['title'], render=lambda p=p: render_post(p), labels=labels_post(p)) for p in posts]
+old_poems = load_poems()
+for cat, q in queues.items():
+    off = len(old_poems) if cat == '시' else 0          # 컴퓨터에서 찾은 시는 네이버에서 옮긴 시 다음 차례로
+    for i, p in enumerate(q, off): bdate[p['id']] = (BSTART + datetime.timedelta(days=i // PER_CAT)).isoformat()
+def render_any(p):
+    if p['kind'] == '시': return render_poem(dict(sub=p['category'].split('>')[-1].strip(), title=p['title'], body=p['body']))
+    return render_post(p)
+jobs = [dict(id=p['id'], date=bdate[p['id']], title=p['title'], render=lambda p=p: render_any(p), labels=labels_post(p)) for p in posts]
 jobs += [dict(id=y['id'], date=y['date'], title=f'[{y["topic"]} 예화] {y["title"]}', render=lambda y=y: render_yehwa(y), labels=labels_yehwa(y)) for y in yehwa]
-for i, p in enumerate(load_poems()):
+for i, p in enumerate(old_poems):
     jobs.append(dict(id=p['id'], date=(BSTART + datetime.timedelta(days=i // PER_CAT)).isoformat(), title=p['title'], render=lambda p=p: render_poem(p), labels=['시', p['sub']]))
 by_id = {j['id']: j for j in jobs}
 # 예전에 올린 예화 묶음 글도 디자인을 다시 입힐 수 있게

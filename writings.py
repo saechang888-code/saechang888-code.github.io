@@ -1,4 +1,4 @@
-# posts.json 중 예약일(한국 시간)이 된 글만 공개: writings/ 글 페이지·보관함 + 첫 화면 '새로 올라온 글'
+﻿# posts.json 중 예약일(한국 시간)이 된 글만 공개: writings/ 글 페이지·보관함 + 첫 화면 '새로 올라온 글'
 import os, re, json, html, datetime, shutil, sys
 
 D = os.path.dirname(os.path.abspath(__file__))
@@ -8,7 +8,7 @@ posts = [p for p in json.load(open(os.path.join(D, 'posts.json'), encoding='utf-
 posts.sort(key=lambda p: (p['date'], p['id']), reverse=True)
 
 def esc(s): return html.escape(s, quote=True)
-KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세·예화'}
+KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세·예화', '시': '시'}
 
 HEAD = '''<!doctype html>
 <html lang="ko">
@@ -16,10 +16,11 @@ HEAD = '''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;800&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{{--paper:#f6f5f0;--sheet:#fffefa;--ink:#1f2a2e;--muted:#62706f;--rule:#dcd8cc;--green:#2f5d50;--gold:#a07b32;
---display:"Nanum Myeongjo","Batang",serif;--body:"IBM Plex Sans KR","Malgun Gothic",system-ui,sans-serif}}
+--display:"Noto Serif KR","Batang",serif;--body:"Pretendard Variable",Pretendard,"Malgun Gothic",system-ui,sans-serif}}
 @media (prefers-color-scheme:dark){{:root{{--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;color-scheme:dark}}}}
 *{{box-sizing:border-box}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.8;padding-inline:16px}}
@@ -36,6 +37,9 @@ h3{{font-family:var(--display);font-size:1.2rem;margin:1.6em 0 .4em;color:var(--
 article{{background:var(--sheet);border:1px solid var(--rule);padding:clamp(20px,4vw,40px)}}
 article p{{margin:0 0 .9em;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}}
 .src{{color:var(--muted);font-size:.88rem}}
+article.poem{{text-align:center;font-family:var(--display);line-height:2.1}}
+article.poem p{{margin:0 0 1.6em}}
+article.poem .src{{font-family:var(--body);margin-top:2.4em}}
 .nav{{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.92rem}}
 .filters{{display:flex;flex-wrap:wrap;gap:8px}}
 .filters button{{font:inherit;font-size:.9rem;padding:6px 14px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:99px;cursor:pointer}}
@@ -65,7 +69,7 @@ def render_body(text):
         if not para.strip(): continue
         if para.startswith('■'):
             out.append(f'<h3>{esc(para.lstrip("■ ").strip())}</h3>')
-        elif para.startswith('— ') or para.startswith('※'):
+        elif para.startswith(('— ', '※', '*')):
             out.append(f'<p class="src">{esc(para)}</p>')
         else:
             out.append(f'<p>{esc(para)}</p>')
@@ -83,7 +87,7 @@ for i, p in enumerate(order):
 <h1>{esc(p["title"])}</h1>
 {f'<div class="tags">{tags}</div>' if tags else ''}
 </header>
-<article>
+<article{' class="poem"' if p['kind'] == '시' else ''}>
 {render_body(p["body"])}
 </article>
 <nav class="nav">{prev_a}{next_a}</nav>
@@ -98,7 +102,7 @@ buttons = '<button type="button" aria-pressed="true" data-k="">전체</button>' 
     f'<button type="button" aria-pressed="false" data-k="{esc(k)}">{KIND_LABEL[k]}</button>' for k in kinds)
 index = HEAD.format(title='글 보관함 · 독서주특기', root='../') + f'''<header style="display:grid;gap:8px">
 <h1>글 보관함</h1>
-<p class="meta">설교 · 예화 · 독후감 · 팡세가 날마다 새로 올라옵니다. 지금까지 {len(posts)}편.</p>
+<p class="meta">설교 · 시 · 독후감 · 예화 · 팡세가 날마다 새로 올라옵니다. 지금까지 {len(posts)}편.</p>
 </header>
 <div class="filters" role="group" aria-label="종류">{buttons}</div>
 <label for="q" class="meta">제목·카테고리·태그 검색</label>
