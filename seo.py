@@ -46,7 +46,15 @@ if 'property="og:title"' not in h:
         f'<meta property="og:url" content="{SITE}">\n<meta property="og:image" content="{IMG}">\n<meta name="twitter:card" content="summary_large_image">\n'), 1)
     open(home, 'w', encoding='utf-8').write(h)
 
-sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+# 검색엔진 소유 확인 (구글 Search Console · 네이버 서치어드바이저)
+VERIFY = ['<meta name="google-site-verification" content="pZkvLgD2zZY8ZxzdHr93jqpC5_ImVbDoKMZ_WWMtQeo" />']
+h = open(home, encoding='utf-8').read()
+add = [v for v in VERIFY if v not in h]
+if add:
+    h = h.replace('</title>', '</title>\n' + '\n'.join(add), 1)
+    open(home, 'w', encoding='utf-8').write(h)
+
+sm =['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 for u, pr in urls:
     sm.append(f'<url><loc>{esc(u)}</loc><lastmod>{TODAY}</lastmod><priority>{pr}</priority></url>')
 sm.append('</urlset>')
