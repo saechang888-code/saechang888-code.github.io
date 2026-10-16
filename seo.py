@@ -47,7 +47,8 @@ if 'property="og:title"' not in h:
     open(home, 'w', encoding='utf-8').write(h)
 
 # 검색엔진 소유 확인 (구글 Search Console · 네이버 서치어드바이저)
-VERIFY = ['<meta name="google-site-verification" content="pZkvLgD2zZY8ZxzdHr93jqpC5_ImVbDoKMZ_WWMtQeo" />']
+VERIFY = ['<meta name="google-site-verification" content="pZkvLgD2zZY8ZxzdHr93jqpC5_ImVbDoKMZ_WWMtQeo" />',
+          '<meta name="naver-site-verification" content="cc75e69313c195c9ae47156d59ec8d97ed48a035" />']
 h = open(home, encoding='utf-8').read()
 add = [v for v in VERIFY if v not in h]
 if add:
