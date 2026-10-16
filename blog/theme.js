@@ -25,7 +25,10 @@
       var box = el('div', 'dj-cats', '<h2>분류</h2>' + src.innerHTML); box.className = 'widget';
       var ab = document.getElementById('dj-about'); side.insertBefore(box, ab ? ab.nextSibling : side.firstChild);
     }
-    // 목록 화면: 글마다 '계속 읽기'
+    // 인기 글·추천 글 미리보기 앞에 붙는 메뉴 글자(예화 · 설교 · 묵상 …)와 분류 글자를 지운다
+    [].forEach.call(document.querySelectorAll('.PopularPosts .item-snippet, .FeaturedPost p, .post-summary p'), function (e) {
+      e.textContent = e.textContent.replace(/^\s*예화\s*·\s*설교\s*·\s*묵상\s*·\s*팡세\s*·\s*독후감\s*·\s*시\s*·\s*기타\s*/, '').replace(/^([^\s.]{1,12}\s+){0,3}(예화|설교|시|독후감)\s+/, '').trim();
+    });    // 목록 화면: 글마다 '계속 읽기'
     if (list) [].forEach.call(document.querySelectorAll('.post-outer'), function (po) {
       var a = po.querySelector('h3.post-title a'), b = po.querySelector('.post-body');
       if (a && b && !po.querySelector('.dj-more')) { var m = el('a', '', '계속 읽기'); m.className = 'dj-more'; m.href = a.href; b.parentNode.insertBefore(m, b.nextSibling); }

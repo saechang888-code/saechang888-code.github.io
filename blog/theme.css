@@ -131,6 +131,23 @@ h3.post-title a:hover{color:#2f5d50!important}
   #dj-top nav a{padding:6px 9px;font-size:14px}
 }
 
+/* ── 글 화면: 댓글 · 인기 글 · 추천 글 ── */
+.comments{margin-top:24px!important;padding-top:18px!important;border-top:1px solid #ece5d6!important}
+.comments h4,.comments h3,#comments h4{font:700 18px "Noto Serif KR",serif!important;color:#23443a!important;margin:0 0 10px!important}
+.comments .comment-footer,.comments p{color:#4a5654;font-size:14.5px}
+.comments .comment-form{max-width:100%!important}
+#comment-post-message{font:700 16px "Noto Serif KR",serif;color:#23443a}
+.blog-pager-newer-link,.blog-pager-older-link,.home-link{display:inline-block;padding:9px 18px;border-radius:99px;background:#23443a;color:#f6efe0!important;font-weight:700;font-size:14px}
+.FeaturedPost,.PopularPosts{background:#fffdf8!important;border:1px solid #e4ddcd!important;border-radius:18px;padding:20px!important;margin:0 0 20px!important}
+.FeaturedPost h2,.PopularPosts h2{font:700 18px "Noto Serif KR",serif!important;color:#23443a!important;background:none!important;border:0!important;margin:0 0 10px!important;padding:0!important;text-transform:none!important}
+.FeaturedPost h3,.FeaturedPost h3 a,.PopularPosts .item-title,.PopularPosts .item-title a{font:700 16px/1.5 "Noto Serif KR",serif!important;color:#1f2a2e!important}
+.FeaturedPost p,.PopularPosts .item-snippet{font-size:13.5px!important;line-height:1.7!important;color:#66726f!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.PopularPosts ul{list-style:none;margin:0;padding:0}
+.PopularPosts li{padding:12px 0!important;border-top:1px solid #ece5d6;margin:0!important}
+.PopularPosts li:first-child{border-top:0}
+.PopularPosts .item-thumbnail img{border-radius:10px;width:72px;height:72px;object-fit:cover}
+.FeaturedPost img{border-radius:12px;max-width:100%;height:auto}
+.post-body div[style*="font-family:Noto Sans KR"] p:first-child{word-spacing:.05em}
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}
