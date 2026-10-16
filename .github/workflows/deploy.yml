@@ -40,6 +40,9 @@ jobs:
       # 행복나눔축제 안내 페이지 + 첫 화면 배너(행사일까지)
       - name: Event page
         run: python event.py
+      # 검색엔진용 sitemap.xml · robots.txt · 공유 카드 태그
+      - name: SEO
+        run: python seo.py
       # 저장소에 최신 글 목록을 남긴다(실패해도 배포는 계속한다)
       - name: Save updated blog data
         continue-on-error: true
@@ -52,7 +55,7 @@ jobs:
             git pull --rebase -X ours origin main && git push
           fi
       - name: Prepare site
-        run: mkdir -p _site && cp -r index.html event.html privacy.html assets writings yehwa blog _site/
+        run: mkdir -p _site && cp -r index.html event.html privacy.html sitemap.xml robots.txt assets writings yehwa blog _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
