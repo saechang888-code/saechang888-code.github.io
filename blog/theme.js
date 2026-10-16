@@ -22,13 +22,19 @@
     // 분류표: 오른쪽 소개 카드 아래
     var src = document.getElementById('dj-cats-src');
     if (src && side && !document.getElementById('dj-cats')) {
-      var box = el('div', 'dj-cats', '<h2>분류</h2>' + src.innerHTML); box.className = 'widget';
+      var box = el('div', 'dj-cats', '<h2>분류</h2>' + src.innerHTML); box.className = 'widget dj-catset';
       var ab = document.getElementById('dj-about'); side.insertBefore(box, ab ? ab.nextSibling : side.firstChild);
     }
     // 인기 글·추천 글 미리보기 앞에 붙는 메뉴 글자(예화 · 설교 · 묵상 …)와 분류 글자를 지운다
     [].forEach.call(document.querySelectorAll('.PopularPosts .item-snippet, .FeaturedPost p, .post-summary p'), function (e) {
       e.textContent = e.textContent.replace(/^\s*예화\s*·\s*설교\s*·\s*묵상\s*·\s*팡세\s*·\s*독후감\s*·\s*시\s*·\s*기타\s*/, '').replace(/^([^\s.]{1,12}\s+){0,3}(예화|설교|시|독후감)\s+/, '').replace(/^(기타|교회 소식)\s+/, '').trim();
-    });    // 분류표 숫자는 블로그에 실제로 올라간 글 수로 바꾸고, 아직 글이 없는 칸은 감춘다
+    });    // 첫 화면: 넓은 '분류별로 찾아보기' 칸 (책장처럼)
+    if (home && src && !document.getElementById('dj-shelf')) {
+      var sh = el('section', 'dj-shelf', '<div class="hd"><span class="eb">CATEGORY</span><h2>분류별로 찾아보기</h2><p>설교는 성경 66권으로, 예화는 가 편부터 하 편까지 나누었습니다. 블로그에 올라온 글과 전체 글 수를 함께 보여 드립니다.</p></div><div class="grid">' + src.innerHTML + '</div>');
+      sh.className = 'dj-catset';
+      [].forEach.call(sh.querySelectorAll('details'), function (d, i) { d.open = true; if (i === 0) d.className = 'wide'; });
+      var nw = document.querySelector('.dj-new'); if (nw) nw.parentNode.insertBefore(sh, nw);
+    }    // 분류표 숫자는 블로그에 실제로 올라간 글 수로 바꾸고, 아직 글이 없는 칸은 감춘다
     if (document.getElementById('dj-cats') && !window.__djCount) {
       window.__djCount = 1;
       var HP = 'https://saechang888-code.github.io/';
@@ -46,7 +52,7 @@
       function apply() {
         // 예화 목차 글이 아직 블로그에 없으면 예화 메뉴는 '예화' 전체로
         if (!cnt['예화 주제 목차']) [].forEach.call(document.querySelectorAll('a[href*="%EC%98%88%ED%99%94%20%EC%A3%BC%EC%A0%9C%20%EB%AA%A9%EC%B0%A8"], a[href*="예화%20주제%20목차"]'), function (a) { a.href = '/search/label/%EC%98%88%ED%99%94'; }); // 목차가 아직
-        [].forEach.call(document.querySelectorAll('#dj-cats details'), function (dt) {
+        [].forEach.call(document.querySelectorAll('.dj-catset details'), function (dt) {
           var name = dt.querySelector('summary b').textContent.trim();
           var main = name === '교회 소식' ? '기타' : name, n = cnt[main] || 0;
           var em = dt.querySelector('summary em'); if (!em.dataset.all) em.dataset.all = em.textContent.trim();

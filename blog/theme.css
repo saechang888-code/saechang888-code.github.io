@@ -170,6 +170,51 @@ h3.post-title a:hover{color:#2f5d50!important}
 #dj-cats .dj-chips a.dj-off small:after{content:' ↗'}
 #dj-cats .dj-legend{margin:6px 0 4px;font-size:11.5px;color:#8a948f}
 
+/* ── 옆 칸 분류: 좁아도 글씨가 넘치지 않게 ── */
+#dj-cats summary{flex-wrap:wrap;row-gap:2px}
+#dj-cats summary b{min-width:0}
+#dj-cats summary em{order:3;flex-basis:100%;margin-left:30px;padding:0;background:none;font-size:11.5px;color:#8a948f;white-space:normal}
+#dj-cats summary:after{order:2}
+#dj-cats .dj-chips a{font-size:12.5px;padding:3px 9px}
+#dj-cats .dj-legend,#dj-cats .dj-hp{font-size:11.5px}
+
+/* ── 첫 화면 '분류별로 찾아보기' ── */
+#dj-shelf{margin:8px 0 48px;padding:40px 40px 34px;background:#fffdf8;border:1px solid #e4ddcd;border-radius:24px;box-shadow:0 18px 50px rgba(35,68,58,.08)}
+#dj-shelf .hd{max-width:720px;margin:0 0 28px}
+#dj-shelf .eb{font-size:12px;letter-spacing:.32em;color:#b08a3e;font-weight:800}
+#dj-shelf h2{margin:8px 0 10px!important;font:900 32px/1.25 "Noto Serif KR",serif!important;color:#1f2a2e!important;letter-spacing:-.02em;border:0!important;background:none!important;padding:0!important;text-transform:none!important}
+#dj-shelf .hd p{margin:0;color:#66726f;font-size:15.5px}
+#dj-shelf .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+#dj-shelf details{border:1px solid #ece5d6;border-radius:18px;background:#fbf8f1;padding:0 22px 18px}
+#dj-shelf details.wide{grid-column:1/-1;background:linear-gradient(180deg,#fbf8f1,#f7f2e6)}
+#dj-shelf summary{list-style:none;display:flex;align-items:center;gap:12px;padding:18px 0 12px;border-bottom:1px solid #ece5d6;margin-bottom:12px;cursor:default}
+#dj-shelf summary::-webkit-details-marker{display:none}
+#dj-shelf summary span{font-size:22px}
+#dj-shelf summary b{flex:1;font:900 21px "Noto Serif KR",serif;color:#1f2a2e}
+#dj-shelf summary em{font-style:normal;font-size:13px;color:#66726f;background:#fffdf8;border:1px solid #e4ddcd;border-radius:99px;padding:4px 12px;white-space:nowrap}
+#dj-shelf summary em b{font:800 13px "Pretendard Variable",sans-serif;color:#23443a}
+#dj-shelf .dj-all{margin:0 0 6px;font-size:14px;font-weight:700}
+#dj-shelf .dj-all a{color:#23443a!important}
+#dj-shelf .dj-legend{margin:2px 0 10px;font-size:12px;color:#8a948f}
+#dj-shelf .dj-sub{margin:14px 0 8px;font-size:12px;letter-spacing:.3em;color:#b08a3e;font-weight:800}
+#dj-shelf .dj-chips{display:flex;flex-wrap:wrap;gap:8px}
+#dj-shelf .dj-chips a{display:inline-flex;align-items:baseline;gap:6px;padding:7px 13px;border-radius:12px;background:#fffdf8;border:1px solid #e4ddcd;color:#1f2a2e!important;font:600 14px "Noto Serif KR",serif;transition:all .15s}
+#dj-shelf .dj-chips a small{font:500 11.5px "Pretendard Variable",sans-serif;color:#8a948f}
+#dj-shelf .dj-chips a:hover{background:#23443a;border-color:#23443a;color:#f6efe0!important;transform:translateY(-1px)}
+#dj-shelf .dj-chips a:hover small{color:#d9b86a}
+#dj-shelf .dj-chips a.dj-off{border-style:dashed;background:transparent;color:#5d6866!important}
+#dj-shelf .dj-chips a.dj-off small:after{content:' ↗'}
+#dj-shelf .dj-hp{margin:14px 0 0;padding:10px 14px;border-radius:12px;background:#f2ead8;font-size:13px;color:#4a5654}
+#dj-shelf .dj-hp a{font-weight:800;color:#23443a!important}
+@media (max-width:760px){
+  #dj-shelf{padding:26px 16px 20px;border-radius:18px;margin-bottom:34px}
+  #dj-shelf h2{font-size:24px!important}
+  #dj-shelf .hd p{font-size:14px}
+  #dj-shelf .grid{grid-template-columns:minmax(0,1fr)}
+  #dj-shelf details{padding:0 14px 14px}
+  #dj-shelf .dj-chips a{padding:6px 10px;font-size:13px}
+  #dj-shelf summary b{font-size:19px}
+}
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}
