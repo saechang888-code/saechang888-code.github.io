@@ -115,6 +115,7 @@ let kind='';
 function apply(){{const s=q.value.trim().toLowerCase();let n=0;for(const r of rows){{const ok=(!kind||r.dataset.kind===kind)&&(!s||r.dataset.q.includes(s));r.hidden=!ok;if(ok)n++;}}empty.hidden=n>0;}}
 btns.forEach(b=>b.addEventListener('click',()=>{{kind=b.dataset.k;btns.forEach(x=>x.setAttribute('aria-pressed',x===b));apply();}}));
 q.addEventListener('input',apply);
+const u=new URLSearchParams(location.search);if(u.get('k')){{const b=btns.find(x=>x.dataset.k===u.get('k'));if(b){{kind=b.dataset.k;btns.forEach(x=>x.setAttribute('aria-pressed',x===b));}}}}if(u.get('q'))q.value=u.get('q');if(u.get('q')||u.get('k'))apply();
 </script>
 ''' + FOOT
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(index)

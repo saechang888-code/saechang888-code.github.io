@@ -53,16 +53,23 @@
           em.innerHTML = '블로그 <b>' + n.toLocaleString() + '</b> · 전체 ' + em.dataset.all;
           [].forEach.call(dt.querySelectorAll('.dj-chips a'), function (a) {
             var k = cnt[lab(a)] || 0, sm = a.querySelector('small');
-            if (sm) { if (!sm.dataset.all) sm.dataset.all = sm.textContent.trim(); sm.textContent = k + '/' + sm.dataset.all; } a.style.display = k ? '' : 'none';
+            if (sm) { if (!sm.dataset.all) sm.dataset.all = sm.textContent.trim(); sm.textContent = k + '/' + sm.dataset.all; }
+            if (!k) {   // 블로그에 아직 없는 칸은 홈페이지 전체 목록으로
+              var t = lab(a) || '', w = t.replace(/ 설교$/, '');
+              if (/ 편$/.test(t)) a.href = HP + 'yehwa/index.html#' + t.charAt(0);
+              else a.href = HP + 'writings/index.html?k=' + encodeURIComponent(name === '설교' ? '설교' : name === '시' ? '시' : name === '독후감' ? '독후감' : '') + '&q=' + encodeURIComponent(t === '주제 설교' ? '' : w);
+              a.target = '_blank'; a.className = 'dj-off'; a.title = '홈페이지에서 보기';
+            }
           });
           [].forEach.call(dt.querySelectorAll('.dj-chips'), function (ch) {
             var vis = [].some.call(ch.querySelectorAll('a'), function (a) { return a.style.display !== 'none'; });
-            ch.style.display = vis ? '' : 'none';
+            vis = true; ch.style.display = '';
             var prev = ch.previousElementSibling; if (prev && prev.className === 'dj-sub' && !prev.querySelector('a')) prev.style.display = vis ? '' : 'none';
           });
           var box = dt.querySelector('.dj-box');
           if (box && !box.querySelector('.dj-hp')) {
             var p = document.createElement('p'); p.className = 'dj-hp';
+            var lg = document.createElement('p'); lg.className = 'dj-legend'; lg.textContent = '숫자: 블로그에 올라온 글 / 전체 글 · 점선 칸 ↗ 은 홈페이지에서 보기'; box.insertBefore(lg, box.querySelector('.dj-sub, .dj-chips'));
             p.innerHTML = '블로그에는 날마다 차례로 올라옵니다. ' + name + ' 전체는 <a href="' + (MORE[name] || HP) + '" target="_blank">홈페이지에서 모두 보기 →</a>';
             box.appendChild(p);
           }
