@@ -148,6 +148,12 @@ h3.post-title a:hover{color:#2f5d50!important}
 .PopularPosts .item-thumbnail img{border-radius:10px;width:72px;height:72px;object-fit:cover}
 .FeaturedPost img{border-radius:12px;max-width:100%;height:auto}
 .post-body div[style*="font-family:Noto Sans KR"] p:first-child{word-spacing:.05em}
+.BlogSearch table,.BlogSearch form table{width:100%!important;border:0!important}
+.BlogSearch td,.BlogSearch .search-input{border:0!important;background:none!important;padding:0!important;box-shadow:none!important}
+.BlogSearch td:last-child{width:1%;padding-left:8px!important}
+.BlogSearch input[type=text]{width:100%!important;box-sizing:border-box;height:42px}
+.BlogSearch input[type=submit]{height:42px;padding:0 18px}
+
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}
