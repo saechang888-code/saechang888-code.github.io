@@ -44,6 +44,8 @@
       }
       function lab(a) { var m = (a.getAttribute('href') || '').match(/\/search\/label\/([^?#]+)/); return m ? decodeURIComponent(m[1]) : null; }
       function apply() {
+        // 예화 목차 글이 아직 블로그에 없으면 예화 메뉴는 '예화' 전체로
+        if (!cnt['예화 주제 목차']) [].forEach.call(document.querySelectorAll('a[href*="%EC%98%88%ED%99%94%20%EC%A3%BC%EC%A0%9C%20%EB%AA%A9%EC%B0%A8"], a[href*="예화%20주제%20목차"]'), function (a) { a.href = '/search/label/%EC%98%88%ED%99%94'; }); // 목차가 아직
         [].forEach.call(document.querySelectorAll('#dj-cats details'), function (dt) {
           var name = dt.querySelector('summary b').textContent.trim();
           var main = name === '교회 소식' ? '기타' : name, n = cnt[main] || 0;
