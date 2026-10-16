@@ -130,3 +130,45 @@ h3.post-title a:hover{color:#2f5d50!important}
   h3.post-title,h3.post-title a{font-size:22px!important}
   #dj-top nav a{padding:6px 9px;font-size:14px}
 }
+
+/* ── 휴대폰 ── */
+@media (max-width:760px){
+  body{padding-top:58px!important;font-size:15.5px!important}
+  .content-inner{padding:0 14px!important}
+  .main-inner .columns{padding-right:0!important}
+  .main-inner .column-right-outer{width:auto!important;margin-right:0!important;float:none!important}
+  .main-inner .column-center-outer,.main-inner .column-center-inner{float:none!important;width:auto!important}
+  .main-inner .column-right-inner{padding-left:0!important;margin-top:10px}
+  #dj-top .in{min-height:56px;flex-wrap:nowrap;gap:10px;padding:0 12px}
+  #dj-top .brand small{display:none}
+  #dj-top .brand b{font-size:17px}
+  #dj-top .mono{width:34px;height:34px;font-size:12px}
+  #dj-top nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:0}
+  #dj-top nav::-webkit-scrollbar{display:none}
+  #dj-top nav a{padding:6px 10px;font-size:14px;white-space:nowrap}
+  #dj-hero{background-position:72% center}
+  #dj-hero:before{background:linear-gradient(180deg,rgba(16,38,31,.88),rgba(16,38,31,.94))}
+  #dj-hero .in{padding:46px 18px 70px}
+  #dj-hero .eb{font-size:11px;letter-spacing:.2em}
+  #dj-hero .eb:before{width:28px}
+  #dj-hero h2{font-size:34px!important}
+  #dj-hero p{font-size:15.5px}
+  #dj-hero .cta a{padding:11px 16px;font-size:14px}
+  .dj-wrap{padding:0 14px}
+  #dj-tiles{grid-template-columns:1fr 1fr!important;gap:10px;margin-top:-40px}
+  #dj-tiles a{padding:14px 14px;border-radius:14px}
+  #dj-tiles b{font-size:16px}
+  #dj-tiles span{font-size:12px;line-height:1.5}
+  .dj-new{font-size:21px}
+  .post-outer{padding:20px 16px!important;border-radius:14px}
+  h3.post-title,h3.post-title a{font-size:20px!important}
+  .post-body{font-size:16px!important;line-height:1.85!important}
+  .post-body div[style*="max-width:680px"]{max-width:100%!important}
+  .post-body img{max-width:100%!important;height:auto!important}
+  .dj-home .post-body{max-height:220px}
+  .main-inner .section,.main-inner .widget.Blog,.main-inner .column-center-inner{margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important}
+  body{padding-top:96px!important}
+  #dj-top .in{flex-wrap:wrap!important;padding:6px 12px;gap:4px}
+  #dj-foot{padding:34px 16px 70px;font-size:13px}
+  #dj-up{width:42px;height:42px;right:12px;bottom:12px}
+}
