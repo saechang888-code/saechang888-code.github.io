@@ -1,4 +1,4 @@
-/* 독서주특기 구글 블로그 디자인 (홈페이지 저장소에서 관리) */
+﻿/* 독서주특기 구글 블로그 디자인 (홈페이지 저장소에서 관리) */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap");
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 /* ── 바탕: 단풍·주황 배경을 걷어 내고 홈페이지와 같은 크림색 ── */
@@ -6,7 +6,8 @@ html,body{min-width:0!important;overflow-x:hidden}
 body{background:#f7f4ec!important;color:#1f2a2e!important;font:16px/1.8 "Pretendard Variable",Pretendard,"Malgun Gothic",sans-serif!important;word-break:keep-all;-webkit-font-smoothing:antialiased}
 .body-fauxcolumn-outer,.body-fauxcolumns,.content-fauxcolumns,.fauxcolumn-outer,.cap-top,.cap-bottom{background:none!important;display:none!important}
 .content-outer,.content-inner,.main-outer,.footer-outer,.header-outer,.tabs-outer,.region-inner,.fauxborder-left,.fauxborder-right{background:none!important;border:0!important;box-shadow:none!important}
-.content-outer{max-width:1180px!important;margin:0 auto!important}
+.content-outer{max-width:1180px!important;min-width:0!important;margin:0 auto!important}
+.region-inner,.content-inner{max-width:none!important;min-width:0!important}
 .content-inner{padding:0 20px!important}
 #navbar,#Navbar1,.navbar,#Attribution1,.Attribution,.feed-links,.ReportAbuse,.sidebar .PageList,.sidebar .Profile{display:none!important}
 a:link,a:visited{color:#2f5d50;text-decoration:none}
@@ -29,7 +30,7 @@ a:hover{color:#b08a3e}
 body{padding-top:66px!important}
 
 /* ── 대문 ── */
-#dj-hero{display:none;position:relative;left:50%;width:100vw;margin-left:-50vw;overflow:hidden;color:#f6efe0;
+#dj-hero{display:none;position:relative;overflow:hidden;color:#f6efe0;
   background:#173229 url(https://saechang888-code.github.io/assets/hero.jpg) center right/cover no-repeat}
 .dj-home #dj-hero{display:block}
 #dj-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,38,31,.94) 0%,rgba(16,38,31,.78) 45%,rgba(16,38,31,.25) 100%)}
@@ -42,7 +43,8 @@ body{padding-top:66px!important}
 #dj-hero .cta{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
 #dj-hero .cta a{display:inline-flex;padding:13px 22px;border-radius:99px;font-weight:700;font-size:15px;border:1px solid rgba(246,239,224,.5);color:#f6efe0!important}
 #dj-hero .cta a.gold{background:#d9b86a;border-color:#d9b86a;color:#1b2a24!important}
-#dj-tiles{display:none;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:-46px 0 40px;position:relative;z-index:2}
+.dj-wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+#dj-tiles{display:none;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:-46px 0 34px;position:relative;z-index:2}
 .dj-home #dj-tiles{display:grid}
 #dj-tiles a{background:#fffdf8;border:1px solid #e4ddcd;border-radius:18px;padding:20px 22px;box-shadow:0 14px 34px rgba(35,68,58,.1);color:#1f2a2e!important;transition:transform .2s}
 #dj-tiles a:hover{transform:translateY(-3px)}
@@ -54,6 +56,9 @@ body{padding-top:66px!important}
 
 /* ── 글 카드 ── */
 .main-inner{padding-top:30px!important}
+.main-inner .columns{padding-left:0!important}
+.main-inner .column-left-outer,.fauxcolumn-left-outer{display:none!important}
+.dj-home .main-inner{padding-top:0!important}
 .main-inner .column-center-inner{padding:0!important}
 .date-outer{border:0!important;margin:0 0 22px!important;padding:0!important}
 h2.date-header{display:none!important}
@@ -88,7 +93,7 @@ h3.post-title a:hover{color:#2f5d50!important}
 #dj-about a{color:#d9b86a!important;font-weight:700}
 
 /* ── 맨 아래 ── */
-#dj-foot{position:relative;left:50%;width:100vw;margin:50px 0 0 -50vw;background:#13261f;color:rgba(246,239,224,.75);padding:44px 20px 50px;font-size:14px}
+#dj-foot{margin:50px 0 0;background:#13261f;color:rgba(246,239,224,.75);padding:44px 20px 50px;font-size:14px}
 #dj-foot .in{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 #dj-foot b{font:900 20px "Noto Serif KR",serif;color:#f6efe0}
 #dj-foot a{color:#d9b86a!important}
