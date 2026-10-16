@@ -215,6 +215,8 @@ h3.post-title a:hover{color:#2f5d50!important}
   #dj-shelf .dj-chips a{padding:6px 10px;font-size:13px}
   #dj-shelf summary b{font-size:19px}
 }
+.jump-link{display:none!important}
+
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}

@@ -1,4 +1,4 @@
-﻿# 예약일(한국 시간)이 된 글을 구글 블로거에 올린다. 올린 글은 blogger_done.json에 남겨 두 번 올리지 않는다.
+# 예약일(한국 시간)이 된 글을 구글 블로거에 올린다. 올린 글은 blogger_done.json에 남겨 두 번 올리지 않는다.
 #  - posts.json: 설교·독후감·팡세·교회 소식 (예화 '묶음' 글은 블로거에는 올리지 않는다)
 #  - blogger_yehwa.json: 예화를 한 편씩, 하루 3편
 # 열쇠(BLOGGER_CLIENT_ID / BLOGGER_CLIENT_SECRET / BLOGGER_REFRESH_TOKEN)가 없으면 아무것도 하지 않는다.
@@ -209,6 +209,16 @@ by_id = {j['id']: j for j in jobs}
 for p in all_posts:
     if p['kind'] == '예화': by_id.setdefault(p['id'], dict(id=p['id'], title=p['title'], render=lambda p=p: render_post(p), labels=labels_post(p)))
 
+def add_more(s, n=4):
+    # 첫 화면에는 앞부분만 보이게 '더 보기' 자리(<!--more-->)를 넣는다 (블로거는 첫 화면 크기에 한도가 있어 긴 글이면 몇 편만 보인다)
+    if '<!--more-->' in s: return s
+    i = -1
+    for _ in range(n):
+        i = s.find('</p>', i + 1)
+        if i < 0: return s
+    i += 4
+    return s[:i] + '<!--more-->' + s[i:]
+
 done_path = os.path.join(D, 'blogger_done.json')
 done = json.load(open(done_path, encoding='utf-8')) if os.path.exists(done_path) else {}
 
@@ -221,7 +231,7 @@ if os.environ.get('REFRESH_ONLY'):
     for jid, u in done.items():
         j, pid = by_id.get(jid), posted.get(u)
         if not (j and pid): continue
-        call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/posts/{pid}', json.dumps(dict(title=j['title'], content=j['render'](), labels=j['labels']), ensure_ascii=False).encode('utf-8'), AUTH, 'PATCH')
+        call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/posts/{pid}', json.dumps(dict(title=j['title'], content=add_more(j['render']()), labels=j['labels']), ensure_ascii=False).encode('utf-8'), AUTH, 'PATCH')
         n += 1; time.sleep(2)
     print('blogger: refreshed', n); sys.exit(0)
 
@@ -230,7 +240,7 @@ n = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
 due = [j for j in due if not j['id'].startswith(('yg', 'yk'))][:MAX_PER_RUN] + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1]
 for j in due:
-    body = dict(kind='blogger#post', title=j['title'], content=j['render'](), labels=j['labels'])
+    body = dict(kind='blogger#post', title=j['title'], content=add_more(j['render']()), labels=j['labels'])
     if j['date'] < TODAY:                        # 밀린 글은 원래 날짜 아침으로 (블로그 글 순서 유지)
         body['published'] = f'{j["date"]}T07:{n % 60:02d}:00+09:00'
     r, code = None, 0
