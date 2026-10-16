@@ -46,7 +46,7 @@
       function apply() {
         [].forEach.call(document.querySelectorAll('#dj-cats details'), function (dt) {
           var name = dt.querySelector('summary b').textContent.trim();
-          var main = lab(dt.querySelector('.dj-all a')) || name, n = cnt[main] || 0;
+          var main = name === '교회 소식' ? '기타' : name, n = cnt[main] || 0;
           dt.querySelector('summary em').textContent = n.toLocaleString();
           [].forEach.call(dt.querySelectorAll('.dj-chips a'), function (a) {
             var k = cnt[lab(a)] || 0, sm = a.querySelector('small');
