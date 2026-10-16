@@ -28,7 +28,45 @@
     // 인기 글·추천 글 미리보기 앞에 붙는 메뉴 글자(예화 · 설교 · 묵상 …)와 분류 글자를 지운다
     [].forEach.call(document.querySelectorAll('.PopularPosts .item-snippet, .FeaturedPost p, .post-summary p'), function (e) {
       e.textContent = e.textContent.replace(/^\s*예화\s*·\s*설교\s*·\s*묵상\s*·\s*팡세\s*·\s*독후감\s*·\s*시\s*·\s*기타\s*/, '').replace(/^([^\s.]{1,12}\s+){0,3}(예화|설교|시|독후감)\s+/, '').replace(/^(기타|교회 소식)\s+/, '').trim();
-    });    // 목록 화면: 글마다 '계속 읽기'
+    });    // 분류표 숫자는 블로그에 실제로 올라간 글 수로 바꾸고, 아직 글이 없는 칸은 감춘다
+    if (document.getElementById('dj-cats') && !window.__djCount) {
+      window.__djCount = 1;
+      var HP = 'https://saechang888-code.github.io/';
+      var MORE = { '설교': HP + 'writings/index.html', '예화': HP + 'yehwa/index.html', '독후감': HP + 'writings/index.html', '시': HP + 'writings/index.html', '팡세': HP + 'writings/index.html' };
+      var cnt = {}, total = 0;
+      function tally(start) {
+        fetch('/feeds/posts/summary?alt=json&max-results=150&start-index=' + start).then(function (r) { return r.json(); }).then(function (d) {
+          var es = (d.feed && d.feed.entry) || [];
+          es.forEach(function (e) { (e.category || []).forEach(function (c) { cnt[c.term] = (cnt[c.term] || 0) + 1; }); });
+          total += es.length;
+          if (es.length === 150 && start < 3000) tally(start + 150); else apply();
+        }).catch(function () {});
+      }
+      function lab(a) { var m = (a.getAttribute('href') || '').match(/\/search\/label\/([^?#]+)/); return m ? decodeURIComponent(m[1]) : null; }
+      function apply() {
+        [].forEach.call(document.querySelectorAll('#dj-cats details'), function (dt) {
+          var name = dt.querySelector('summary b').textContent.trim();
+          var main = lab(dt.querySelector('.dj-all a')) || name, n = cnt[main] || 0;
+          dt.querySelector('summary em').textContent = n.toLocaleString();
+          [].forEach.call(dt.querySelectorAll('.dj-chips a'), function (a) {
+            var k = cnt[lab(a)] || 0, sm = a.querySelector('small');
+            if (sm) sm.textContent = k; a.style.display = k ? '' : 'none';
+          });
+          [].forEach.call(dt.querySelectorAll('.dj-chips'), function (ch) {
+            var vis = [].some.call(ch.querySelectorAll('a'), function (a) { return a.style.display !== 'none'; });
+            ch.style.display = vis ? '' : 'none';
+            var prev = ch.previousElementSibling; if (prev && prev.className === 'dj-sub' && !prev.querySelector('a')) prev.style.display = vis ? '' : 'none';
+          });
+          var box = dt.querySelector('.dj-box');
+          if (box && !box.querySelector('.dj-hp')) {
+            var p = document.createElement('p'); p.className = 'dj-hp';
+            p.innerHTML = '블로그에는 날마다 차례로 올라옵니다. ' + name + ' 전체는 <a href="' + (MORE[name] || HP) + '" target="_blank">홈페이지에서 모두 보기 →</a>';
+            box.appendChild(p);
+          }
+        });
+      }
+      tally(1);
+    }    // 목록 화면: 글마다 '계속 읽기'
     if (list) [].forEach.call(document.querySelectorAll('.post-outer'), function (po) {
       var a = po.querySelector('h3.post-title a'), b = po.querySelector('.post-body');
       if (a && b && !po.querySelector('.dj-more')) { var m = el('a', '', '계속 읽기'); m.className = 'dj-more'; m.href = a.href; b.parentNode.insertBefore(m, b.nextSibling); }

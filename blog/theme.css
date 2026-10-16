@@ -160,6 +160,9 @@ h3.post-title a:hover{color:#2f5d50!important}
 .status-msg-body b{color:#23443a}
 .status-msg-body a{display:inline-block;margin:6px 6px 0 0;padding:4px 12px;border-radius:99px;background:#fffdf8;border:1px solid #b08a3e;color:#b08a3e!important;font-size:13px}
 
+#dj-cats .dj-hp{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:#f6efe0;font-size:12.5px;line-height:1.6;color:#4a5654}
+#dj-cats .dj-hp a{font-weight:700;color:#23443a!important}
+
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}
