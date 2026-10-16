@@ -49,10 +49,11 @@
         [].forEach.call(document.querySelectorAll('#dj-cats details'), function (dt) {
           var name = dt.querySelector('summary b').textContent.trim();
           var main = name === '교회 소식' ? '기타' : name, n = cnt[main] || 0;
-          dt.querySelector('summary em').textContent = n.toLocaleString();
+          var em = dt.querySelector('summary em'); if (!em.dataset.all) em.dataset.all = em.textContent.trim();
+          em.innerHTML = '블로그 <b>' + n.toLocaleString() + '</b> · 전체 ' + em.dataset.all;
           [].forEach.call(dt.querySelectorAll('.dj-chips a'), function (a) {
             var k = cnt[lab(a)] || 0, sm = a.querySelector('small');
-            if (sm) sm.textContent = k; a.style.display = k ? '' : 'none';
+            if (sm) { if (!sm.dataset.all) sm.dataset.all = sm.textContent.trim(); sm.textContent = k + '/' + sm.dataset.all; } a.style.display = k ? '' : 'none';
           });
           [].forEach.call(dt.querySelectorAll('.dj-chips'), function (ch) {
             var vis = [].some.call(ch.querySelectorAll('a'), function (a) { return a.style.display !== 'none'; });

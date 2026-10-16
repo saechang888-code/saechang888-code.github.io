@@ -163,6 +163,9 @@ h3.post-title a:hover{color:#2f5d50!important}
 #dj-cats .dj-hp{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:#f6efe0;font-size:12.5px;line-height:1.6;color:#4a5654}
 #dj-cats .dj-hp a{font-weight:700;color:#23443a!important}
 
+#dj-cats summary em{white-space:nowrap}
+#dj-cats summary em b{color:#23443a;font-weight:800}
+
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}
