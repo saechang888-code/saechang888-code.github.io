@@ -16,6 +16,9 @@ def img(name): return 'assets/' + name
 
 def body(p):
     b = html.unescape(p['brief']).strip()
+    # 옮겨 온 설교 글 머리의 [제목]·[카테고리]·[원본 파일 경로] 꼬리표는 요약에서 뺀다
+    b = re.sub(r'^.*?\[원본 파일\].*?\.(?:hwpx?|docx?|txt)\s*', '', b, flags=re.S | re.I)
+    b = re.sub(r'\[(?:제목|카테고리)\][^\[]*', '', b).replace('[본문]', '본문:').strip()
     t = re.sub(r'^\(.+?\)\s*', '', html.unescape(p['title']))
     t = re.sub(r'^팡세\s*\d+\s*', '', t)
     for head in (t, t.split('(')[0].strip()):
@@ -97,135 +100,185 @@ STATS = [(cnt(101), '편', '설교와 성경연구', '#sermon'), (cnt(38), '권'
          (cnt(44), '편', '시', '#poems'), (cnt(36), '편', '팡세', '#pensees')]
 stats = ''.join(f'<li><a href="{h}"><b>{n:,}</b><small>{u}</small><span>{l}</span></a></li>' for n, u, l, h in STATS)
 
-page = f'''<title>독서주특기</title>
+page = f'''<title>독서주특기 · 이재선 목사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-/* layout: a reading desk - sticky contents rail on the left, each body of writing gets its own "room": sermons as cards + Bible bookshelf, poems as four anthologies, pensées as a numbered notebook, reading as four shelves */
+/* 대문: 창가 책상 그림 위에 큰 명조 제목 · 본문: 프리텐다드 · 색: 짙은 숲색 + 아이보리 + 금색 */
 :root{{
-  --paper:#f6f5f0; --sheet:#fffefa; --ink:#1f2a2e; --muted:#62706f; --rule:#dcd8cc;
-  --green:#2f5d50; --gold:#a07b32; --tint:#ecebe3;
-  --display:"Nanum Myeongjo","Batang",serif; --body:"IBM Plex Sans KR","Malgun Gothic",system-ui,sans-serif;
+  --paper:#f7f4ec; --sheet:#fffdf8; --ink:#1c2624; --muted:#66706c; --rule:#e5dece;
+  --green:#23443a; --green2:#2f5d50; --gold:#b08a3e; --gold2:#d9b86a; --tint:#efeadf; --cream:#f6efe0;
+  --shadow:0 1px 2px rgba(28,38,36,.05),0 8px 24px -12px rgba(28,38,36,.18);
+  --display:"Noto Serif KR","Nanum Myeongjo","Batang",serif;
+  --body:"Pretendard Variable","Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
 }}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;--tint:#20282a;color-scheme:dark}}}}
-:root[data-theme="dark"]{{--paper:#141819;--sheet:#1b2122;--ink:#e8e6df;--muted:#9eaaa7;--rule:#2f3738;--green:#8cc4ad;--gold:#d6b46c;--tint:#20282a;color-scheme:dark}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#121716;--sheet:#1a2120;--ink:#ebe7dd;--muted:#a3ada9;--rule:#2c3533;--green:#9fd0bb;--green2:#8cc4ad;--gold:#d9b86a;--tint:#1f2826;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);color-scheme:dark}}}}
+:root[data-theme="dark"]{{--paper:#121716;--sheet:#1a2120;--ink:#ebe7dd;--muted:#a3ada9;--rule:#2c3533;--green:#9fd0bb;--green2:#8cc4ad;--gold:#d9b86a;--tint:#1f2826;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);color-scheme:dark}}
 *{{box-sizing:border-box}}
-body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.7;padding-inline:16px;padding-block:0}}
+html{{scroll-behavior:smooth;scroll-padding-top:84px}}
+body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.75;word-break:keep-all;-webkit-font-smoothing:antialiased}}
 a{{color:inherit}}
-a:focus-visible{{outline:2px solid var(--green);outline-offset:3px}}
-.wrap{{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:190px minmax(0,1fr);gap:56px}}
-nav{{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-block:48px;display:grid;gap:16px}}
-.mono{{width:60px;height:60px;border-radius:50%;background:var(--green);color:var(--paper);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.3rem}}
-.blogname{{font-family:var(--display);font-weight:800;font-size:1.15rem}}
-nav ol{{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:.92rem}}
-nav ol a{{text-decoration:none;color:var(--muted);display:flex;justify-content:space-between;gap:8px}}
-nav ol a small{{font-variant-numeric:tabular-nums;color:var(--rule)}}
-nav ol a:hover{{color:var(--green)}}
-main{{display:grid;gap:84px;padding-block:48px 64px}}
-.eyebrow{{font-size:.75rem;letter-spacing:.14em;color:var(--gold);font-weight:600}}
-h1,h2,h3{{font-family:var(--display);font-weight:800;margin:0;text-wrap:balance}}
-h1{{font-size:clamp(2.3rem,6vw,4rem);line-height:1.18}}
-h2{{font-size:1.8rem}}
+a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}}
+.container{{max-width:1180px;margin:0 auto;padding-inline:24px}}
+h1,h2,h3{{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.02em}}
 h4{{margin:0}}
-.hero{{display:grid;gap:20px}}
-.who{{font-size:1.05rem;color:var(--muted);margin:0;max-width:38em}}
-.hero blockquote{{margin:0;font-family:var(--display);font-size:1.2rem;line-height:1.85;max-width:34em;border-left:3px solid var(--gold);padding-left:18px}}
-.stats{{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--rule)}}
-.stats a{{display:grid;grid-template-columns:auto 1fr;align-items:baseline;column-gap:4px;padding:16px 12px;text-decoration:none}}
-.stats li+li a{{border-left:1px solid var(--rule)}}
-.stats b{{font-family:var(--display);font-size:1.9rem;font-variant-numeric:tabular-nums}}
-.stats small{{color:var(--muted)}}
-.stats span{{grid-column:1/-1;font-size:.85rem;color:var(--muted)}}
-.stats a:hover b{{color:var(--green)}}
-section{{display:grid;gap:24px;scroll-margin-top:24px}}
-.head{{display:grid;gap:6px}}
-.head .row{{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}}
-.head .row a{{font-size:.9rem;color:var(--green)}}
-.lede{{margin:0;color:var(--muted);max-width:40em}}
-.cards{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}}
-.card a{{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;height:100%;padding:20px;background:var(--sheet);text-decoration:none}}
-.card a:hover h4{{color:var(--green)}}
-.ref{{font-size:.78rem;color:var(--gold);font-weight:600}}
-.card h4{{font-family:var(--display);font-size:1.12rem;line-height:1.45}}
-.card p{{margin:0;color:var(--muted);font-size:.88rem;line-height:1.6}}
-.meta{{font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}}
-.theory{{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline;background:var(--tint);padding:18px 20px;text-decoration:none}}
-.theory .ref{{grid-row:span 2}}
-.theory strong{{font-family:var(--display);font-size:1.1rem}}
-.theory span.q{{color:var(--muted);font-size:.9rem}}
-.theory:hover strong{{color:var(--green)}}
-.shelf{{display:grid;gap:8px}}
-.shelf h3{{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weight:600;letter-spacing:.08em}}
-.books-scroll{{overflow-x:auto;padding-bottom:4px}}
-.books{{list-style:none;margin:0;padding:0;display:flex;gap:3px;align-items:flex-end;border-bottom:3px solid var(--ink);width:max-content;min-width:100%}}
-.spine{{width:22px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:5px 0 4px;font-size:.62rem;color:var(--muted);background:var(--rule);border-radius:2px 2px 0 0;text-decoration:none}}
+
+/* 머리 막대 */
+.topbar{{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top,0px)}}
+.topbar .container{{display:flex;align-items:center;gap:28px;height:68px}}
+.brand{{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}}
+.mono{{width:40px;height:40px;border-radius:50%;background:var(--green);color:var(--cream);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:.92rem;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--gold2) 70%,transparent)}}
+.brand b{{font-family:var(--display);font-weight:700;font-size:1.18rem;letter-spacing:-.02em;display:block;line-height:1.2}}
+.brand small{{display:block;font-size:.72rem;color:var(--muted);letter-spacing:.06em}}
+nav.menu{{margin-left:auto;min-width:0}}
+nav.menu ol{{list-style:none;margin:0;padding:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}}
+nav.menu ol::-webkit-scrollbar{{display:none}}
+nav.menu a{{display:block;white-space:nowrap;text-decoration:none;color:var(--muted);font-size:.92rem;font-weight:500;padding:8px 12px;border-radius:99px}}
+nav.menu a small{{display:none}}
+nav.menu a:hover{{color:var(--ink);background:var(--tint)}}
+
+/* 행사 띠 (event.py가 대문 앞에 넣는다) */
+.evbanner{{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;background:linear-gradient(90deg,#7a1f33,#a3324b);color:#fff;padding:12px max(24px,calc((100% - 1132px)/2));text-decoration:none;font-size:.93rem}}
+.evbanner b{{font-family:var(--display);font-size:1.05rem}}
+.evbanner .dd{{background:#fff;color:#a3324b;border-radius:99px;padding:1px 11px;font-weight:700;font-variant-numeric:tabular-nums}}
+.evbanner a{{color:#fff;font-weight:600;margin-left:auto;text-underline-offset:3px}}
+
+/* 대문 */
+.hero{{position:relative;color:var(--cream);background:#1d3530 url(assets/hero.jpg) 72% 50%/cover no-repeat;isolation:isolate}}
+.hero::before{{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(17,33,28,.94) 0%,rgba(17,33,28,.82) 38%,rgba(17,33,28,.25) 66%,rgba(17,33,28,0) 85%),linear-gradient(0deg,rgba(17,33,28,.7),rgba(17,33,28,0) 34%)}}
+.hero .container{{min-height:min(84vh,780px);display:grid;align-content:center;gap:26px;padding-block:88px 40px}}
+.hero .eyebrow{{color:var(--gold2)}}
+.hero .eyebrow::before{{background:var(--gold2)}}
+.hero h1{{font-size:clamp(2.6rem,6.4vw,5rem);line-height:1.14;font-weight:700;max-width:12em;text-shadow:0 2px 24px rgba(0,0,0,.25)}}
+.hero h1 em{{font-style:normal;color:var(--gold2)}}
+.who{{font-size:1.08rem;margin:0;max-width:34em;color:rgba(246,239,224,.86)}}
+.hero blockquote{{margin:0;font-family:var(--display);font-size:clamp(1.05rem,1.8vw,1.22rem);line-height:1.9;max-width:30em;border-left:2px solid var(--gold2);padding-left:20px;color:rgba(246,239,224,.92)}}
+.cta{{display:flex;flex-wrap:wrap;gap:12px}}
+.btn{{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:99px;text-decoration:none;font-weight:600;font-size:.95rem;border:1px solid var(--green2);color:var(--green2)}}
+.btn:hover{{background:var(--green2);color:var(--paper)}}
+.btn.gold{{background:var(--gold2);border-color:var(--gold2);color:#1d2a26}}
+.btn.gold:hover{{background:#e8cb84;color:#1d2a26}}
+.btn.ghost{{border-color:rgba(246,239,224,.5);color:var(--cream)}}
+.btn.ghost:hover{{background:rgba(246,239,224,.12);color:var(--cream)}}
+.stats{{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:760px}}
+.stats a{{display:grid;grid-template-columns:auto 1fr;align-items:baseline;column-gap:4px;padding:16px 18px;text-decoration:none;border-radius:14px;background:rgba(246,239,224,.08);border:1px solid rgba(246,239,224,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}}
+.stats b{{font-family:var(--display);font-size:1.9rem;font-weight:600;font-variant-numeric:tabular-nums;color:#fff}}
+.stats small{{color:rgba(246,239,224,.7)}}
+.stats span{{grid-column:1/-1;font-size:.82rem;color:rgba(246,239,224,.75)}}
+.stats a:hover{{background:rgba(246,239,224,.16)}}
+
+/* 본문 */
+main{{display:grid;grid-template-columns:minmax(0,1fr);gap:104px;padding-block:96px 104px}}
+section{{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}}
+.shelf,.head{{min-width:0}}
+.eyebrow{{display:inline-flex;align-items:center;gap:10px;font-size:.78rem;letter-spacing:.16em;color:var(--gold);font-weight:700}}
+.eyebrow::before{{content:"";width:22px;height:1.5px;background:var(--gold)}}
+.head{{display:grid;gap:10px}}
+.head .row{{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 20px}}
+.head h2{{font-size:clamp(1.8rem,3.4vw,2.4rem);font-weight:700;line-height:1.25}}
+.head .row a{{font-size:.92rem;font-weight:600;color:var(--green2);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}}
+.lede{{margin:0;color:var(--muted);max-width:42em;font-size:1.02rem}}
+.cards{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}}
+.card a{{display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;height:100%;padding:24px 24px 20px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;box-shadow:var(--shadow);text-decoration:none}}
+.card a:hover{{transform:translateY(-3px);border-color:color-mix(in srgb,var(--gold) 45%,var(--rule))}}
+.card a:hover h4{{color:var(--green2)}}
+.ref{{justify-self:start;font-size:.74rem;color:var(--gold);font-weight:700;letter-spacing:.04em;background:color-mix(in srgb,var(--gold) 12%,transparent);padding:2px 10px;border-radius:99px}}
+.card h4{{font-family:var(--display);font-size:1.16rem;font-weight:600;line-height:1.5}}
+.card p{{margin:0;color:var(--muted);font-size:.9rem;line-height:1.65}}
+.meta{{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}}
+.theory{{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:baseline;background:var(--green);color:var(--cream);padding:22px 26px;border-radius:16px;text-decoration:none}}
+.theory .ref{{grid-row:span 2;background:rgba(217,184,106,.18);color:var(--gold2)}}
+.theory strong{{font-family:var(--display);font-size:1.2rem;font-weight:600}}
+.theory span.q{{color:rgba(246,239,224,.75);font-size:.92rem}}
+.theory:hover strong{{color:var(--gold2)}}
+.shelf{{display:grid;gap:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:20px 22px 16px}}
+.shelf h3{{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weight:700;letter-spacing:.1em}}
+.books-scroll{{overflow-x:auto;padding-bottom:6px}}
+.books{{list-style:none;margin:0;padding:0;display:flex;gap:3px;align-items:flex-end;border-bottom:4px solid #6b4f2e;width:max-content;min-width:100%}}
+.spine{{width:23px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px 0 4px;font-size:.62rem;color:var(--muted);background:var(--tint);border-radius:3px 3px 0 0;text-decoration:none}}
 .spine span{{writing-mode:vertical-rl;overflow:hidden;max-height:calc(100% - 16px)}}
-.spine.on{{background:var(--green);color:var(--paper)}}
-.spine.on:hover{{background:var(--gold)}}
+.spine.on{{background:linear-gradient(180deg,var(--gold) 0 4px,var(--green) 4px);color:var(--cream)}}
+.books li:nth-child(3n+2) .spine.on{{background:linear-gradient(180deg,var(--gold) 0 4px,#355f52 4px)}}
+.books li:nth-child(3n) .spine.on{{background:linear-gradient(180deg,var(--gold) 0 4px,#1b382f 4px)}}
+.books .spine.on:hover{{background:var(--gold);color:#1d2a26}}
 .spine b{{font-size:.6rem;font-variant-numeric:tabular-nums}}
-.cols{{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:28px}}
-.pcol,.rcol{{display:grid;gap:10px;align-content:start;border-top:2px solid var(--ink);padding-top:14px}}
+.cols{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}}
+.pcol,.rcol{{display:grid;gap:12px;align-content:start;background:var(--sheet);border:1px solid var(--rule);border-top:3px solid var(--green2);border-radius:14px;padding:22px}}
 .pcol-h{{display:flex;justify-content:space-between;align-items:baseline;gap:8px}}
-.pcol-h h4{{font-family:var(--display);font-size:1.15rem}}
-.n{{font-size:.8rem;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}}
-.sub{{margin:0;font-size:.82rem;color:var(--muted)}}
-.pcol ul,.rcol ol{{list-style:none;margin:0;padding:0;display:grid;gap:12px}}
+.pcol-h h4{{font-family:var(--display);font-size:1.18rem;font-weight:700}}
+.n{{font-size:.8rem;color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}}
+.sub{{margin:0;font-size:.84rem;color:var(--muted)}}
+.pcol ul,.rcol ol{{list-style:none;margin:0;padding:0;display:grid;gap:14px}}
 .pcol li a{{display:grid;gap:2px;text-decoration:none}}
-.pcol li strong{{font-family:var(--display);font-size:1.02rem}}
-.pcol li span{{font-family:var(--display);font-size:.88rem;color:var(--muted);line-height:1.6}}
-.pcol li a:hover strong,.rcol li a:hover{{color:var(--green)}}
-.rcol li{{display:grid;gap:0}}
+.pcol li strong{{font-family:var(--display);font-size:1.03rem;font-weight:600}}
+.pcol li span{{font-family:var(--display);font-size:.88rem;color:var(--muted);line-height:1.65}}
+.pcol li a:hover strong,.rcol li a:hover{{color:var(--green2)}}
+.rcol li{{display:grid;gap:0;padding-bottom:10px;border-bottom:1px dashed var(--rule)}}
 .rcol li a{{text-decoration:none;font-weight:500}}
-.more{{font-size:.85rem;color:var(--green)}}
-.notebook{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 32px}}
-.notebook a{{display:grid;grid-template-columns:3.2rem 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none}}
-.notebook .num{{font-family:var(--display);font-size:1.7rem;color:var(--gold);line-height:1.1;font-variant-numeric:tabular-nums}}
-.notebook h4{{font-family:var(--display);font-size:1.08rem}}
-.notebook p{{margin:2px 0 0;color:var(--muted);font-size:.87rem;line-height:1.6}}
-.notebook a:hover h4{{color:var(--green)}}
-.vids{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px 18px}}
-.vid a{{display:grid;gap:8px;text-decoration:none}}
-.thumb{{position:relative;display:block;aspect-ratio:16/9;background:var(--tint);overflow:hidden;border-radius:3px}}
+.more{{font-size:.88rem;font-weight:600;color:var(--green2);text-decoration:none}}
+.notebook{{list-style:none;margin:0;padding:8px 28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:0 40px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;background-image:linear-gradient(90deg,transparent 0 calc(100% - 1px),var(--rule) 0);background-size:100% 100%}}
+.notebook a{{display:grid;grid-template-columns:3.4rem 1fr;gap:14px;padding:20px 0;border-bottom:1px solid var(--rule);text-decoration:none}}
+.notebook .num{{font-family:var(--display);font-size:1.9rem;font-weight:500;color:var(--gold);line-height:1.1;font-variant-numeric:tabular-nums}}
+.notebook h4{{font-family:var(--display);font-size:1.1rem;font-weight:600}}
+.notebook p{{margin:4px 0 0;color:var(--muted);font-size:.88rem;line-height:1.65}}
+.notebook a:hover h4{{color:var(--green2)}}
+.yt{{background:var(--green);color:var(--cream);border-radius:24px;padding:clamp(24px,4vw,48px)}}
+.yt .eyebrow{{color:var(--gold2)}}.yt .eyebrow::before{{background:var(--gold2)}}
+.yt .lede{{color:rgba(246,239,224,.78)}}
+.yt .head .row a{{color:var(--gold2)}}
+.vids{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px 20px}}
+.vid a{{display:grid;gap:10px;text-decoration:none}}
+.thumb{{position:relative;display:block;aspect-ratio:16/9;background:rgba(0,0,0,.2);overflow:hidden;border-radius:12px;box-shadow:0 10px 30px -14px rgba(0,0,0,.6)}}
 .thumb img{{width:100%;height:100%;object-fit:cover;display:block}}
-.play{{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;background:var(--green);color:var(--paper);display:grid;place-items:center;font-size:.8rem;padding-left:2px}}
-.vid h4{{font-family:var(--display);font-size:1.05rem}}
-.vid a:hover h4{{color:var(--green)}}
-.btn{{justify-self:start;display:inline-block;padding:10px 18px;border:1px solid var(--green);color:var(--green);text-decoration:none;border-radius:2px;font-weight:600;font-size:.92rem}}
-.btn:hover{{background:var(--green);color:var(--paper)}}
-.stories{{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}}
-.stories a{{display:inline-block;padding:6px 14px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;font-size:.9rem;background:var(--sheet)}}
-.stories a:hover{{border-color:var(--green);color:var(--green)}}
-.works{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}}
-.work{{display:grid;gap:8px;align-content:start}}
-.work img{{width:100%;height:auto;display:block;border:1px solid var(--rule)}}
-.song{{aspect-ratio:2/3;border:1px solid var(--rule);background:var(--sheet);display:grid;place-content:center;gap:8px;text-align:center;padding:20px}}
-.song .clef{{font-family:var(--display);font-size:2.6rem;color:var(--gold);line-height:1}}
-.song strong{{font-family:var(--display);font-size:1.3rem}}
-.work h4{{font-size:1rem}}
-.work p{{margin:0;font-size:.85rem;color:var(--muted)}}
-.church{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;background:var(--sheet);border:1px solid var(--rule);padding:28px}}
-.church dl{{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:.95rem}}
+.play{{position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;background:var(--gold2);color:#1d2a26;display:grid;place-items:center;font-size:.8rem;padding-left:2px}}
+.vid h4{{font-family:var(--display);font-size:1.04rem;font-weight:600;line-height:1.45}}
+.vid .meta{{color:rgba(246,239,224,.6)}}
+.vid a:hover h4{{color:var(--gold2)}}
+.vid a:hover img{{transform:scale(1.04)}}
+.thumb img{{transition:transform .4s}}
+.yt .btn{{justify-self:start}}
+.stories{{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}}
+.stories a{{display:inline-block;padding:8px 16px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;font-size:.92rem;background:var(--sheet)}}
+.stories a:hover{{border-color:var(--gold);color:var(--green2)}}
+.works{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px}}
+.work{{display:grid;gap:10px;align-content:start}}
+.work img{{width:100%;height:auto;display:block;border-radius:12px;box-shadow:var(--shadow)}}
+.song{{aspect-ratio:2/3;border-radius:12px;background:var(--green);color:var(--cream);display:grid;place-content:center;gap:10px;text-align:center;padding:20px;box-shadow:var(--shadow)}}
+.song .clef{{font-family:var(--display);font-size:3rem;color:var(--gold2);line-height:1}}
+.song strong{{font-family:var(--display);font-size:1.35rem}}
+.song .meta{{color:rgba(246,239,224,.7)}}
+.work h4{{font-size:1rem;font-weight:600}}
+.work p{{margin:0;font-size:.86rem;color:var(--muted)}}
+.church{{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:28px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:30px;box-shadow:var(--shadow)}}
+.church dl{{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 20px;font-size:.97rem}}
 .church dt{{color:var(--muted)}}
 .church dd{{margin:0;font-variant-numeric:tabular-nums}}
-footer{{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}}
+footer{{background:#16261f;color:rgba(246,239,224,.7);font-size:.88rem;padding-bottom:env(safe-area-inset-bottom,0px)}}
+footer .container{{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding-block:36px}}
+footer b{{font-family:var(--display);color:var(--cream);font-size:1.05rem}}
+footer a{{color:var(--gold2);text-decoration:none}}
 @media (max-width:860px){{
-  .wrap{{grid-template-columns:minmax(0,1fr);gap:0}}
-  nav{{position:static;padding-block:28px 0;grid-template-columns:auto 1fr;align-items:center}}
-  nav ol{{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 16px}}
-  nav ol a small{{display:none}}
-  main{{padding-block:32px 48px;gap:64px}}
+  .topbar .container{{height:auto;flex-wrap:wrap;gap:4px 16px;padding-block:10px 6px}}
+  nav.menu{{margin-left:0;width:100%}}
+  nav.menu a{{padding:6px 10px;font-size:.88rem}}
+  html{{scroll-padding-top:120px}}
+  .hero{{background-position:78% 50%}}
+  .hero::before{{background:linear-gradient(180deg,rgba(17,33,28,.72),rgba(17,33,28,.9))}}
+  .hero .container{{min-height:0;padding-block:64px 36px}}
   .stats{{grid-template-columns:repeat(2,1fr)}}
-  .stats li:nth-child(3) a{{border-left:0}}
-  .stats li:nth-child(n+3) a{{border-top:1px solid var(--rule)}}
+  main{{gap:76px;padding-block:64px 72px}}
+  .notebook{{padding:4px 20px;background-image:none}}
 }}
-@media (prefers-reduced-motion:no-preference){{a{{transition:color .15s,background .15s,border-color .15s}}}}
+@media (prefers-reduced-motion:no-preference){{a{{transition:color .2s,background .2s,border-color .2s,transform .25s}}}}
+@media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 </style>
-<div class="wrap">
-<nav aria-label="목차">
-  <div class="mono" aria-hidden="true">재선</div>
-  <div class="blogname">독서주특기</div>
+<header class="topbar">
+<div class="container">
+  <a class="brand" href="#about"><span class="mono" aria-hidden="true">재선</span><span><b>독서주특기</b><small>이재선 목사 · 새암교회</small></span></a>
+  <nav class="menu" aria-label="목차">
   <ol>
-    <li><a href="#about">소개</a></li>
     <li><a href="#sermon">설교 <small>{cnt(101):,}</small></a></li>
     <li><a href="#youtube">유튜브 <small>{YT.get("count") or ""}</small></a></li>
     <li><a href="#poems">시 <small>{cnt(44)}</small></a></li>
@@ -235,16 +288,20 @@ footer{{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);fon
     <li><a href="#works">작품</a></li>
     <li><a href="#church">새암교회</a></li>
   </ol>
-</nav>
-<main>
-  <header class="hero" id="about">
-    <span class="eyebrow">새암교회 · 30년 설교자</span>
-    <h1>읽고, 묵상하고,<br>삶으로 남기다</h1>
-    <p class="who">이재선 목사가 말씀을 전하고, 시를 쓰고, 생각을 적고, 책을 읽은 기록 {TOTAL:,}편을 한곳에 모았습니다.</p>
+  </nav>
+</div>
+</header>
+<header class="hero" id="about">
+  <div class="container">
+    <span class="eyebrow">새암교회 · 30년 설교자 이재선 목사</span>
+    <h1>읽고, 묵상하고,<br><em>삶으로</em> 남기다</h1>
+    <p class="who">말씀을 전하고, 시를 쓰고, 생각을 적고, 책을 읽은 기록 {TOTAL:,}편을 한곳에 모았습니다.</p>
     <blockquote>독서는 취미가 아닙니다. 특기이며, 특기를 넘어 주특기가 됩니다. 독서로 나의 세계를 바꾸기를 희망하며……</blockquote>
+    <div class="cta"><a class="btn gold" href="#sermon">말씀 읽기 →</a><a class="btn ghost" href="{YT_URL}" target="_blank" rel="noopener">▶ 유튜브 어음성경</a></div>
     <ul class="stats">{stats}</ul>
-  </header>
-
+  </div>
+</header>
+<main class="container">
   <section id="sermon" aria-labelledby="sermon-h">
     <div class="head"><span class="eyebrow">성경연구와 설교</span><div class="row"><h2 id="sermon-h">강단에서 전한 말씀</h2><a href="{caturl(101)}" target="_blank" rel="noopener">설교 전체 {cnt(101):,}편 →</a></div>
     <p class="lede">주일낮예배와 금요기도회에서 전한 설교입니다. 아래 책장에서 성경 권별로 찾아 읽을 수 있습니다.</p></div>
@@ -255,11 +312,11 @@ footer{{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);fon
     <p class="lede">66권 가운데 {covered}권을 설교했습니다. 책등이 높을수록 글이 많고, 책을 누르면 그 권의 설교 목록이 열립니다.</p>
   </section>
 
-  <section id="youtube" aria-labelledby="youtube-h">
+  <section id="youtube" class="yt" aria-labelledby="youtube-h">
     <div class="head"><span class="eyebrow">유튜브 · 어음성경</span><div class="row"><h2 id="youtube-h">들으면서 읽는 성경</h2><a href="{YT_URL}" target="_blank" rel="noopener">채널 바로가기 · {yt_count} →</a></div>
     <p class="lede">창세기부터 요한계시록까지 성경 66권 전 장을 음악으로 만드는 통독 프로젝트입니다. 자막의 말씀을 따라 읽거나, 큐티와 기도 시간에 틀어 두고 들을 수 있습니다.</p></div>
     <ul class="vids">{videos}</ul>
-    <a class="btn" href="{YT_URL}?sub_confirmation=1" target="_blank" rel="noopener">구독하고 새 영상 받기</a>
+    <a class="btn gold" href="{YT_URL}?sub_confirmation=1" target="_blank" rel="noopener">구독하고 새 영상 받기</a>
   </section>
 
   <section id="poems" aria-labelledby="poems-h">
@@ -299,10 +356,8 @@ footer{{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);fon
       <dl><dt>주일예배</dt><dd>오전 11시</dd><dt>새벽기도회</dt><dd>매일 오전 6시</dd><dt>금요기도회</dt><dd>금요일 오후 8시 30분</dd></dl>
     </div>
   </section>
-
-  <footer><span>독서주특기 · 이재선</span><a href="{BLOG}" target="_blank" rel="noopener">blog.naver.com/saechang888</a></footer>
 </main>
-</div>'''
+<footer><div class="container"><span><b>독서주특기</b> · 이재선 목사 · 대한예수교장로회 새암교회</span><a href="{BLOG}" target="_blank" rel="noopener">blog.naver.com/saechang888 →</a></div></footer>'''
 if not PREVIEW:
     page = ('<!doctype html>\n<html lang="ko">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<meta name="description" content="이재선 목사의 설교·시·팡세·독후감과 유튜브 어음성경">\n'
