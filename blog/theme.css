@@ -154,6 +154,12 @@ h3.post-title a:hover{color:#2f5d50!important}
 .BlogSearch input[type=text]{width:100%!important;box-sizing:border-box;height:42px}
 .BlogSearch input[type=submit]{height:42px;padding:0 18px}
 
+.status-msg-wrapper{width:100%!important;margin:0 0 18px!important}
+.status-msg-border,.status-msg-bg{display:none!important}
+.status-msg-body{position:static!important;background:#f6efe0!important;border:1px solid #e4ddcd!important;border-radius:14px!important;padding:14px 18px!important;color:#1f2a2e!important;font-size:14.5px!important;text-align:left!important}
+.status-msg-body b{color:#23443a}
+.status-msg-body a{display:inline-block;margin:6px 6px 0 0;padding:4px 12px;border-radius:99px;background:#fffdf8;border:1px solid #b08a3e;color:#b08a3e!important;font-size:13px}
+
 /* ── 휴대폰 ── */
 @media (max-width:760px){
   body{padding-top:58px!important;font-size:15.5px!important}
