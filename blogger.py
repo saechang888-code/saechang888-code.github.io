@@ -1,4 +1,4 @@
-﻿# 예약일(한국 시간)이 된 글을 구글 블로거에 올린다. 올린 글은 blogger_done.json에 남겨 두 번 올리지 않는다.
+# 예약일(한국 시간)이 된 글을 구글 블로거에 올린다. 올린 글은 blogger_done.json에 남겨 두 번 올리지 않는다.
 #  - posts.json: 설교·독후감·팡세·교회 소식 (예화 '묶음' 글은 블로거에는 올리지 않는다)
 #  - blogger_yehwa.json: 예화를 한 편씩, 하루 3편
 # 열쇠(BLOGGER_CLIENT_ID / BLOGGER_CLIENT_SECRET / BLOGGER_REFRESH_TOKEN)가 없으면 아무것도 하지 않는다.
@@ -78,11 +78,48 @@ def render_post(p):
     return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
 
 def render_yehwa(y):
-    out = [nav('예화'), badges([y['topic'] + ' 예화'] + [b + ' 예화' for b in y['books'][:2]])]
+    out = [nav('예화'), badges([y['topic'], y['topic'] + ' › ' + y['sub']])]
     out += paras(y['body'])
     if y['sermon']:
         out.append(f'<div style="{NOTE}">📖 이 예화를 인용한 설교<br><b style="color:{INK}">{esc(y["sermon"])}</b></div>')
     out.append(f'<p style="{P};font-size:14px;color:{MUTED}">※ 설교 중에 인용한 예화입니다. 출처가 분명한 예화는 원 출처를 밝혀 사용해 주세요.</p>')
+    out.append(footer())
+    return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
+
+# ---------- 예화 모음: 소주제마다 한 글(많으면 나눔). 모든 예화를 주제별로 한 번에 볼 수 있게 ----------
+CHUNK = 20
+NUMS = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮'
+def label_url(l): return f'{BLOG_URL}search/label/{urllib.parse.quote(l)}'
+def yehwa_groups(yehwa):
+    by = {}
+    for y in yehwa: by.setdefault((y['topic'], y['sub']), []).append(y)
+    out = []
+    for (m, s) in sorted(by):
+        items = by[(m, s)]
+        parts = [items[i:i + CHUNK] for i in range(0, len(items), CHUNK)]
+        for k, part in enumerate(parts):
+            no = f' {NUMS[k]}' if len(parts) > 1 else ''
+            out.append(dict(id=f'yg-{m}-{s}-{k + 1}', m=m, s=s, items=part, title=f'[예화 모음] {m} › {s}{no} — {len(part)}편'))
+    return out
+def render_group(g):
+    out = [nav('예화'), badges([g['m'], g['m'] + ' › ' + g['s']])]
+    out.append(f'<div style="{NOTE}">이 글에는 「{esc(g["m"])} › {esc(g["s"])}」 주제의 예화 {len(g["items"])}편이 있습니다. 제목을 누르면 바로 내려갑니다.<br>'
+               + '<br>'.join(f'<a href="#y{i + 1}" style="color:{GREEN}">{i + 1}. {esc(y["title"])}</a>' for i, y in enumerate(g['items'])) + '</div>')
+    for i, y in enumerate(g['items']):
+        out.append(f'<h3 id="y{i + 1}" style="{H3}">{i + 1}. {esc(y["title"])}</h3>')
+        out += paras(y['body'])
+        if y['sermon']: out.append(f'<p style="{P};font-size:14px;color:{MUTED}">📖 인용한 설교: {esc(y["sermon"])}</p>')
+    out.append(f'<p style="{P};font-size:14px;color:{MUTED}">※ 설교 중에 인용한 예화입니다. 출처가 분명한 예화는 원 출처를 밝혀 사용해 주세요.</p>')
+    out.append(f'<p style="{P};font-size:15px"><a href="{label_url("예화 주제 목차")}" style="color:{GREEN}">← 예화 주제 목차(가나다순) 보기</a></p>')
+    out.append(footer())
+    return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
+def render_index(groups):
+    out = [nav('예화'), f'<p style="{P}">설교 중에 인용한 예화를 주제별로 모았습니다. 대주제와 소주제 모두 가나다순입니다. 주제를 누르면 그 주제의 예화 모음이 열립니다.</p>']
+    tops = {}
+    for g in groups: tops.setdefault(g['m'], {}).setdefault(g['s'], 0); tops[g['m']][g['s']] += len(g['items'])
+    for m in sorted(tops):
+        out.append(f'<h3 style="{H3}"><a href="{label_url(m)}" style="color:{GREEN};text-decoration:none">{esc(m)}</a> <span style="font-size:14px;color:{MUTED}">{sum(tops[m].values())}편</span></h3>')
+        out.append(f'<p style="{P}">' + ' &nbsp;·&nbsp; '.join(f'<a href="{label_url(m + " › " + s)}" style="color:{INK}">{esc(s)}</a> <span style="font-size:13px;color:{MUTED}">{n}</span>' for s, n in sorted(tops[m].items())) + '</p>')
     out.append(footer())
     return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
 
@@ -96,7 +133,7 @@ def labels_post(p):
     if leaf and leaf not in ls and leaf != '성경별 예화': ls.append(leaf)
     return [l.replace(',', ' ') for l in ls]
 
-def labels_yehwa(y): return ['예화', y['topic'] + ' 예화']
+def labels_yehwa(y): return ['예화', y['topic'], y['topic'] + ' › ' + y['sub']]
 
 # ---------- 시 (네이버 블로그 '시' 카테고리에서 가져온 poems.json) ----------
 POEM_BASE = {'자연시': '자연시', '생활시': '생활시', '기탄잘리(찬양시)': '찬양시', '자아성찰시': '묵상시'}
@@ -148,7 +185,16 @@ def render_any(p):
     if p['kind'] == '시': return render_poem(dict(sub=p['category'].split('>')[-1].strip(), title=p['title'], body=p['body']))
     return render_post(p)
 jobs = [dict(id=p['id'], date=bdate[p['id']], title=p['title'], render=lambda p=p: render_any(p), labels=labels_post(p)) for p in posts]
-jobs += [dict(id=y['id'], date=y['date'], title=f'[{y["topic"]} 예화] {y["title"]}', render=lambda y=y: render_yehwa(y), labels=labels_yehwa(y)) for y in yehwa]
+# 예화는 낱개 대신 주제별 모음 글로 모두 올린다 (목차 1편 + 소주제별 모음). 하루 YG_PER편씩 YG_START부터
+YG_START, YG_PER = datetime.date(2026, 10, 17), 8
+groups = yehwa_groups(yehwa)
+jobs.append(dict(id='yg-index', date=YG_START.isoformat(), title='[예화] 주제별 목차 (가나다순)', render=lambda: render_index(groups), labels=['예화', '예화 주제 목차']))
+for i, g in enumerate(groups):
+    jobs.append(dict(id=g['id'], date=(YG_START + datetime.timedelta(days=(i + 1) // YG_PER)).isoformat(), title=g['title'], render=lambda g=g: render_group(g), labels=['예화', g['m'], g['m'] + ' › ' + g['s']]))
+# 이미 올린 낱개 예화는 디자인 다시 입히기(REFRESH_ONLY)용으로만 남긴다
+for y in yehwa:
+    by_y = dict(id=y['id'], date='9999-12-31', title=f'[{y["topic"]} 예화] {y["title"]}', render=lambda y=y: render_yehwa(y), labels=labels_yehwa(y))
+    jobs.append(by_y)
 for i, p in enumerate(old_poems):
     jobs.append(dict(id=p['id'], date=(BSTART + datetime.timedelta(days=i // PER_CAT)).isoformat(), title=p['title'], render=lambda p=p: render_poem(p), labels=['시', p['sub']]))
 by_id = {j['id']: j for j in jobs}
@@ -174,7 +220,9 @@ if os.environ.get('REFRESH_ONLY'):
 
 due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['date'], j['id']))
 n = 0
-for j in due[:MAX_PER_RUN]:
+# 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
+due = [j for j in due if not j['id'].startswith('yg')][:MAX_PER_RUN] + [j for j in due if j['id'].startswith('yg')][:YG_PER + 1]
+for j in due:
     body = dict(kind='blogger#post', title=j['title'], content=j['render'](), labels=j['labels'])
     if j['date'] < TODAY:                        # 밀린 글은 원래 날짜 아침으로 (블로그 글 순서 유지)
         body['published'] = f'{j["date"]}T07:{n % 60:02d}:00+09:00'
