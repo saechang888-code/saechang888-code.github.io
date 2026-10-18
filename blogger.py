@@ -15,6 +15,7 @@ KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화',
 CATS = ['예화', '설교', '묵상', '팡세', '독후감', '시', '기타']
 CAT_OF = {'예화': '예화', '설교': '설교', '독후감': '독후감', '팡세/예화': '팡세', '묵상': '묵상', '시': '시', '행사': '기타'}
 BLOG_URL = 'https://saechang888.blogspot.com/'
+YEHWA_INDEX = BLOG_URL + '2026/10/blog-post_16.html'   # [예화] 주제별 예화 목차 — 가 편 ~ 하 편
 
 cid, secret, refresh = (os.environ.get(k) for k in ('BLOGGER_CLIENT_ID', 'BLOGGER_CLIENT_SECRET', 'BLOGGER_REFRESH_TOKEN'))
 if not (cid and secret and refresh):
@@ -58,7 +59,9 @@ def nav(cur):
     a = []
     for c in CATS:
         st = f'color:{GREEN};text-decoration:none;font-weight:700;border-bottom:2px solid {GOLD}' if c == cur else f'color:{MUTED};text-decoration:none'
-        a.append(f'<a href="{BLOG_URL}search/label/{urllib.parse.quote(c)}" style="{st}">{c}</a>')
+        # '예화'는 글 목록 대신 주제별 목차(가 편 ~ 하 편)로 바로 간다
+        href = YEHWA_INDEX if c == '예화' else f'{BLOG_URL}search/label/{urllib.parse.quote(c)}'
+        a.append(f'<a href="{href}" style="{st}">{c}</a>')
     return (f'<p style="font-family:Noto Sans KR,Malgun Gothic,sans-serif;font-size:14px;margin:0 0 1.6em;padding:10px 0;border-top:1px solid #e3ddd0;border-bottom:1px solid #e3ddd0;text-align:center;word-spacing:.2em">'
             + ' &nbsp;·&nbsp; '.join(a) + '</p>')
 
