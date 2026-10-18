@@ -13,6 +13,11 @@ y = json.load(open(os.path.join(D, 'blogger_yehwa.json'), encoding='utf-8'))
 # 둘로스 자료에서 골라 줄거리를 새로 쓴 예화(원글 저자·출처는 credit) — 같은 주제 맨 앞에 둔다
 dl = os.path.join(D, 'doulos_yehwa.json')
 if os.path.exists(dl): y = json.load(open(dl, encoding='utf-8')) + y
+# 둘로스·sermon-jesus 예화와 둘로스 설교 속 예화를 제미나이로 새로 쓴 것(예화작업/export.py가 만든다) — 손으로 쓴 것 다음에
+ai = os.path.join(D, 'yehwa_ai.json')
+if os.path.exists(ai):
+    n_hand = sum(1 for x in y if x.get('credit'))
+    y = y[:n_hand] + json.load(open(ai, encoding='utf-8')) + y[n_hand:]
 by = {}
 for x in y: by.setdefault(x.get('kw') or '지혜', []).append(x)
 
@@ -68,24 +73,32 @@ def src_line(x):
 if os.path.isdir(OUT): shutil.rmtree(OUT)
 os.makedirs(OUT)
 kws = sorted(by)
+PER = 100                                     # 한 쪽에 예화 100편씩, 넘으면 2쪽·3쪽…
+def pname(kw, p): return slug(kw) + ('' if p == 1 else f'-{p}') + '.html'
 for i, kw in enumerate(kws):
-    items = by[kw]
-    toc = ''.join(f'<a href="#y{j + 1}">{j + 1}. {esc(x["title"])}</a>' for j, x in enumerate(items))
-    arts = ''.join(f'<article id="y{j + 1}"><h3>{j + 1}. {esc(x["title"])}</h3>'
-                   + ''.join(f'<p>{esc(l.strip())}</p>' for l in x['body'].split('\n') if l.strip())
-                   + (f'<p class="src">{src_line(x)}</p>' if src_line(x) else '') + '</article>' for j, x in enumerate(items))
-    prev_a = f'<a href="{slug(kws[i - 1])}.html">← 【{esc(kws[i - 1])}】</a>' if i else '<span></span>'
-    next_a = f'<a href="{slug(kws[i + 1])}.html">【{esc(kws[i + 1])}】 →</a>' if i + 1 < len(kws) else '<span></span>'
-    page = HEAD.format(title=f'【{esc(kw)}】 예화 모음 · 독서주특기') + f'''<header style="display:grid;gap:8px">
+    allit = by[kw]; npg = (len(allit) + PER - 1) // PER
+    for p in range(1, npg + 1):
+        items = allit[(p - 1) * PER:p * PER]; base = (p - 1) * PER
+        toc = ''.join(f'<a href="#y{base + j + 1}">{base + j + 1}. {esc(x["title"])}</a>' for j, x in enumerate(items))
+        arts = ''.join(f'<article id="y{base + j + 1}"><h3>{base + j + 1}. {esc(x["title"])}</h3>'
+                       + ''.join(f'<p>{esc(l.strip())}</p>' for l in x['body'].split('\n') if l.strip())
+                       + (f'<p class="src">{src_line(x)}</p>' if src_line(x) else '') + '</article>' for j, x in enumerate(items))
+        pager = '' if npg == 1 else '<nav class="jump" aria-label="쪽">' + ''.join(
+            f'<a href="{pname(kw, q)}"' + (' style="border-color:var(--gold);font-weight:700"' if q == p else '') + f'>{(q - 1) * PER + 1}~{min(q * PER, len(allit))}</a>' for q in range(1, npg + 1)) + '</nav>'
+        prev_a = f'<a href="{slug(kws[i - 1])}.html">← 【{esc(kws[i - 1])}】</a>' if i else '<span></span>'
+        next_a = f'<a href="{slug(kws[i + 1])}.html">【{esc(kws[i + 1])}】 →</a>' if i + 1 < len(kws) else '<span></span>'
+        page = HEAD.format(title=f'【{esc(kw)}】 예화 모음' + (f' {p}쪽' if p > 1 else '') + ' · 독서주특기') + f'''<header style="display:grid;gap:8px">
 <p class="lede">{pyeon(kw)} · 주제별 예화</p>
-<h1>【{esc(kw)}】 예화 모음 <small style="font-size:.55em;color:var(--muted)">{len(items)}편</small></h1>
+<h1>【{esc(kw)}】 예화 모음 <small style="font-size:.55em;color:var(--muted)">{len(allit)}편{f' · {p}/{npg}쪽' if npg > 1 else ''}</small></h1>
 </header>
+{pager}
 <nav class="toc" aria-label="이 쪽의 예화">{toc}</nav>
 {arts}
-<p class="src">※ 설교 중에 인용한 예화, 독후감에서 뽑은 이야기, 고전과 역사 기록이나 여러 예화집의 줄거리를 바탕으로 새로 쓴 이야기입니다. 출처가 분명한 예화는 원 출처를 밝혀 사용해 주세요.</p>
+{pager}
+<p class="src">※ 설교 중에 인용한 예화, 독후감에서 뽑은 이야기, 고전과 역사 기록이나 여러 예화집·설교집의 줄거리를 바탕으로 새로 쓴 이야기입니다. 출처가 분명한 예화는 원 출처를 밝혀 사용해 주세요.</p>
 <nav class="nav">{prev_a}{next_a}</nav>
 ''' + FOOT
-    open(os.path.join(OUT, slug(kw) + '.html'), 'w', encoding='utf-8').write(page)
+        open(os.path.join(OUT, pname(kw, p)), 'w', encoding='utf-8').write(page)
 
 groups = {}
 for kw in kws: groups.setdefault(pyeon(kw), []).append(kw)
