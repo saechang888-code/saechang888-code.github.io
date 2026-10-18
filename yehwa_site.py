@@ -124,6 +124,8 @@ GROUPS = [('신앙의 기초', '믿음 기도 말씀 은혜 구원 회개 복음
 used = {k for _, ks in GROUPS for k in ks.split()}
 rest = ' '.join(sorted((k for k in by if k not in used and len(by[k]) >= 15), key=lambda k: -len(by[k]))[:40])
 GROUPS.append(('더 많은 주제', rest))
+# 블로그 예화 목차처럼 가 편 ~ 하 편(주제 가나다순)으로 책꽂이를 나눈다
+GROUPS = [(p, ' '.join(groups[p])) for p in sorted(groups)]
 new_kw = {x['kw'] for x in y if x.get('credit')}
 mx = max(len(v) for v in by.values())
 def spine(k):
@@ -131,9 +133,9 @@ def spine(k):
     tip = f'{k} 예화 {n}편' + (' · 새로 쓴 예화 포함' if k in new_kw else '')
     return (f'<li><a class="spine on" style="height:{hgt}px" href="yehwa/{slug(k)}.html" title="{esc(tip)}">'
             f'<span>{esc(k)}{"✦" if k in new_kw else ""}</span><b>{n}</b></a></li>')
-cards = ''.join(f'<div class="shelf"><h3>{g} · {sum(len(by[k]) for k in ks.split() if k in by):,}편</h3><div class="books-scroll"><ul class="books">'
+cards = ''.join(f'<div class="shelf"' + (' style="grid-column:1/-1"' if len([k for k in ks.split() if k in by]) > 17 else '') + f'><h3>{g} · {sum(len(by[k]) for k in ks.split() if k in by):,}편</h3><div class="books-scroll"><ul class="books">'
                 + ''.join(spine(k) for k in ks.split() if k in by) + '</ul></div></div>' for g, ks in GROUPS)
-STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:14px;margin:6px 0 14px}.ygrid>.shelf:last-child{grid-column:1/-1}'
+STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:14px;margin:6px 0 14px}'
        '.yblog summary{cursor:pointer;color:var(--muted);margin:4px 0 10px}.ymore{margin:0 0 12px;font-size:.92rem}</style>')
 m = re.search(r'(<section id="stories"[^>]*>.*?</div></div>\s*)(?:<style>\.ygrid.*?</details>|<ul class="stories">.*?</ul>)', h, re.S)
 if m:
