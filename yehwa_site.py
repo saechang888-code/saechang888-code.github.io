@@ -113,5 +113,32 @@ h = open(home, encoding='utf-8').read()
 if 'href="yehwa/index.html"' not in h:
     h = h.replace('<li><a href="#stories">', '<li><a href="yehwa/index.html">예화 모음</a></li>\n    <li><a href="#stories">', 1)
     h = re.sub(r'(<h2 id="stories-h">[^<]*</h2>)', r'\1<a href="yehwa/index.html">주제별 예화 ' + f'{len(y):,}' + '편 →</a>', h, 1)
+# 첫 화면 '설교에 쓰는 이야기' 칸: 설교 쓰임새별 묶음 → 주제 → 예화 쪽. 블로그 글 목록은 접어서 아래에
+GROUPS = [('신앙의 기초', '믿음 기도 말씀 은혜 구원 회개 복음 찬양 예배 성령 하나님 예수님 십자가 부활'),
+          ('성품과 태도', '감사 겸손 교만 인내 정직 성실 태도 욕심 말 생각 마음 습관'),
+          ('사랑과 관계', '사랑 용서 섬김 나눔 희생 신뢰 친구 이웃 선행 배려'),
+          ('가정', '가정 부부 어머니 아버지 자녀 효도'),
+          ('고난과 소망', '고난 시련 희망 소망 섭리 실패 변화 위로 죽음 천국'),
+          ('사명과 인생', '사명 헌신 순종 전도 선교 지도자 지혜 인생 선택 꿈 비전 도전 노력 시간 가치 삶')]
+new_kw = {x['kw'] for x in y if x.get('credit')}
+def chip(k): return (f'<a href="yehwa/{slug(k)}.html">【{esc(k)}】<small>{len(by[k])}</small>'
+                     + ('<em>새 글</em>' if k in new_kw else '') + '</a>')
+cards = ''.join(f'<div class="ygroup"><h3>{g}</h3><div class="ychips">' + ''.join(chip(k) for k in ks.split() if k in by) + '</div></div>'
+                for g, ks in GROUPS)
+STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:6px 0 14px}'
+       '.ygroup{background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:14px 16px}'
+       '.ygroup h3{margin:0 0 10px;font-size:1rem;color:var(--green2)}.ychips{display:flex;flex-wrap:wrap;gap:7px}'
+       '.ychips a{text-decoration:none;color:var(--ink);border:1px solid var(--rule);border-radius:99px;padding:5px 12px;font-size:.9rem;background:var(--paper)}'
+       '.ychips a:hover{border-color:var(--gold)}.ychips small{color:var(--muted);margin-left:4px}'
+       '.ychips em{font-style:normal;font-size:.72rem;color:var(--gold);margin-left:5px}'
+       '.yblog summary{cursor:pointer;color:var(--muted);margin:4px 0 10px}.ymore{margin:0 0 12px;font-size:.92rem}</style>')
+m = re.search(r'(<section id="stories"[^>]*>.*?</div></div>\s*)(?:<style>\.ygrid.*?</details>|<ul class="stories">.*?</ul>)', h, re.S)
+if m:
+    blog = re.search(r'<ul class="stories">.*?</ul>', h[m.start():], re.S).group(0)
+    body = (STY + f'<div class="ygrid">{cards}</div>'
+            + f'<p class="ymore"><a href="yehwa/index.html">주제 {len(kws)}가지 · 예화 {len(y):,}편 모두 보기 →</a></p>'
+            + f'<details class="yblog"><summary>블로그에 올린 예화 글 보기</summary>{blog}</details>')
+    h = h[:m.start()] + m.group(1) + body + h[m.end():]
+h = re.sub(r'주제별 예화 [\d,]+편 →', f'주제별 예화 {len(y):,}편 →', h)
 open(home, 'w', encoding='utf-8').write(h)
 print('예화', len(y), '주제', len(kws))
