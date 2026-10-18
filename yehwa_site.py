@@ -120,25 +120,38 @@ GROUPS = [('신앙의 기초', '믿음 기도 말씀 은혜 구원 회개 복음
           ('가정', '가정 부부 어머니 아버지 자녀 효도'),
           ('고난과 소망', '고난 시련 희망 소망 섭리 실패 변화 위로 죽음 천국'),
           ('사명과 인생', '사명 헌신 순종 전도 선교 지도자 지혜 인생 선택 꿈 비전 도전 노력 시간 가치 삶')]
+# 설교 칸처럼 책꽂이: 묶음마다 한 칸, 주제마다 책등(예화가 많을수록 높게)
+used = {k for _, ks in GROUPS for k in ks.split()}
+rest = ' '.join(sorted((k for k in by if k not in used and len(by[k]) >= 15), key=lambda k: -len(by[k]))[:40])
+GROUPS.append(('더 많은 주제', rest))
 new_kw = {x['kw'] for x in y if x.get('credit')}
-def chip(k): return (f'<a href="yehwa/{slug(k)}.html">【{esc(k)}】<small>{len(by[k])}</small>'
-                     + ('<em>새 글</em>' if k in new_kw else '') + '</a>')
-cards = ''.join(f'<div class="ygroup"><h3>{g}</h3><div class="ychips">' + ''.join(chip(k) for k in ks.split() if k in by) + '</div></div>'
-                for g, ks in GROUPS)
-STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:6px 0 14px}'
-       '.ygroup{background:var(--sheet);border:1px solid var(--rule);border-radius:14px;padding:14px 16px}'
-       '.ygroup h3{margin:0 0 10px;font-size:1rem;color:var(--green2)}.ychips{display:flex;flex-wrap:wrap;gap:7px}'
-       '.ychips a{text-decoration:none;color:var(--ink);border:1px solid var(--rule);border-radius:99px;padding:5px 12px;font-size:.9rem;background:var(--paper)}'
-       '.ychips a:hover{border-color:var(--gold)}.ychips small{color:var(--muted);margin-left:4px}'
-       '.ychips em{font-style:normal;font-size:.72rem;color:var(--gold);margin-left:5px}'
+mx = max(len(v) for v in by.values())
+def spine(k):
+    n = len(by[k]); hgt = 46 + round(100 * (n / mx) ** 0.6)
+    tip = f'{k} 예화 {n}편' + (' · 새로 쓴 예화 포함' if k in new_kw else '')
+    return (f'<li><a class="spine on" style="height:{hgt}px" href="yehwa/{slug(k)}.html" title="{esc(tip)}">'
+            f'<span>{esc(k)}{"✦" if k in new_kw else ""}</span><b>{n}</b></a></li>')
+cards = ''.join(f'<div class="shelf"><h3>{g} · {sum(len(by[k]) for k in ks.split() if k in by):,}편</h3><div class="books-scroll"><ul class="books">'
+                + ''.join(spine(k) for k in ks.split() if k in by) + '</ul></div></div>' for g, ks in GROUPS)
+STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:14px;margin:6px 0 14px}.ygrid>.shelf:last-child{grid-column:1/-1}'
        '.yblog summary{cursor:pointer;color:var(--muted);margin:4px 0 10px}.ymore{margin:0 0 12px;font-size:.92rem}</style>')
 m = re.search(r'(<section id="stories"[^>]*>.*?</div></div>\s*)(?:<style>\.ygrid.*?</details>|<ul class="stories">.*?</ul>)', h, re.S)
 if m:
     blog = re.search(r'<ul class="stories">.*?</ul>', h[m.start():], re.S).group(0)
     body = (STY + f'<div class="ygrid">{cards}</div>'
-            + f'<p class="ymore"><a href="yehwa/index.html">주제 {len(kws)}가지 · 예화 {len(y):,}편 모두 보기 →</a></p>'
+            + f'<p class="ymore">✦ 표시는 새로 쓴 예화가 들어 있는 주제입니다. <a href="yehwa/index.html">주제 {len(kws)}가지 · 예화 {len(y):,}편 모두 보기 →</a></p>'
             + f'<details class="yblog"><summary>블로그에 올린 예화 글 보기</summary>{blog}</details>')
     h = h[:m.start()] + m.group(1) + body + h[m.end():]
 h = re.sub(r'주제별 예화 [\d,]+편 →', f'주제별 예화 {len(y):,}편 →', h)
+# 예화를 맨 앞으로: 메뉴 첫 칸 + 대문 바로 아래 첫 칸
+h = re.sub(r'\s*<li><a href="yehwa/index.html">예화 모음</a></li>', '', h)
+h = re.sub(r'\s*<li><a href="#stories">예화[^<]*(?:<small>[^<]*</small>)?</a></li>', '', h)
+h = h.replace('<li><a href="#new">', f'<li><a href="#stories">예화 <small>{len(y):,}</small></a></li>\n    <li><a href="#new">', 1)
+h = re.sub(r'<li><a href="#stories"><b>[\d,]+</b><small>편</small><span>예화</span></a></li>', '', h)
+h = h.replace('<ul class="stats">', f'<ul class="stats"><li><a href="#stories"><b>{len(y):,}</b><small>편</small><span>예화</span></a></li>', 1)
+sec = re.search(r'\s*<section id="stories".*?</section>', h, re.S)
+if sec and h.find('<section id="new"') < sec.start():
+    h = h[:sec.start()] + h[sec.end():]
+    i = h.find('<section id="new"'); h = h[:i] + sec.group(0).strip() + '\n\n  ' + h[i:]
 open(home, 'w', encoding='utf-8').write(h)
 print('예화', len(y), '주제', len(kws))
