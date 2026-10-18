@@ -10,6 +10,9 @@ def esc(s): return html.escape(s, quote=True)
 def slug(w): return 'k-' + '-'.join(f'{ord(c):x}' for c in w)
 
 y = json.load(open(os.path.join(D, 'blogger_yehwa.json'), encoding='utf-8'))
+# 둘로스 자료에서 골라 줄거리를 새로 쓴 예화(원글 저자·출처는 credit) — 같은 주제 맨 앞에 둔다
+dl = os.path.join(D, 'doulos_yehwa.json')
+if os.path.exists(dl): y = json.load(open(dl, encoding='utf-8')) + y
 by = {}
 for x in y: by.setdefault(x.get('kw') or '지혜', []).append(x)
 
@@ -56,6 +59,7 @@ article p{{margin:0 0 .8em}}
 FOOT = '</div>\n</body>\n</html>\n'
 
 def src_line(x):
+    if x.get('credit'): return f'📜 원글: {esc(x["credit"])} — 줄거리를 바탕으로 새로 써서 옮김'
     if x.get('sermon'): return f'📖 인용한 설교: {esc(x["sermon"])}'
     if x.get('book'): return f'📚 독후감 「{esc(x["book"])}」에서'
     if x.get('origin'): return f'📜 출처: {esc(x["origin"])}' + (' (저작권이 끝난 고전을 새로 옮겨 씀)' if x.get('src') == 'classic' else ' (역사 기록을 바탕으로 새로 씀)')
@@ -78,7 +82,7 @@ for i, kw in enumerate(kws):
 </header>
 <nav class="toc" aria-label="이 쪽의 예화">{toc}</nav>
 {arts}
-<p class="src">※ 설교 중에 인용한 예화, 독후감에서 뽑은 이야기, 고전과 역사 기록을 바탕으로 새로 쓴 이야기입니다. 출처가 분명한 예화는 원 출처를 밝혀 사용해 주세요.</p>
+<p class="src">※ 설교 중에 인용한 예화, 독후감에서 뽑은 이야기, 고전과 역사 기록이나 여러 예화집의 줄거리를 바탕으로 새로 쓴 이야기입니다. 출처가 분명한 예화는 원 출처를 밝혀 사용해 주세요.</p>
 <nav class="nav">{prev_a}{next_a}</nav>
 ''' + FOOT
     open(os.path.join(OUT, slug(kw) + '.html'), 'w', encoding='utf-8').write(page)
