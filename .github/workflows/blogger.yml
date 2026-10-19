@@ -44,7 +44,7 @@ jobs:
           BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
           BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
           BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
-        run: python blogger.py
+        run: python blogger.py 2>&1 | tee blogger_log.txt
       # 올린 글 목록을 저장해 다음 날 같은 글을 다시 올리지 않게 한다
       - name: Save posted list
         if: always()
@@ -52,7 +52,7 @@ jobs:
           git config user.name "homepage-bot"
           git config user.email "homepage-bot@users.noreply.github.com"
           if [ -f blogger_done.json ]; then
-            git add blogger_done.json
+            git add blogger_done.json blogger_log.txt
             if ! git diff --cached --quiet; then
               git commit -m "블로거 게시 기록"
               git pull --rebase -X ours origin main && git push
