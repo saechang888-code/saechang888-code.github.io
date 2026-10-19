@@ -191,20 +191,50 @@ find = ('<div class="finder"><label for="yq">어떤 주제의 예화가 필요�
         "if(k.length===1){location.href='yehwa/'+T[k[0]]+'.html';return;}"
         "m.innerHTML=k.length?'비슷한 주제: '+k.slice(0,8).map(function(x){return '<a href=\"yehwa/'+T[x]+'.html\" style=\"color:inherit\">'+x+'</a>';}).join(' · ')"
         ":'「'+s.replace(/[<>&]/g,'')+'」 주제는 아직 없습니다. <a href=\"yehwa/index.html\" style=\"color:inherit\">주제 목록 보기 →</a>';});})();</script>")
-# 오늘의 예화: 새로 쓴 예화(원글 출처가 있는 것) 가운데 날짜마다 하나
-pool = [(k, i) for k in kws for i, x in enumerate(by[k]) if x.get('credit')]
+# 새로 쓴 예화: 둘로스 설교자료 · 목회 자료집(USB) · 독후감 · 역사와 고전에서 골라 새 문장으로 쓴 것
+def is_new(x): return bool(x.get('credit') or x.get('book') or x.get('origin'))
+def src_of(x):
+    if x.get('book'): return '독후감'
+    if x.get('origin'): return '역사와 고전'
+    return '목회 자료집' if '목회 프리미엄' in x.get('credit', '') else '둘로스 설교자료'
+def excerpt_of(x, n=120):
+    story = x['body'].split('\n\n')[0].strip()
+    cut = story[:n]; dot = max(cut.rfind('다. '), cut.rfind('니다.'))
+    return (cut[:dot + 2] if dot > 50 else cut.rstrip() + '…').strip()
+def ref_of(x): return (re.search(r'▸ 말씀:.*\(([^()]+)\)\s*$', x['body'], re.M) or [None, ''])[1]
+where = {id(x): (k2, i2) for k2 in kws for i2, x in enumerate(by[k2])}
+def url_of(x):
+    k2, i2 = where[id(x)]; return f'yehwa/{pname(k2, i2 // PER + 1)}#y{i2 + 1}'
+newy = [x for x in y if is_new(x)]
+SRCS = ['둘로스 설교자료', '목회 자료집', '독후감', '역사와 고전']
+src_n = {s: sum(1 for x in newy if src_of(x) == s) for s in SRCS}
+# 가장 최근에 쓴 것: yehwa_ai.json 끝에서부터 (export.py가 새 예화를 뒤에 붙인다)
+recent = (json.load(open(ai, encoding='utf-8')) if os.path.exists(ai) else [])[::-1]
+ttl = {(x.get('kw'), x['title']): x for x in newy}
+recent = [ttl[(r.get('kw'), r['title'])] for r in recent if (r.get('kw'), r['title']) in ttl][:6]
+fcards = ''.join(f'<li><a href="{url_of(x)}"><span class="fk">【{esc(x["kw"])}】</span><h3>{esc(x["title"])}</h3>'
+                 f'<p>{esc(excerpt_of(x, 90))}</p><span class="fs">{esc(src_of(x))}에서</span></a></li>' for x in recent)
+fsrc = ''.join(f'<li><b>{src_n[s]:,}</b><span>{s}</span></li>' for s in SRCS if src_n[s])
+fresh = ('<section id="fresh" aria-labelledby="fresh-h"><div class="head"><span class="eyebrow">새로 쓴 예화</span>'
+         f'<div class="row"><h2 id="fresh-h">좋은 이야기를 골라, 새 문장으로</h2><a href="yehwa/index.html">새로 쓴 예화 {len(newy):,}편 · 주제별로 보기 →</a></div>'
+         '<p class="lede">둘로스 설교자료와 목회 자료집, 그리고 제가 읽은 책의 독후감에서 설교에 쓸 만한 이야기를 골라 사실을 확인하고 새 문장으로 다시 썼습니다. '
+         '편마다 적용과 개역개정 말씀을 붙이고, 원글의 저자와 출처를 밝혀 두었습니다.</p></div>'
+         f'<ul class="fsrc">{fsrc}</ul><ul class="fcards">{fcards}</ul></section>')
+# 오늘의 예화: 새로 쓴 예화 가운데 날짜마다 하나
+pool = [(k2, i2) for k2 in kws for i2, x in enumerate(by[k2]) if is_new(x)]
 k, i = random.Random(int(KST.strftime('%Y%m%d'))).choice(pool)
 x = by[k][i]
-story = x['body'].split('\n\n')[0].strip()
-cut = story[:120]; dot = max(cut.rfind('다. '), cut.rfind('니다.'))
-excerpt = (cut[:dot + 2] if dot > 50 else cut.rstrip() + '…').strip()
-ref = (re.search(r'▸ 말씀:.*\(([^()]+)\)\s*$', x['body'], re.M) or [None, ''])[1]
-url = f'yehwa/{pname(k, i // PER + 1)}#y{i + 1}'
+excerpt = excerpt_of(x)
+ref = ref_of(x)
+url = url_of(x)
 today = (f'<a class="today" href="{url}"><span class="tag">오늘의 예화<span>{KST.month}월 {KST.day}일</span></span>'
          f'<span class="kw">【{esc(k)}】</span><h2>{esc(x["title"])}</h2><p>{esc(excerpt)}</p>'
          + (f'<span class="verse">말씀 · {esc(ref)}</span>' if ref else '') + '<span class="go">이야기 전체 읽기 →</span></a>')
-h = h.replace('<!--YH-N-->여러', f'{len(y):,}').replace('<!--YH-FIND-->', find).replace('<!--YH-TODAY-->', today)
+h = (h.replace('<!--YH-N-->여러', f'{len(y):,}').replace('<!--YH-K-->153', f'{len(kws)}').replace('<!--YH-NEW-->여러', f'{len(newy):,}')
+     .replace('<!--YH-FIND-->', find).replace('<!--YH-TODAY-->', today).replace('<!--YH-FRESH-->', fresh))
 json.dump({'n': len(y), 'topics': [[k2, slug(k2), len(by[k2])] for k2 in kws], 'pop': POP,
+           'new': len(newy), 'src': [[s, src_n[s]] for s in SRCS if src_n[s]],
+           'recent': [{'kw': x['kw'], 'title': x['title'], 'excerpt': excerpt_of(x, 90), 'src': src_of(x), 'url': SITE + url_of(x)} for x in recent],
            'today': {'kw': k, 'title': x['title'], 'excerpt': excerpt, 'ref': ref, 'url': SITE + url, 'date': f'{KST.month}월 {KST.day}일'}},
           open(os.path.join(OUT, 'front.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 open(home, 'w', encoding='utf-8').write(h)

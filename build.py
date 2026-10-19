@@ -300,6 +300,18 @@ footer a{{color:var(--gold2);text-decoration:none}}
   main{{gap:76px;padding-block:64px 72px}}
   .notebook{{padding:4px 20px;background-image:none}}
 }}
+/* 새로 쓴 예화 */
+.fsrc{{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-wrap:wrap;gap:10px}}
+.fsrc li{{display:flex;align-items:baseline;gap:6px;background:var(--sheet);border:1px solid var(--rule);border-radius:99px;padding:6px 16px}}
+.fsrc b{{font-family:var(--display);font-size:1.15rem;color:var(--green);font-variant-numeric:tabular-nums}}
+.fsrc span{{font-size:.9rem;color:var(--muted)}}
+.fcards{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}}
+.fcards a{{height:100%;display:grid;align-content:start;gap:8px;background:var(--sheet);border:1px solid var(--rule);border-top:3px solid var(--gold);border-radius:14px;padding:20px 22px;text-decoration:none;box-shadow:var(--shadow)}}
+.fcards a:hover{{border-color:var(--gold);transform:translateY(-2px)}}
+.fcards .fk{{font-size:.82rem;font-weight:700;color:var(--gold)}}
+.fcards h3{{font-size:1.12rem;line-height:1.45}}
+.fcards p{{margin:0;color:var(--muted);font-size:.94rem;line-height:1.75}}
+.fcards .fs{{font-size:.8rem;color:var(--muted);border-top:1px dashed var(--rule);padding-top:8px;margin-top:4px}}
 @media (prefers-reduced-motion:no-preference){{a{{transition:color .2s,background .2s,border-color .2s,transform .25s}}}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 </style>
@@ -325,7 +337,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
     <div class="hero-main">
       <span class="eyebrow">새암교회 담임 · 이재선 목사의 서재</span>
       <h1>말씀을 읽고,<br><em>이야기</em>로 전하다</h1>
-      <p class="who">30년 강단에서 전한 설교와 주제별 예화 <b><!--YH-N-->여러</b>편, 책을 읽고 남긴 생각과 기도처럼 써 내려간 시. 설교를 준비하는 동역자와 말씀을 사랑하는 모든 분께 이 서재를 열어 둡니다.</p>
+      <p class="who">30년 강단에서 전한 설교, <b><!--YH-K-->153</b>가지 주제로 엮은 예화 <b><!--YH-N-->여러</b>편. 설교자료와 목회 자료집, 독후감에서 좋은 이야기를 골라 새 문장으로 다시 쓴 예화 <b><!--YH-NEW-->여러</b>편이 날마다 더해집니다. 설교를 준비하는 동역자와 말씀을 사랑하는 모든 분께 이 서재를 열어 둡니다.</p>
       <!--YH-FIND-->
       <div class="cta"><a class="btn gold" href="yehwa/index.html">주제별 예화 →</a><a class="btn ghost" href="#sermon">설교 읽기</a><a class="btn ghost" href="{YT_URL}" target="_blank" rel="noopener">▶ 어음성경</a></div>
       <p class="motto">독서는 취미가 아닙니다. 특기를 넘어 주특기가 됩니다.</p>
@@ -335,6 +347,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   </div>
 </header>
 <main class="container">
+  <!--YH-FRESH-->
   <section id="sermon" aria-labelledby="sermon-h">
     <div class="head"><span class="eyebrow">성경연구와 설교</span><div class="row"><h2 id="sermon-h">강단에서 전한 말씀</h2><a href="{caturl(101)}" target="_blank" rel="noopener">설교 전체 {cnt(101):,}편 →</a></div>
     <p class="lede">주일낮예배와 금요기도회에서 전한 설교입니다. 아래 책장에서 성경 권별로 찾아 읽을 수 있습니다.</p></div>
