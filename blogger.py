@@ -138,6 +138,7 @@ YN_SIZE = 10
 def src_note(y):
     if y.get('credit'): return f'📜 원글: {esc(y["credit"])} — 줄거리를 바탕으로 새로 써서 옮김'
     if y.get('book'): return f'📚 독후감 「{esc(y["book"])}」에서'
+    if y.get('origin'): return f'📜 출처: {esc(y["origin"])} (기록을 바탕으로 새로 씀)'
     return ''
 def render_new(k, items):
     out = [nav('예화'), badges(['새로 쓴 예화', f'제{k}집'] + sorted({y['kw'] for y in items})[:6])]
@@ -268,11 +269,11 @@ if os.environ.get('REFRESH_ONLY'):
     print('blogger: refreshed', n); sys.exit(0)
 
 due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['date'], j['id']))
-n = 0
+n = fails = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
-due = ([j for j in due if j['id'].startswith('yn')][:YN_PER]                       # 새로 쓴 예화부터
-       + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1]
-       + [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn'))][:MAX_PER_RUN])
+reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn'))][:MAX_PER_RUN]
+due = (reg[:3] + [j for j in due if j['id'].startswith('yn')][:YN_PER]             # 일반 글 몇 편 → 새로 쓴 예화 → 나머지
+       + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1] + reg[3:])
 for j in due:
     body = dict(kind='blogger#post', title=j['title'], content=add_more(j['render']()), labels=j['labels'])
     if j['date'] < TODAY:                        # 밀린 글은 원래 날짜 아침으로 (블로그 글 순서 유지)
@@ -288,8 +289,10 @@ for j in due:
             if code != 429 or not wait: break
             print('blogger: 잠시 쉼', wait, '초'); time.sleep(wait)
     if r is None:
-        if code in (401, 403, 429): break
+        fails += 1
+        if code == 401 or (code in (403, 429) and fails >= 3): break   # 403·429가 세 번 거듭되면 오늘은 그만
         continue
+    fails = 0
     done[j['id']] = r.get('url', '')
     n += 1
     json.dump(done, open(done_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
