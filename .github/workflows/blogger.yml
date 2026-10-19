@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: "30 21 * * *"   # 매일 06:30 KST
   workflow_dispatch:
+  push:                      # blogger_run.txt를 바꿔 올리면 바로 한 번 더 돈다
+    paths: ['blogger_run.txt']
 
 permissions:
   contents: write
