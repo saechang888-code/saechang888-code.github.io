@@ -96,8 +96,9 @@ yt_count = f'영상 {YT["count"]}편' if YT.get('count') else '영상'
 # ---------- 예화 ----------
 stories = ''.join(f'<li><a href="{esc(url(p))}" target="_blank" rel="noopener">{esc(html.unescape(p["title"]))}</a></li>' for p in P[161])
 
+AN = len(json.load(open(os.path.join(D, 'anshik_poems.json'), encoding='utf-8'))) if os.path.exists(os.path.join(D, 'anshik_poems.json')) else 0
 STATS = [(cnt(101), '편', '설교와 성경연구', '#sermon'), (cnt(38), '권', '독후감', '#reading'),
-         (cnt(44), '편', '시', '#poems'), (cnt(36), '편', '팡세', '#pensees')]
+         (cnt(44) + AN, '편', '시', '#poems'), (cnt(36), '편', '팡세', '#pensees')]
 stats = ''.join(f'<li><a href="{h}"><b>{n:,}</b><small>{u}</small><span>{l}</span></a></li>' for n, u, l, h in STATS)
 
 page = f'''<title>독서주특기 · 이재선 목사</title>
@@ -322,7 +323,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   <ol>
     <li><a href="#sermon">설교 <small>{cnt(101):,}</small></a></li>
     <li><a href="#youtube">유튜브 <small>{YT.get("count") or ""}</small></a></li>
-    <li><a href="#poems">시 <small>{cnt(44)}</small></a></li>
+    <li><a href="#poems">시 <small>{cnt(44) + AN}</small></a></li>
     <li><a href="#pensees">팡세 <small>{cnt(36)}</small></a></li>
     <li><a href="#reading">독후감 <small>{cnt(38)}</small></a></li>
     <li><a href="#stories">예화 <small>{cnt(161)}</small></a></li>
@@ -366,7 +367,8 @@ footer a{{color:var(--gold2);text-decoration:none}}
   </section>
 
   <section id="poems" aria-labelledby="poems-h">
-    <div class="head"><span class="eyebrow">시</span><div class="row"><h2 id="poems-h">네 권의 시집</h2><a href="{caturl(44)}" target="_blank" rel="noopener">시 전체 {cnt(44)}편 →</a></div></div>
+    <div class="head"><span class="eyebrow">시</span><div class="row"><h2 id="poems-h">시와 찬양시</h2><a href="anshik/index.html">안식월 시집 {AN}편 →</a></div></div>
+    <!--ANSHIK-->
     <div class="cols">{poems}</div>
   </section>
 

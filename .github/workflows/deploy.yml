@@ -37,6 +37,9 @@ jobs:
       # 예화 전체를 주제별로 (가 편 ~ 하 편)
       - name: Illustrations by topic
         run: python yehwa_site.py
+      # 안식월 시집 (시 한 편마다 한 쪽, 사진과 함께)
+      - name: Sabbatical poems
+        run: python poems_site.py
       # 행복나눔축제 안내 페이지 + 첫 화면 배너(행사일까지)
       - name: Event page
         run: python event.py

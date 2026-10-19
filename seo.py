@@ -19,17 +19,19 @@ def tag_page(path, url):
     title = html.unescape(m.group(1)).strip() if m else '독서주특기'
     body = re.search(r'<article\b.*?</article>', h, re.S) or re.search(r'<body\b.*', h, re.S)
     desc = text_of(body.group(0) if body else h)[:150]
-    meta = (f'<meta name="description" content="{esc(desc)}">\n'
+    img = re.search(r'<header class="hero"><img src="\.\./([^"]+)"', h)
+    meta = ('' if 'name="description"' in h else f'<meta name="description" content="{esc(desc)}">\n') + (
             f'<link rel="canonical" href="{url}">\n'
             f'<meta property="og:type" content="article">\n<meta property="og:site_name" content="독서주특기 · 이재선 목사">\n'
             f'<meta property="og:title" content="{esc(title)}">\n<meta property="og:description" content="{esc(desc)}">\n'
-            f'<meta property="og:url" content="{url}">\n<meta property="og:image" content="{IMG}">\n'
+            f'<meta property="og:url" content="{url}">\n<meta property="og:image" content="{SITE + img.group(1) if img else IMG}">\n'
             f'<meta name="twitter:card" content="summary_large_image">\n')
     h = h.replace('</title>', '</title>\n' + meta, 1)
     open(path, 'w', encoding='utf-8').write(h)
 
 urls = [(SITE, '1.0'), (SITE + 'writings/index.html', '0.9'), (SITE + 'yehwa/index.html', '0.9'), (SITE + 'event.html', '0.6')]
-for sub, pr in (('writings', '0.6'), ('yehwa', '0.7')):
+urls.append((SITE + 'anshik/index.html', '0.8'))
+for sub, pr in (('writings', '0.6'), ('yehwa', '0.7'), ('anshik', '0.6')):
     for f in sorted(glob.glob(os.path.join(D, sub, '*.html'))):
         name = os.path.basename(f)
         u = SITE + sub + '/' + name
@@ -42,7 +44,7 @@ if 'property="og:title"' not in h:
     h = h.replace('</title>', '</title>\n' + (
         f'<link rel="canonical" href="{SITE}">\n<meta property="og:type" content="website">\n'
         f'<meta property="og:title" content="독서주특기 · 이재선 목사 (새암교회)">\n'
-        f'<meta property="og:description" content="강단에서 전한 설교 1,300여 편, 주제별 예화 3,400여 편, 독후감과 시를 날마다 나눕니다.">\n'
+        f'<meta property="og:description" content="새암교회 이재선 목사의 서재 — 설교 1,300여 편, 153가지 주제의 예화 3,700여 편, 독후감과 안식월 시집을 나눕니다.">\n'
         f'<meta property="og:url" content="{SITE}">\n<meta property="og:image" content="{IMG}">\n<meta name="twitter:card" content="summary_large_image">\n'), 1)
     open(home, 'w', encoding='utf-8').write(h)
 

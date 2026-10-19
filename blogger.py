@@ -237,6 +237,21 @@ for y in yehwa:
     jobs.append(by_y)
 for i, p in enumerate(old_poems):
     jobs.append(dict(id=p['id'], date=(BSTART + datetime.timedelta(days=i // PER_CAT)).isoformat(), title=p['title'], render=lambda p=p: render_poem(p), labels=['시', p['sub']]))
+# 안식월 시집(anshik_poems.json): 사진이 있으면 맨 위에. 하루 AN_PER편씩
+AN_START, AN_PER = datetime.date(2026, 10, 20), 8
+def render_anshik(p):
+    lines = ''.join(f'<p style="margin:0;min-height:1em">{esc(l)}</p>' for l in p['body'].split('\n'))
+    photo = (f'<p style="margin:0 0 1.4em"><img src="{SITE}{p["photo"]}" alt="「{esc(p["title"])}」을 쓴 곳에서 찍은 사진" style="width:100%;height:auto;border-radius:10px"></p>'
+             if p['photo'] else '')
+    note = f'<p style="{P};font-size:14px;color:{MUTED};margin-top:2em;text-align:left">✎ {esc(p["note"])}</p>' if p['note'] else ''
+    return (f'<div style="{WRAP}">' + nav('시') + badges(['시', p['sub'], '안식월 시집']) + photo +
+            f'<h2 style="font-size:24px;text-align:center;margin:.6em 0 1.4em;color:{INK}">{esc(p["title"])}</h2>' +
+            f'<div style="text-align:center;line-height:2.1">{lines}</div>{note}' +
+            footer(f'<a href="{SITE}anshik/{p["id"]}.html" style="color:{GREEN}">홈페이지 안식월 시집에서 보기</a> · ') + '</div>')
+ap = os.path.join(D, 'anshik_poems.json')
+for i, p in enumerate(json.load(open(ap, encoding='utf-8')) if os.path.exists(ap) else []):
+    jobs.append(dict(id='an-' + p['id'], date=(AN_START + datetime.timedelta(days=i // AN_PER)).isoformat(), title=p['title'],
+                     render=lambda p=p: render_anshik(p), labels=['시', p['sub'], '안식월 시집']))
 by_id = {j['id']: j for j in jobs}
 # 예전에 올린 예화 묶음 글도 디자인을 다시 입힐 수 있게
 for p in all_posts:
@@ -271,8 +286,9 @@ if os.environ.get('REFRESH_ONLY'):
 due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['date'], j['id']))
 n = fails = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
-reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn'))][:MAX_PER_RUN]
-due = (reg[:3] + [j for j in due if j['id'].startswith('yn')][:YN_PER]             # 일반 글 몇 편 → 새로 쓴 예화 → 나머지
+reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn', 'an-'))][:MAX_PER_RUN]
+due = (reg[:3] + [j for j in due if j['id'].startswith('yn')][:YN_PER]             # 일반 글 몇 편 → 새로 쓴 예화 → 안식월 시 → 나머지
+       + [j for j in due if j['id'].startswith('an-')][:AN_PER]
        + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1] + reg[3:])
 for j in due:
     body = dict(kind='blogger#post', title=j['title'], content=add_more(j['render']()), labels=j['labels'])
