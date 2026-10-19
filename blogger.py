@@ -221,7 +221,7 @@ jobs.append(dict(id='yg-index', date=YG_START.isoformat(), title='[예화] 주�
 for i, g in enumerate(groups):
     jobs.append(dict(id=g['id'], date=(YG_START + datetime.timedelta(days=(i + 1) // YG_PER)).isoformat(), title=g['title'], render=lambda g=g: render_group(g), labels=['예화', g['pyeon'], g['kw'] + ' 예화']))
 # 새로 쓴 예화: 10편이 다 찬 묶음만 올린다(묶음 내용이 바뀌지 않게). 하루 YN_PER편까지
-YN_START, YN_PER = datetime.date(2026, 10, 20), 12
+YN_START, YN_PER = datetime.date(2026, 10, 19), 12
 newy = []
 for f in ('doulos_yehwa.json', 'yehwa_ai.json'):
     fp = os.path.join(D, f)
