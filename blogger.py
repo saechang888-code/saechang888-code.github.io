@@ -8,7 +8,7 @@ import os, re, json, html, datetime, urllib.request, urllib.parse, urllib.error,
 D = os.path.dirname(os.path.abspath(__file__))
 BLOG = '5791371153360346841'
 SITE = 'https://saechang888-code.github.io/'
-MAX_PER_RUN = int(os.environ.get('BLOGGER_MAX', '12'))       # 밀린 글이 많아도 하루에 이만큼만 (스팸 판정 방지)
+MAX_PER_RUN = int(os.environ.get('BLOGGER_MAX', '30'))       # 밀린 글이 많아도 하루에 이만큼만 (스팸 판정 방지)
 TODAY = os.environ.get('TODAY') or (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)).strftime('%Y-%m-%d')
 KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세', '시': '시'}
 # 블로그 카테고리(= 첫 번째 라벨). 글 맨 위 메뉴도 이 순서로 보인다
@@ -133,6 +133,25 @@ def render_index(groups):
     out.append(footer())
     return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
 
+# ---------- 새로 쓴 예화(둘로스·sermon-jesus·설교·독후감에서 줄거리를 새로 쓴 것): 들어온 차례대로 10편씩 한 글 ----------
+YN_SIZE = 10
+def src_note(y):
+    if y.get('credit'): return f'📜 원글: {esc(y["credit"])} — 줄거리를 바탕으로 새로 써서 옮김'
+    if y.get('book'): return f'📚 독후감 「{esc(y["book"])}」에서'
+    return ''
+def render_new(k, items):
+    out = [nav('예화'), badges(['새로 쓴 예화', f'제{k}집'] + sorted({y['kw'] for y in items})[:6])]
+    out.append(f'<div style="{NOTE}">설교에 바로 쓸 수 있도록 줄거리를 새로 쓰고 적용과 말씀(개역개정)을 붙인 예화 {len(items)}편입니다. 제목을 누르면 바로 내려갑니다.<br>'
+               + '<br>'.join(f'<a href="#y{i + 1}" style="color:{GREEN}">{i + 1}. 【{esc(y["kw"])}】 {esc(y["title"])}</a>' for i, y in enumerate(items)) + '</div>')
+    for i, y in enumerate(items):
+        out.append(f'<h3 id="y{i + 1}" style="{H3}">{i + 1}. 【{esc(y["kw"])}】 {esc(y["title"])}</h3>')
+        out += paras(y['body'])
+        if src_note(y): out.append(f'<p style="{P};font-size:14px;color:{MUTED}">{src_note(y)}</p>')
+    out.append(f'<p style="{P};font-size:15px"><a href="{SITE}yehwa/index.html" style="color:{GREEN}">홈페이지에서 주제별 예화 모두 보기 →</a> · '
+               f'<a href="{label_url("새로 쓴 예화")}" style="color:{GREEN}">새로 쓴 예화 모음 전체</a></p>')
+    out.append(footer())
+    return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
+
 def labels_post(p):
     # 라벨은 카테고리 하나 + 세부 주제 하나만 (라벨 목록이 깔끔하게)
     ls = [CAT_OF.get(p['kind'], '기타')]
@@ -182,7 +201,7 @@ all_posts = json.load(open(os.path.join(D, 'posts.json'), encoding='utf-8'))
 posts = [p for p in all_posts if p['kind'] != '예화']
 yehwa = json.load(open(os.path.join(D, 'blogger_yehwa.json'), encoding='utf-8'))
 # 블로거는 홈페이지와 따로, 분야(카테고리)마다 하루 PER_CAT편씩 BSTART부터 차례로 올린다. 교회 소식은 정해진 날짜 그대로.
-BSTART, PER_CAT = datetime.date(2026, 10, 11), 2
+BSTART, PER_CAT = datetime.date(2026, 10, 11), 6
 queues = {}
 for p in sorted(posts, key=lambda p: (p['date'], p['id'])):
     if p['kind'] != '행사': queues.setdefault(CAT_OF.get(p['kind'], '기타'), []).append(p)
@@ -201,6 +220,16 @@ groups = yehwa_groups(yehwa)
 jobs.append(dict(id='yg-index', date=YG_START.isoformat(), title='[예화] 주제별 예화 목차 — 가 편 ~ 하 편', render=lambda: render_index(groups), labels=['예화', '예화 주제 목차']))
 for i, g in enumerate(groups):
     jobs.append(dict(id=g['id'], date=(YG_START + datetime.timedelta(days=(i + 1) // YG_PER)).isoformat(), title=g['title'], render=lambda g=g: render_group(g), labels=['예화', g['pyeon'], g['kw'] + ' 예화']))
+# 새로 쓴 예화: 10편이 다 찬 묶음만 올린다(묶음 내용이 바뀌지 않게). 하루 YN_PER편까지
+YN_START, YN_PER = datetime.date(2026, 10, 20), 12
+newy = []
+for f in ('doulos_yehwa.json', 'yehwa_ai.json'):
+    fp = os.path.join(D, f)
+    if os.path.exists(fp): newy += json.load(open(fp, encoding='utf-8'))
+for k in range(len(newy) // YN_SIZE):
+    part = newy[k * YN_SIZE:(k + 1) * YN_SIZE]
+    jobs.append(dict(id=f'yn-{k + 1:04d}', date=YN_START.isoformat(), title=f'[새로 쓴 예화 {k + 1}] ' + ' · '.join(dict.fromkeys(y['kw'] for y in part)),
+                     render=lambda k=k, part=part: render_new(k + 1, part), labels=['예화', '새로 쓴 예화']))
 # 이미 올린 낱개 예화는 디자인 다시 입히기(REFRESH_ONLY)용으로만 남긴다
 for y in yehwa:
     by_y = dict(id=y['id'], date='9999-12-31', title=f'[{y["topic"]} 예화] {y["title"]}', render=lambda y=y: render_yehwa(y), labels=labels_yehwa(y))
@@ -241,7 +270,9 @@ if os.environ.get('REFRESH_ONLY'):
 due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['date'], j['id']))
 n = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
-due = [j for j in due if not j['id'].startswith(('yg', 'yk'))][:MAX_PER_RUN] + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1]
+due = ([j for j in due if j['id'].startswith('yn')][:YN_PER]                       # 새로 쓴 예화부터
+       + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1]
+       + [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn'))][:MAX_PER_RUN])
 for j in due:
     body = dict(kind='blogger#post', title=j['title'], content=add_more(j['render']()), labels=j['labels'])
     if j['date'] < TODAY:                        # 밀린 글은 원래 날짜 아침으로 (블로그 글 순서 유지)
