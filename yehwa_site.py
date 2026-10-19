@@ -115,7 +115,9 @@ index = HEAD.format(title='주제별 예화 모음 · 독서주특기') + f'''<h
 {secs}
 <script>
 const q=document.getElementById('q');
+const u=new URLSearchParams(location.search).get('q');
 q.addEventListener('input',()=>{{const s=q.value.trim();document.querySelectorAll('[data-sec]').forEach(sec=>{{let n=0;sec.querySelectorAll('[data-k]').forEach(a=>{{const ok=!s||a.dataset.k.includes(s);a.hidden=!ok;if(ok)n++;}});sec.hidden=n===0;}});}});
+if(u){{q.value=u;q.dispatchEvent(new Event('input'));}}
 </script>
 ''' + FOOT
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(index)
@@ -168,5 +170,42 @@ sec = re.search(r'\s*<section id="stories".*?</section>', h, re.S)
 if sec and h.find('<section id="new"') < sec.start():
     h = h[:sec.start()] + h[sec.end():]
     i = h.find('<section id="new"'); h = h[:i] + sec.group(0).strip() + '\n\n  ' + h[i:]
+
+# ---------- 대문: 예화 수 · 예화 찾기 · 오늘의 예화 (블로그 대문도 같은 것을 yehwa/*.json으로 받아 쓴다) ----------
+import datetime, random
+KST = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)
+SITE = 'https://saechang888-code.github.io/'
+T = {k: slug(k) for k in kws}
+POP = [k for k in '감사 기도 사랑 믿음 용서 고난 소망 겸손 가정 전도'.split() if k in by]
+find = ('<div class="finder"><label for="yq">어떤 주제의 예화가 필요하세요?</label>'
+        '<form id="yfind" role="search" action="yehwa/index.html"><input id="yq" name="q" list="ykws" placeholder="예: 감사, 용서, 고난, 부부" autocomplete="off" enterkeyhint="search">'
+        '<button type="submit">예화 찾기</button></form>'
+        '<datalist id="ykws">' + ''.join(f'<option value="{esc(k)}">' for k in kws) + '</datalist>'
+        '<div class="chips">' + ''.join(f'<a href="yehwa/{slug(k)}.html">{esc(k)}</a>' for k in POP) + f'<a href="yehwa/index.html">주제 {len(kws)}가지 모두</a></div>'
+        '<p class="msg" id="ymsg" aria-live="polite"></p></div>\n'
+        '<script>(function(){var T=' + json.dumps(T, ensure_ascii=False) + ';'
+        "var f=document.getElementById('yfind'),q=document.getElementById('yq'),m=document.getElementById('ymsg');"
+        "f.addEventListener('submit',function(e){e.preventDefault();var s=q.value.replace(/[【】\\s]/g,'');if(!s)return;"
+        "if(T[s]){location.href='yehwa/'+T[s]+'.html';return;}"
+        "var k=Object.keys(T).filter(function(k){return k.indexOf(s)>=0||s.indexOf(k)>=0;});"
+        "if(k.length===1){location.href='yehwa/'+T[k[0]]+'.html';return;}"
+        "m.innerHTML=k.length?'비슷한 주제: '+k.slice(0,8).map(function(x){return '<a href=\"yehwa/'+T[x]+'.html\" style=\"color:inherit\">'+x+'</a>';}).join(' · ')"
+        ":'「'+s.replace(/[<>&]/g,'')+'」 주제는 아직 없습니다. <a href=\"yehwa/index.html\" style=\"color:inherit\">주제 목록 보기 →</a>';});})();</script>")
+# 오늘의 예화: 새로 쓴 예화(원글 출처가 있는 것) 가운데 날짜마다 하나
+pool = [(k, i) for k in kws for i, x in enumerate(by[k]) if x.get('credit')]
+k, i = random.Random(int(KST.strftime('%Y%m%d'))).choice(pool)
+x = by[k][i]
+story = x['body'].split('\n\n')[0].strip()
+cut = story[:120]; dot = max(cut.rfind('다. '), cut.rfind('니다.'))
+excerpt = (cut[:dot + 2] if dot > 50 else cut.rstrip() + '…').strip()
+ref = (re.search(r'▸ 말씀:.*\(([^()]+)\)\s*$', x['body'], re.M) or [None, ''])[1]
+url = f'yehwa/{pname(k, i // PER + 1)}#y{i + 1}'
+today = (f'<a class="today" href="{url}"><span class="tag">오늘의 예화<span>{KST.month}월 {KST.day}일</span></span>'
+         f'<span class="kw">【{esc(k)}】</span><h2>{esc(x["title"])}</h2><p>{esc(excerpt)}</p>'
+         + (f'<span class="verse">말씀 · {esc(ref)}</span>' if ref else '') + '<span class="go">이야기 전체 읽기 →</span></a>')
+h = h.replace('<!--YH-N-->여러', f'{len(y):,}').replace('<!--YH-FIND-->', find).replace('<!--YH-TODAY-->', today)
+json.dump({'n': len(y), 'topics': [[k2, slug(k2), len(by[k2])] for k2 in kws], 'pop': POP,
+           'today': {'kw': k, 'title': x['title'], 'excerpt': excerpt, 'ref': ref, 'url': SITE + url, 'date': f'{KST.month}월 {KST.day}일'}},
+          open(os.path.join(OUT, 'front.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 open(home, 'w', encoding='utf-8').write(h)
 print('예화', len(y), '주제', len(kws))

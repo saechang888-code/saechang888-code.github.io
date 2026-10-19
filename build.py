@@ -145,16 +145,41 @@ nav.menu a:hover{{color:var(--ink);background:var(--tint)}}
 .evbanner .dd{{background:#fff;color:#a3324b;border-radius:99px;padding:1px 11px;font-weight:700;font-variant-numeric:tabular-nums}}
 .evbanner a{{color:#fff;font-weight:600;margin-left:auto;text-underline-offset:3px}}
 
-/* 대문 */
+/* 대문: 왼쪽 글·예화 찾기, 오른쪽 '오늘의 예화' 카드, 아래 숫자 띠 */
 .hero{{position:relative;color:var(--cream);background:#1d3530 url(assets/hero.jpg) 72% 50%/cover no-repeat;isolation:isolate}}
-.hero::before{{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(17,33,28,.94) 0%,rgba(17,33,28,.82) 38%,rgba(17,33,28,.25) 66%,rgba(17,33,28,0) 85%),linear-gradient(0deg,rgba(17,33,28,.7),rgba(17,33,28,0) 34%)}}
-.hero .container{{min-height:min(84vh,780px);display:grid;align-content:center;gap:26px;padding-block:88px 40px}}
+.hero::before{{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(14,28,24,.96) 0%,rgba(14,28,24,.86) 42%,rgba(14,28,24,.42) 70%,rgba(14,28,24,.2) 100%),linear-gradient(0deg,rgba(14,28,24,.92),rgba(14,28,24,0) 38%)}}
+.hero .container{{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);align-items:center;gap:40px 56px;padding-block:clamp(56px,9vh,104px) 36px}}
+.hero-main{{display:grid;gap:24px;align-content:center}}
 .hero .eyebrow{{color:var(--gold2)}}
 .hero .eyebrow::before{{background:var(--gold2)}}
-.hero h1{{font-size:clamp(2.6rem,6.4vw,5rem);line-height:1.14;font-weight:700;max-width:12em;text-shadow:0 2px 24px rgba(0,0,0,.25)}}
+.hero h1{{font-size:clamp(2.5rem,5.8vw,4.6rem);line-height:1.16;font-weight:700;text-shadow:0 2px 24px rgba(0,0,0,.3)}}
 .hero h1 em{{font-style:normal;color:var(--gold2)}}
-.who{{font-size:1.08rem;margin:0;max-width:34em;color:rgba(246,239,224,.86)}}
-.hero blockquote{{margin:0;font-family:var(--display);font-size:clamp(1.05rem,1.8vw,1.22rem);line-height:1.9;max-width:30em;border-left:2px solid var(--gold2);padding-left:20px;color:rgba(246,239,224,.92)}}
+.who{{font-size:1.08rem;margin:0;max-width:33em;color:rgba(246,239,224,.86);line-height:1.85}}
+.who b{{color:#fff;font-weight:600}}
+.finder{{display:grid;gap:12px;max-width:560px}}
+.finder label{{font-size:.86rem;letter-spacing:.04em;color:rgba(246,239,224,.72)}}
+.finder form{{display:flex;align-items:center;background:rgba(253,250,243,.97);border-radius:99px;padding:6px 6px 6px 22px;box-shadow:0 18px 40px -18px rgba(0,0,0,.6),inset 0 0 0 1px rgba(217,184,106,.5)}}
+.finder input{{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:1.02rem;color:#1c2624;outline:0;padding:8px 0}}
+.finder input::placeholder{{color:#8a918d}}
+.finder button{{flex:none;border:0;border-radius:99px;background:var(--green);color:var(--cream);font:inherit;font-weight:600;font-size:.95rem;padding:11px 22px;cursor:pointer}}
+.finder button:hover{{background:#1a332c}}
+.chips{{display:flex;flex-wrap:wrap;gap:8px}}
+.chips a{{text-decoration:none;font-size:.86rem;color:rgba(246,239,224,.9);border:1px solid rgba(246,239,224,.24);border-radius:99px;padding:4px 13px;background:rgba(246,239,224,.05)}}
+.chips a:hover{{border-color:var(--gold2);color:var(--gold2)}}
+.finder .msg{{margin:0;font-size:.85rem;color:var(--gold2);min-height:1.2em}}
+.today{{position:relative;display:grid;gap:14px;align-content:start;padding:28px 28px 24px;border-radius:20px;background:rgba(20,36,31,.62);border:1px solid rgba(217,184,106,.32);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 30px 60px -30px rgba(0,0,0,.7);text-decoration:none;color:var(--cream)}}
+.today .tag{{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.78rem;letter-spacing:.14em;color:var(--gold2);font-weight:700}}
+.today .tag span{{letter-spacing:0;font-weight:500;color:rgba(246,239,224,.6);font-variant-numeric:tabular-nums}}
+.today .kw{{justify-self:start;font-size:.8rem;color:#1d2a26;background:var(--gold2);border-radius:99px;padding:2px 12px;font-weight:700}}
+.today h2{{font-size:1.45rem;line-height:1.45;font-weight:700;color:#fff}}
+.today p{{margin:0;font-family:var(--display);font-size:.98rem;line-height:1.85;color:rgba(246,239,224,.84)}}
+.today .verse{{font-size:.88rem;color:rgba(246,239,224,.62);border-top:1px solid rgba(246,239,224,.14);padding-top:12px}}
+.today .go{{font-size:.9rem;font-weight:600;color:var(--gold2)}}
+.today:hover{{border-color:var(--gold2)}}
+.today:hover h2{{color:var(--gold2)}}
+.motto{{margin:0;font-family:var(--display);font-size:.95rem;color:rgba(246,239,224,.62)}}
+.motto::before{{content:"“";color:var(--gold2);margin-right:4px}}
+.motto::after{{content:"”";color:var(--gold2);margin-left:2px}}
 .cta{{display:flex;flex-wrap:wrap;gap:12px}}
 .btn{{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:99px;text-decoration:none;font-weight:600;font-size:.95rem;border:1px solid var(--green2);color:var(--green2)}}
 .btn:hover{{background:var(--green2);color:var(--paper)}}
@@ -162,12 +187,15 @@ nav.menu a:hover{{color:var(--ink);background:var(--tint)}}
 .btn.gold:hover{{background:#e8cb84;color:#1d2a26}}
 .btn.ghost{{border-color:rgba(246,239,224,.5);color:var(--cream)}}
 .btn.ghost:hover{{background:rgba(246,239,224,.12);color:var(--cream)}}
-.stats{{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:760px}}
-.stats a{{display:grid;grid-template-columns:auto 1fr;align-items:baseline;column-gap:4px;padding:16px 18px;text-decoration:none;border-radius:14px;background:rgba(246,239,224,.08);border:1px solid rgba(246,239,224,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}}
-.stats b{{font-family:var(--display);font-size:1.9rem;font-weight:600;font-variant-numeric:tabular-nums;color:#fff}}
-.stats small{{color:rgba(246,239,224,.7)}}
-.stats span{{grid-column:1/-1;font-size:.82rem;color:rgba(246,239,224,.75)}}
-.stats a:hover{{background:rgba(246,239,224,.16)}}
+.stats{{grid-column:1/-1;list-style:none;margin:8px 0 0;padding:22px 0 0;display:flex;flex-wrap:wrap;border-top:1px solid rgba(246,239,224,.16)}}
+.stats li{{flex:1 1 140px}}
+.stats li+li a{{border-left:1px solid rgba(246,239,224,.14)}}
+.stats a{{display:grid;grid-template-columns:auto 1fr;align-items:baseline;column-gap:4px;padding:6px 22px;text-decoration:none}}
+.stats li:first-child a{{padding-left:0}}
+.stats b{{font-family:var(--display);font-size:clamp(1.5rem,2.4vw,2rem);font-weight:600;font-variant-numeric:tabular-nums;color:#fff}}
+.stats small{{color:rgba(246,239,224,.6)}}
+.stats span{{grid-column:1/-1;font-size:.82rem;letter-spacing:.04em;color:rgba(246,239,224,.68)}}
+.stats a:hover b{{color:var(--gold2)}}
 
 /* 본문 */
 main{{display:grid;grid-template-columns:minmax(0,1fr);gap:104px;padding-block:96px 104px}}
@@ -265,9 +293,10 @@ footer a{{color:var(--gold2);text-decoration:none}}
   nav.menu a{{padding:6px 10px;font-size:.88rem}}
   html{{scroll-padding-top:120px}}
   .hero{{background-position:78% 50%}}
-  .hero::before{{background:linear-gradient(180deg,rgba(17,33,28,.72),rgba(17,33,28,.9))}}
-  .hero .container{{min-height:0;padding-block:64px 36px}}
-  .stats{{grid-template-columns:repeat(2,1fr)}}
+  .hero::before{{background:linear-gradient(180deg,rgba(14,28,24,.78),rgba(14,28,24,.94))}}
+  .hero .container{{grid-template-columns:minmax(0,1fr);padding-block:52px 32px;gap:32px}}
+  .stats li{{flex:1 1 33%}}
+  .stats li a,.stats li+li a{{border-left:0;padding:8px 12px 8px 0}}
   main{{gap:76px;padding-block:64px 72px}}
   .notebook{{padding:4px 20px;background-image:none}}
 }}
@@ -293,11 +322,15 @@ footer a{{color:var(--gold2);text-decoration:none}}
 </header>
 <header class="hero" id="about">
   <div class="container">
-    <span class="eyebrow">새암교회 · 30년 설교자 이재선 목사</span>
-    <h1>읽고, 묵상하고,<br><em>삶으로</em> 남기다</h1>
-    <p class="who">말씀을 전하고, 시를 쓰고, 생각을 적고, 책을 읽은 기록 {TOTAL:,}편을 한곳에 모았습니다.</p>
-    <blockquote>독서는 취미가 아닙니다. 특기이며, 특기를 넘어 주특기가 됩니다. 독서로 나의 세계를 바꾸기를 희망하며……</blockquote>
-    <div class="cta"><a class="btn gold" href="#sermon">말씀 읽기 →</a><a class="btn ghost" href="{YT_URL}" target="_blank" rel="noopener">▶ 유튜브 어음성경</a></div>
+    <div class="hero-main">
+      <span class="eyebrow">새암교회 담임 · 이재선 목사의 서재</span>
+      <h1>말씀을 읽고,<br><em>이야기</em>로 전하다</h1>
+      <p class="who">30년 강단에서 전한 설교와 주제별 예화 <b><!--YH-N-->여러</b>편, 책을 읽고 남긴 생각과 기도처럼 써 내려간 시. 설교를 준비하는 동역자와 말씀을 사랑하는 모든 분께 이 서재를 열어 둡니다.</p>
+      <!--YH-FIND-->
+      <div class="cta"><a class="btn gold" href="yehwa/index.html">주제별 예화 →</a><a class="btn ghost" href="#sermon">설교 읽기</a><a class="btn ghost" href="{YT_URL}" target="_blank" rel="noopener">▶ 어음성경</a></div>
+      <p class="motto">독서는 취미가 아닙니다. 특기를 넘어 주특기가 됩니다.</p>
+    </div>
+    <!--YH-TODAY-->
     <ul class="stats">{stats}</ul>
   </div>
 </header>
@@ -336,7 +369,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   </section>
 
   <section id="stories" aria-labelledby="stories-h">
-    <div class="head"><span class="eyebrow">은혜되는 예화</span><div class="row"><h2 id="stories-h">설교에 쓰는 이야기</h2><a href="{caturl(161)}" target="_blank" rel="noopener">예화 전체 {cnt(161)}편 →</a></div></div>
+    <div class="head"><span class="eyebrow">은혜되는 예화</span><div class="row"><h2 id="stories-h">설교에 쓰는 이야기</h2><a href="https://saechang888.blogspot.com/2026/10/blog-post_16.html" target="_blank" rel="noopener">블로그 예화 목차 →</a></div></div>
     <ul class="stories">{stories}</ul>
   </section>
 
@@ -360,7 +393,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
 <footer><div class="container"><span><b>독서주특기</b> · 이재선 목사 · 대한예수교장로회 새암교회</span><a href="{BLOG}" target="_blank" rel="noopener">blog.naver.com/saechang888 →</a></div></footer>'''
 if not PREVIEW:
     page = ('<!doctype html>\n<html lang="ko">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-            '<meta name="description" content="이재선 목사의 설교·시·팡세·독후감과 유튜브 어음성경">\n'
+            '<meta name="description" content="이재선 목사의 서재 — 주제별 설교 예화, 설교와 성경연구, 독후감, 시와 팡세, 유튜브 어음성경">\n'
             + page.replace('</style>', '</style>\n</head>\n<body>', 1) + '\n</body>\n</html>\n')
 open(os.path.join(D, 'index.html'), 'w', encoding='utf-8').write(page)
 print('ok total', TOTAL, 'bible books covered', covered, 'of', len(bible))

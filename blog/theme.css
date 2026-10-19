@@ -1,4 +1,4 @@
-﻿/* 독서주특기 구글 블로그 디자인 (홈페이지 저장소에서 관리) */
+/* 독서주특기 구글 블로그 디자인 (홈페이지 저장소에서 관리) */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap");
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 /* ── 바탕: 단풍·주황 배경을 걷어 내고 홈페이지와 같은 크림색 ── */
@@ -257,4 +257,33 @@ h3.post-title a:hover{color:#2f5d50!important}
   #dj-top .in{flex-wrap:wrap!important;padding:6px 12px;gap:4px}
   #dj-foot{padding:34px 16px 70px;font-size:13px}
   #dj-up{width:42px;height:42px;right:12px;bottom:12px}
+}
+
+/* ── 새 대문 (2026-10): 예화 찾기 · 오늘의 예화 ── */
+#dj-hero:before{background:linear-gradient(90deg,rgba(14,28,24,.96) 0%,rgba(14,28,24,.86) 42%,rgba(14,28,24,.42) 70%,rgba(14,28,24,.2) 100%)}
+#dj-hero .in{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:40px 56px;align-items:center}
+#dj-hero p b{color:#fff}
+#dj-hero .dj-find{margin-top:26px;display:grid;gap:12px;max-width:560px}
+#dj-hero .dj-find label{font-size:14px;color:rgba(246,239,224,.72)}
+#dj-hero .dj-find form{display:flex;align-items:center;background:rgba(253,250,243,.97);border-radius:99px;padding:6px 6px 6px 22px;box-shadow:0 18px 40px -18px rgba(0,0,0,.6),inset 0 0 0 1px rgba(217,184,106,.5);margin:0}
+#dj-hero .dj-find input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:16px;color:#1c2624;outline:0;padding:8px 0;box-shadow:none}
+#dj-hero .dj-find button{flex:none;border:0;border-radius:99px;background:#23443a;color:#f6efe0;font:inherit;font-weight:700;font-size:15px;padding:11px 22px;cursor:pointer}
+#dj-hero .chips{display:flex;flex-wrap:wrap;gap:8px}
+#dj-hero .chips a{font-size:13.5px;color:rgba(246,239,224,.9)!important;border:1px solid rgba(246,239,224,.24);border-radius:99px;padding:4px 13px;background:rgba(246,239,224,.05)}
+#dj-hero .chips a:hover{border-color:#d9b86a;color:#d9b86a!important}
+#dj-hero .msg{margin:0;font-size:14px;color:#d9b86a;min-height:1.2em}
+#dj-hero .msg a{color:inherit!important;text-decoration:underline}
+.dj-today{display:grid;gap:12px;align-content:start;padding:26px 26px 22px;border-radius:20px;background:rgba(20,36,31,.62);border:1px solid rgba(217,184,106,.32);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 30px 60px -30px rgba(0,0,0,.7);color:#f6efe0!important;text-decoration:none!important}
+.dj-today[hidden]{display:none}
+.dj-today .tag{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.14em;color:#d9b86a;font-weight:700}
+.dj-today .tag span{letter-spacing:0;font-weight:500;color:rgba(246,239,224,.6)}
+.dj-today .kw{justify-self:start;font-size:12.5px;color:#1d2a26;background:#d9b86a;border-radius:99px;padding:2px 12px;font-weight:700}
+.dj-today .tt{font:700 22px/1.45 "Noto Serif KR",serif;color:#fff}
+.dj-today .ex{font:400 15.5px/1.85 "Noto Serif KR",serif;color:rgba(246,239,224,.84)}
+.dj-today .vs{font-size:13.5px;color:rgba(246,239,224,.62);border-top:1px solid rgba(246,239,224,.14);padding-top:10px}
+.dj-today .go{font-size:14px;font-weight:700;color:#d9b86a}
+.dj-today:hover{border-color:#d9b86a}
+@media (max-width:860px){
+  #dj-hero .in{grid-template-columns:minmax(0,1fr);gap:28px}
+  #dj-hero .dj-find button{padding:10px 16px;font-size:14px}
 }
