@@ -375,6 +375,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   <section id="pensees" aria-labelledby="pensees-h">
     <div class="head"><span class="eyebrow">나의 팡세</span><div class="row"><h2 id="pensees-h">생각의 노트</h2><a href="{caturl(36)}" target="_blank" rel="noopener">팡세 전체 {cnt(36)}편 →</a></div>
     <p class="lede">목회와 신앙, 삶에 대해 떠오른 생각을 번호를 매겨 적어 온 노트입니다.</p></div>
+    <!--ANSHIK-M-->
     <ol class="notebook">{pensees}</ol>
   </section>
 

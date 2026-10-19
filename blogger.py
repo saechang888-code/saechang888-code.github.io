@@ -238,7 +238,7 @@ for y in yehwa:
 for i, p in enumerate(old_poems):
     jobs.append(dict(id=p['id'], date=(BSTART + datetime.timedelta(days=i // PER_CAT)).isoformat(), title=p['title'], render=lambda p=p: render_poem(p), labels=['시', p['sub']]))
 # 안식월 시집(anshik_poems.json): 사진이 있으면 맨 위에. 하루 AN_PER편씩
-AN_START, AN_PER = datetime.date(2026, 10, 20), 8
+AN_START, AN_PER = datetime.date(2026, 10, 20), 12
 def render_anshik(p):
     lines = ''.join(f'<p style="margin:0;min-height:1em">{esc(l)}</p>' for l in p['body'].split('\n'))
     photo = (f'<p style="margin:0 0 1.4em"><img src="{SITE}{p["photo"]}" alt="「{esc(p["title"])}」을 쓴 곳에서 찍은 사진" style="width:100%;height:auto;border-radius:10px"></p>'
@@ -249,9 +249,23 @@ def render_anshik(p):
             f'<div style="text-align:center;line-height:2.1">{lines}</div>{note}' +
             footer(f'<a href="{SITE}anshik/{p["id"]}.html" style="color:{GREEN}">홈페이지 안식월 시집에서 보기</a> · ') + '</div>')
 ap = os.path.join(D, 'anshik_poems.json')
-for i, p in enumerate(json.load(open(ap, encoding='utf-8')) if os.path.exists(ap) else []):
+# 이미 올린 시(posts.json에 있는 것, dup)는 다시 올리지 않는다
+for i, p in enumerate([p for p in (json.load(open(ap, encoding='utf-8')) if os.path.exists(ap) else []) if not p.get('dup')]):
     jobs.append(dict(id='an-' + p['id'], date=(AN_START + datetime.timedelta(days=i // AN_PER)).isoformat(), title=p['title'],
                      render=lambda p=p: render_anshik(p), labels=['시', p['sub'], '안식월 시집']))
+# 안식월 묵상(anshik_pensees.json) → 블로그 '팡세'. 하루 AN_PER편씩 시와 함께
+def render_med(m):
+    out = [nav('팡세'), badges(['팡세', '안식월 묵상']), f'<h2 style="font-size:24px;margin:.4em 0 1.2em;color:{INK}">{esc(m["title"])}</h2>']
+    for para in m['body'].split('\n'):
+        para = para.strip()
+        if not para: continue
+        out.append(f'<p style="{NOTE}">{esc(para[2:])}</p>' if para.startswith('▸ ') else f'<p style="{P}">{esc(para)}</p>')
+    out.append(footer(f'<a href="{SITE}anshik/{m["id"]}.html" style="color:{GREEN}">홈페이지 안식월 묵상에서 보기</a> · '))
+    return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
+mp = os.path.join(D, 'anshik_pensees.json')
+for i, m in enumerate(json.load(open(mp, encoding='utf-8')) if os.path.exists(mp) else []):
+    jobs.append(dict(id='an-' + m['id'], date=(AN_START + datetime.timedelta(days=i // 4)).isoformat(), title=f'[팡세] {m["title"]}',
+                     render=lambda m=m: render_med(m), labels=['팡세', '안식월 묵상']))
 by_id = {j['id']: j for j in jobs}
 # 예전에 올린 예화 묶음 글도 디자인을 다시 입힐 수 있게
 for p in all_posts:

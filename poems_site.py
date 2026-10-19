@@ -156,3 +156,50 @@ h = re.sub(r'<style>\.anshik\{.*?</a>', '', h, flags=re.S)
 h = h.replace('<!--ANSHIK-->', STY + band, 1)
 open(home, 'w', encoding='utf-8').write(h)
 print('안식월 시집', len(P), '편 · 사진', len(photos))
+
+# ---------- 안식월 묵상(팡세): anshik/meditations.html + 한 편마다 m###.html ----------
+mp = os.path.join(D, 'anshik_pensees.json')
+M = json.load(open(mp, encoding='utf-8')) if os.path.exists(mp) else []
+MCSS = PCSS + '''
+.mhead{border-radius:22px;padding:clamp(34px,7vw,72px) clamp(22px,5vw,48px) clamp(24px,4vw,36px);background:linear-gradient(135deg,#1d3530,#2f5d50);color:#f6efe0}
+.mhead .meta{color:#d9b86a}
+.prose{max-width:680px;margin:40px auto 0;font-size:1.06rem;line-height:2}
+.prose p{margin:0 0 1.2em}
+.prose .vs{font-family:var(--display);color:var(--green);background:var(--sheet);border-left:3px solid var(--gold);padding:10px 16px;margin:1.6em 0 .8em;font-size:.98rem;line-height:1.8}
+.mlist{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:12px}
+.mlist a{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;padding:18px 22px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;text-decoration:none;color:var(--ink)}
+.mlist a:hover{border-color:var(--gold)}
+.mlist .n{grid-row:span 2;font-family:var(--display);font-weight:900;font-size:1.5rem;color:var(--gold);min-width:2.2em}
+.mlist b{font-family:var(--display);font-size:1.12rem}
+.mlist span{color:var(--muted);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+'''
+def mdate(m):
+    y, mo, d = m['date'].split('-'); return f'{y}년 {int(mo)}월 {int(d)}일'
+for i, m in enumerate(M):
+    paras = ''
+    for para in m['body'].split('\n'):
+        para = para.strip()
+        if not para: continue
+        paras += f'<p class="vs">{esc(para[2:])}</p>' if para.startswith('▸ ') else f'<p>{esc(para)}</p>'
+    prv = M[i - 1] if i else None; nxt = M[i + 1] if i + 1 < len(M) else None
+    nav = ('<nav class="nav">' + (f'<a href="{prv["id"]}.html"><small>← 앞의 묵상</small>{esc(prv["title"])}</a>' if prv else '<span></span>')
+           + (f'<a class="nx" href="{nxt["id"]}.html"><small>다음 묵상 →</small>{esc(nxt["title"])}</a>' if nxt else '<span></span>') + '</nav>')
+    first = re.sub(r'^▸ ', '', m['body'].split('\n')[0])[:110]
+    page = HEAD.format(title=f'{esc(m["title"])} · 안식월 묵상 · 이재선 목사', desc=esc(f'이재선 목사(새암교회)의 묵상 「{m["title"]}」 — {first}'), css=MCSS).replace('<a href="index.html">안식월 시집</a>', '<a href="meditations.html">안식월 묵상</a> · <a href="index.html">안식월 시집</a>') + \
+        f'<header class="mhead"><div class="meta"><span>나의 팡세 · 안식월 묵상</span><span>{mdate(m)}</span></div><h1>{esc(m["title"])}</h1></header>' + \
+        f'<article class="prose">{paras}</article><p class="sign">— 이재선 목사 · 새암교회</p>{nav}' + FOOT
+    open(os.path.join(OUT, m['id'] + '.html'), 'w', encoding='utf-8').write(page)
+if M:
+    items = ''.join(f'<li><a href="{m["id"]}.html"><span class="n">{k}</span><b>{esc(m["title"])}</b><span>{mdate(m)} · {esc(re.sub(r"^▸ ", "", m["body"])[:90])}…</span></a></li>' for k, m in enumerate(M, 1))
+    idx = HEAD.format(title='안식월 묵상 · 나의 팡세 · 이재선 목사', desc=f'이재선 목사(새암교회)가 안식월에 말씀을 읽고 기도하며 적은 묵상 {len(M)}편', css=MCSS).replace('<a href="index.html">안식월 시집</a>', '<a href="meditations.html">안식월 묵상</a> · <a href="index.html">안식월 시집</a>') + f'''
+<header class="mhead"><div class="meta"><span>나의 팡세</span><span>{len(M)}편</span></div><h1>안식월 묵상</h1>
+<p style="margin:.8em 0 0;max-width:640px;opacity:.85">안식월과 기도원에서 성경을 읽고 기도하며 받은 깨달음을 적어 둔 노트입니다. 쉬는 동안 하나님께서 가르쳐 주신 것들을 그대로 옮겼습니다.</p></header>
+<ol class="mlist">{items}</ol>''' + FOOT
+    open(os.path.join(OUT, 'meditations.html'), 'w', encoding='utf-8').write(idx)
+    h = open(home, encoding='utf-8').read()
+    band = (f'<a class="anshik am" href="anshik/meditations.html" style="grid-template-columns:1fr"><div class="as-tx"><span class="eb">새로 엮은 팡세</span><h3>안식월 묵상 <small>{len(M)}편</small></h3>'
+            f'<p>{" · ".join(esc(m["title"]) for m in M[:6])} …</p><span class="go">묵상 노트 펼치기 →</span></div></a>')
+    h = re.sub(r'<a class="anshik am".*?</a>', '', h, flags=re.S)
+    h = h.replace('<!--ANSHIK-M-->', band, 1)
+    open(home, 'w', encoding='utf-8').write(h)
+print('안식월 묵상', len(M), '편')
