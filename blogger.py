@@ -304,6 +304,8 @@ reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn', 'an-'))][:MAX
 due = (reg[:3] + [j for j in due if j['id'].startswith('yn')][:YN_PER]             # 일반 글 몇 편 → 새로 쓴 예화 → 안식월 시 → 나머지
        + [j for j in due if j['id'].startswith('an-')][:AN_PER]
        + [j for j in due if j['id'].startswith(('yg', 'yk'))][:YG_PER + 1] + reg[3:])
+# 한 번에 너무 많이 올리면 블로거가 글쓰기를 막는다(2026-10-19 21편 뒤 403) → 하루 BLOGGER_TOTAL편까지만, 간격도 넉넉히
+due = due[:int(os.environ.get('BLOGGER_TOTAL', '12'))]
 for j in due:
     body = dict(kind='blogger#post', title=j['title'], content=add_more(j['render']()), labels=j['labels'])
     if j['date'] < TODAY:                        # 밀린 글은 원래 날짜 아침으로 (블로그 글 순서 유지)
@@ -326,5 +328,5 @@ for j in due:
     done[j['id']] = r.get('url', '')
     n += 1
     json.dump(done, open(done_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
-    time.sleep(45)
+    time.sleep(150)
 print('blogger: today', TODAY, 'posted', n, '· waiting', len(due) - n, '· total done', len(done))
