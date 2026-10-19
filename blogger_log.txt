@@ -1,4 +1,4 @@
-blogger: 실패 yn-0001 403 {
+blogger: 실패 20261016-o113 403 {
   "error": {
     "code": 403,
     "message": "The caller does not have permission",
@@ -13,4 +13,34 @@ blogger: 실패 yn-0001 403 {
   }
 }
 
-blogger: today 2026-10-19 posted 0 · waiting 42 · total done 125
+blogger: 실패 20261016-o114 403 {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "errors": [
+      {
+        "message": "The caller does not have permission",
+        "domain": "global",
+        "reason": "forbidden"
+      }
+    ],
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+blogger: 실패 20261101-h1 403 {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "errors": [
+      {
+        "message": "The caller does not have permission",
+        "domain": "global",
+        "reason": "forbidden"
+      }
+    ],
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+blogger: today 2026-10-20 posted 0 · waiting 58 · total done 125
