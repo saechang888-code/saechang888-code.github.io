@@ -30,7 +30,7 @@ def tag_page(path, url):
     open(path, 'w', encoding='utf-8').write(h)
 
 urls = [(SITE, '1.0'), (SITE + 'writings/index.html', '0.9'), (SITE + 'yehwa/index.html', '0.9'), (SITE + 'event.html', '0.6')]
-urls.append((SITE + 'anshik/index.html', '0.8'))
+urls.append((SITE + 'anshik/index.html', '0.8')); urls.append((SITE + 'saeam/', '1.0')); urls.append((SITE + 'anshik/meditations.html', '0.7'))
 for sub, pr in (('writings', '0.6'), ('yehwa', '0.7'), ('anshik', '0.6')):
     for f in sorted(glob.glob(os.path.join(D, sub, '*.html'))):
         name = os.path.basename(f)

@@ -1,4 +1,4 @@
-﻿# 매일 아침 블로그 새 글을 반영해 홈페이지를 다시 만들고 GitHub Pages에 배포한다.
+# 매일 아침 블로그 새 글을 반영해 홈페이지를 다시 만들고 GitHub Pages에 배포한다.
 name: build-and-deploy
 
 on:
@@ -43,6 +43,9 @@ jobs:
       # 행복나눔축제 안내 페이지 + 첫 화면 배너(행사일까지)
       - name: Event page
         run: python event.py
+      # 새암교회 안내 쪽 · 구조화 정보 · llms.txt (검색엔진과 AI 검색용)
+      - name: Church page
+        run: python church.py
       # 검색엔진용 sitemap.xml · robots.txt · 공유 카드 태그
       - name: SEO
         run: python seo.py
