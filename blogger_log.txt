@@ -1,0 +1,16 @@
+blogger: 실패 yn-0001 403 {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "errors": [
+      {
+        "message": "The caller does not have permission",
+        "domain": "global",
+        "reason": "forbidden"
+      }
+    ],
+    "status": "PERMISSION_DENIED"
+  }
+}
+
+blogger: today 2026-10-19 posted 0 · waiting 42 · total done 125
