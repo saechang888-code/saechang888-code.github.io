@@ -50,10 +50,12 @@ FOOT = '</div>\n</body>\n</html>\n'
 
 # ---------- 시 한 편 ----------
 PCSS = CSS + '''
-.hero{position:relative;border-radius:22px;overflow:hidden;min-height:clamp(260px,52vw,520px);display:grid;align-items:end;background:#1d2a26}
+.hero{position:relative;border-radius:22px;overflow:hidden;min-height:clamp(300px,56vw,560px);display:grid;align-items:end;background:#efe9f2}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,18,16,.82),rgba(10,18,16,.1) 60%)}
-.hero .cap{position:relative;z-index:1;padding:clamp(22px,5vw,48px);color:#fff}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(255,250,246,.35),transparent 55%)}
+.hero .cap{position:relative;z-index:1;justify-self:start;max-width:min(560px,calc(100% - 28px));margin:clamp(14px,3vw,28px);padding:clamp(18px,4vw,34px) clamp(20px,4.5vw,40px);color:#3a3346;background:rgba(255,252,248,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:18px;border:1px solid rgba(255,255,255,.7);box-shadow:0 10px 30px rgba(120,100,140,.16)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero .cap{background:rgba(26,30,36,.72);color:#efe9f2;border-color:rgba(255,255,255,.12)}}
+:root[data-theme="dark"] .hero .cap{background:rgba(26,30,36,.72);color:#efe9f2;border-color:rgba(255,255,255,.12)}
 .tint{border-radius:22px;padding:clamp(40px,9vw,96px) clamp(22px,5vw,48px) clamp(26px,5vw,44px);background:radial-gradient(120% 90% at 85% 0%,var(--c1),transparent 60%),radial-gradient(100% 80% at 0% 100%,var(--c2),transparent 60%),var(--sheet);border:1px solid var(--rule);position:relative;overflow:hidden}
 .tint::before{content:attr(data-s);position:absolute;right:-.06em;top:-.22em;font-family:var(--display);font-weight:900;font-size:clamp(7rem,26vw,15rem);line-height:1;color:var(--ink);opacity:.05}
 .meta{font-size:.86rem;letter-spacing:.06em;opacity:.85;display:flex;gap:10px;flex-wrap:wrap}
