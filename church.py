@@ -13,6 +13,7 @@ posts = load('posts.json', [])
 n_sermon = sum(1 for p in posts if p.get('kind') == '설교')
 S_TXT = f'{n_sermon // 100 * 100:,}여'
 n_yehwa = front.get('n') or 0
+n_topic = len(front.get('topics') or []) or 153
 n_poem = len(load('anshik_poems.json', []))
 CH = dict(name='새암교회', alt='용인 새암교회', denom='대한예수교장로회(합동)', addr='경기도 용인시 수지구 고기로 165 (동천동)',
           street='고기로 165', locality='용인시 수지구 동천동', region='경기도', tel='031-262-3440', pastor='이재선')
@@ -103,7 +104,7 @@ dt{{color:var(--muted)}} dd{{margin:0;font-weight:600}}
 <dt>주소</dt><dd>{CH["addr"]}</dd><dt>전화</dt><dd>{CH["tel"]}</dd></dl></div></section>
 <section><h2>담임목사의 서재</h2><div class="grid">
 <a class="card" href="../index.html#sermon" style="text-decoration:none;color:inherit"><b>설교 {S_TXT} 편</b><span>주일과 금요기도회에서 전한 말씀을 성경 권별로</span></a>
-<a class="card" href="../yehwa/index.html" style="text-decoration:none;color:inherit"><b>주제별 예화 {n_yehwa:,}편</b><span>설교와 교육에 쓰는 이야기, 153가지 주제</span></a>
+<a class="card" href="../yehwa/index.html" style="text-decoration:none;color:inherit"><b>주제별 예화 {n_yehwa:,}편</b><span>설교와 교육에 쓰는 이야기, {n_topic}가지 주제</span></a>
 <a class="card" href="../anshik/index.html" style="text-decoration:none;color:inherit"><b>안식월 시집 {n_poem}편</b><span>기도원과 산골에서 쓴 시와 사진</span></a>
 </div></section>
 <section class="faq"><h2>자주 묻는 질문</h2>{''.join(f'<details><summary>{esc(q2)}</summary><p>{esc(a)}</p></details>' for q2, a in FAQ)}</section>
@@ -136,7 +137,7 @@ open(os.path.join(D, 'llms.txt'), 'w', encoding='utf-8').write(f'''# 독서주�
 ''' + (f'- [2026 행복나눔축제 (12월 6일 주일 오전 11시, 새암교회 본당, 누구나 무료)]({SITE}event.html)\n' if show_event else '') + f'''
 ## 글
 - [설교 {S_TXT} 편 — 성경 권별]({SITE}#sermon)
-- [주제별 예화 {n_yehwa:,}편 — 153가지 주제]({SITE}yehwa/index.html)
+- [주제별 예화 {n_yehwa:,}편 — {n_topic}가지 주제]({SITE}yehwa/index.html)
 - [안식월 시집 {n_poem}편]({SITE}anshik/index.html)
 - [안식월 묵상]({SITE}anshik/meditations.html)
 - [글 보관함]({SITE}writings/index.html)

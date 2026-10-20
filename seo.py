@@ -38,13 +38,21 @@ for sub, pr in (('writings', '0.6'), ('yehwa', '0.7'), ('anshik', '0.6')):
         tag_page(f, u)
         if name != 'index.html': urls.append((u, pr))
 
-# 첫 화면에도 공유 카드
+# 첫 화면에도 공유 카드 — 글 수는 자료에서 그때그때 센다
+def _load(f, d):
+    p = os.path.join(D, f)
+    return json.load(open(p, encoding='utf-8')) if os.path.exists(p) else d
+_front = _load(os.path.join('yehwa', 'front.json'), {})
+_ns = sum(1 for p in _load('posts.json', []) if p.get('kind') == '설교')
+_nt = len(_front.get('topics') or []) or 153
+DESC = (f'새암교회 이재선 목사의 서재 — 설교 {_ns // 100 * 100:,}여 편, {_nt}가지 주제의 예화 {_front.get("n", 0):,}편, '
+        f'독후감과 안식월 시집 {len(_load("anshik_poems.json", []))}편을 나눕니다.')
 home = os.path.join(D, 'index.html'); h = open(home, encoding='utf-8').read()
 if 'property="og:title"' not in h:
     h = h.replace('</title>', '</title>\n' + (
         f'<link rel="canonical" href="{SITE}">\n<meta property="og:type" content="website">\n'
         f'<meta property="og:title" content="독서주특기 · 이재선 목사 (새암교회)">\n'
-        f'<meta property="og:description" content="새암교회 이재선 목사의 서재 — 설교 1,300여 편, 153가지 주제의 예화 3,700여 편, 독후감과 안식월 시집을 나눕니다.">\n'
+        f'<meta property="og:description" content="{esc(DESC)}">\n'
         f'<meta property="og:url" content="{SITE}">\n<meta property="og:image" content="{IMG}">\n<meta name="twitter:card" content="summary_large_image">\n'), 1)
     open(home, 'w', encoding='utf-8').write(h)
 
