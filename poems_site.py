@@ -4,12 +4,6 @@ import os, json, html, re
 D = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(D, 'anshik')
 P = json.load(open(os.path.join(D, 'anshik_poems.json'), encoding='utf-8'))
-# 사진이 없는 시에는 미술관이 공개한(퍼블릭 도메인·CC0) 옛 수채화를 곁들인다 — anshik_art.json(시작업/art_assign.py가 만든다)
-_ap = os.path.join(D, 'anshik_art.json')
-ART = json.load(open(_ap, encoding='utf-8')) if os.path.exists(_ap) else {}
-for p in P:
-    a = ART.get(p['id']) if not p['photo'] else None
-    if a: p['photo'], p['art'] = a['img'], a
 def esc(s): return html.escape(s, quote=True)
 SEASON = {12: 'w', 1: 'w', 2: 'w', 3: 'sp', 4: 'sp', 5: 'sp', 6: 'su', 7: 'su', 8: 'su', 9: 'au', 10: 'au', 11: 'au'}
 SNAME = {'sp': '봄', 'su': '여름', 'au': '가을', 'w': '겨울'}
@@ -75,7 +69,6 @@ h1{font-family:var(--brush);font-weight:400;font-size:clamp(2.6rem,8vw,4.4rem);l
 .nav{max-width:760px;margin:44px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .nav a{display:grid;gap:2px;padding:14px 18px;border:1px solid var(--rule);border-radius:14px;background:var(--sheet);text-decoration:none;color:var(--ink)}
 .nav a small{color:var(--muted)}.nav .nx{text-align:right}
-.credit{margin:10px 4px 0;text-align:right;font-size:.78rem;color:var(--muted)}.credit a{color:inherit}
 '''
 os.makedirs(OUT, exist_ok=True)
 for f in os.listdir(OUT):
@@ -83,11 +76,7 @@ for f in os.listdir(OUT):
 for i, p in enumerate(P):
     s = season(p)
     meta = f'<div class="meta"><span>{esc(p["sub"])}</span><span>{kdate(p)}</span><span>{SNAME[s]}</span></div>'
-    art = p.get('art')
-    alt = f'{art["artist"]}의 수채화 「{art["title"]}」' if art else f'「{p["title"]}」을 쓴 곳에서 찍은 사진'
-    credit = (f'<p class="credit">그림: {esc(art["artist"])}, <a href="{esc(art["url"])}" target="_blank" rel="noopener">〈{esc(art["title"])}〉</a>'
-              + (f' ({esc(art["date"])})' if art['date'] else '') + f' · {esc(art["museum"])} 소장 · 퍼블릭 도메인</p>') if art else ''
-    top = (f'<header class="hero"><img src="../{p["photo"]}" alt="{esc(alt)}" loading="eager"><div class="cap">{meta}<h1>{esc(p["title"])}</h1></div></header>'
+    top = (f'<header class="hero"><img src="../{p["photo"]}" alt="「{esc(p["title"])}」을 쓴 곳에서 찍은 사진" loading="eager"><div class="cap">{meta}<h1>{esc(p["title"])}</h1></div></header>'
            if p['photo'] else f'<header class="tint {s}" data-s="{SNAME[s]}">{meta}<h1>{esc(p["title"])}</h1></header>')
     body = ''.join(f'<p>{esc(l)}</p>' for l in p['body'].split('\n'))
     note = f'<p class="note">✎ {esc(p["note"])}</p>' if p['note'] else ''
@@ -95,7 +84,7 @@ for i, p in enumerate(P):
     nav = ('<nav class="nav">' + (f'<a href="{prv["id"]}.html"><small>← 앞의 시</small>{esc(prv["title"])}</a>' if prv else '<span></span>')
            + (f'<a class="nx" href="{nxt["id"]}.html"><small>다음 시 →</small>{esc(nxt["title"])}</a>' if nxt else '<span></span>') + '</nav>')
     page = HEAD.format(title=f'{esc(p["title"])} · 안식월 시집 · 이재선 목사', desc=esc(f'이재선 목사(새암교회)의 시 「{p["title"]}」 — {first_lines(p)}'), css=PCSS) + \
-        top + credit + f'<article class="poem">{body}</article>{note}<p class="sign">— 이재선 목사 · 새암교회</p>{nav}' + FOOT
+        top + f'<article class="poem">{body}</article>{note}<p class="sign">— 이재선 목사 · 새암교회</p>{nav}' + FOOT
     open(os.path.join(OUT, p['id'] + '.html'), 'w', encoding='utf-8').write(page)
 
 # ---------- 시집 목차 ----------
@@ -125,7 +114,7 @@ h2 small{font-size:.55em;color:var(--muted);font-family:var(--body)}
 '''
 years = sorted({p['year'] for p in P})
 subs = ['자연시', '생활시', '묵상시', '찬양시']
-photos = [p for p in P if p['photo'] and not p.get('art')]  # 표지 모자이크는 직접 찍은 사진만
+photos = [p for p in P if p['photo']]
 mosaic = ''.join(f'<img src="../{p["photo"]}" alt="" loading="lazy">' for p in photos[:7])
 def card(p):
     s = season(p)
@@ -137,7 +126,7 @@ secs = ''.join(f'<section data-year><h2 id="y{y}">{y}년 <small>{sum(1 for p in 
 index = HEAD.format(title='안식월 시집 · 이재선 목사', desc=f'이재선 목사(새암교회)가 안식월과 기도원에서 쓴 시 {len(P)}편 — 자연시, 생활시, 묵상시, 찬양시', css=ICSS) + f'''
 <section class="cover"><div><span class="eb">이재선 목사의 시</span><h1>안식월 시집</h1>
 <p>2011년 첫 안식월, 가평 필그림하우스의 밤 개구리 소리를 듣다가 처음 시를 적었습니다. 그 뒤로 광은기도원과 남해, 홍천의 산골에서 쉬고 기도하며 쓴 시가 {len(P)}편이 되었습니다.</p>
-<p>산과 나무, 바람과 바다, 그리고 그 사이에서 만난 사람들과 하나님 이야기입니다. 사진은 그때 그 자리에서 찍은 것이고, 사진이 없는 시에는 미술관이 공개한 옛 수채화를 곁들였습니다.</p></div>
+<p>산과 나무, 바람과 바다, 그리고 그 사이에서 만난 사람들과 하나님 이야기입니다. 사진은 그때 그 자리에서 찍은 것입니다.</p></div>
 <div class="mosaic">{mosaic}</div></section>
 <nav class="bar" aria-label="갈래와 해"><button type="button" data-f="" aria-pressed="true">전체 {len(P)}</button>'''
 index += ''.join(f'<button type="button" data-f="{s}" aria-pressed="false">{s} {sum(1 for p in P if p["sub"] == s)}</button>' for s in subs)
