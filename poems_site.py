@@ -17,6 +17,7 @@ def first_lines(p, n=2):
 
 CSS = '''
 :root{--paper:#f7f4ec;--sheet:#fffdf8;--ink:#1f2a2e;--muted:#66706c;--rule:#e2dccd;--green:#23443a;--gold:#b08a3e;
+--poem:"Nanum Pen Script","Gowun Batang","Noto Serif KR",serif;--brush:"Nanum Brush Script","Nanum Pen Script","Noto Serif KR",serif;
 --display:"Noto Serif KR","Nanum Myeongjo","Batang",serif;--body:"Pretendard Variable",Pretendard,"Malgun Gothic",system-ui,sans-serif;
 --sp1:#f3e3e6;--sp2:#e3efe0;--su1:#dcefee;--su2:#e7f1dc;--au1:#f3e2c8;--au2:#ecd6c4;--w1:#e3e8ee;--w2:#eef0f2}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121716;--sheet:#1a2120;--ink:#ebe7dd;--muted:#a3ada9;--rule:#2c3533;--green:#9fd0bb;--gold:#d9b86a;
@@ -38,7 +39,7 @@ HEAD = '''<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700;900&family=Nanum+Pen+Script&family=Nanum+Brush+Script&family=Gowun+Batang&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>{css}</style>
 </head>
@@ -60,11 +61,11 @@ PCSS = CSS + '''
 .tint::before{content:attr(data-s);position:absolute;right:-.06em;top:-.22em;font-family:var(--display);font-weight:900;font-size:clamp(7rem,26vw,15rem);line-height:1;color:var(--ink);opacity:.05}
 .meta{font-size:.86rem;letter-spacing:.06em;opacity:.85;display:flex;gap:10px;flex-wrap:wrap}
 .meta span{border:1px solid currentColor;border-radius:99px;padding:1px 10px}
-h1{font-family:var(--display);font-weight:900;font-size:clamp(2rem,6vw,3.4rem);line-height:1.25;margin:.25em 0 0;letter-spacing:-.02em}
-.poem{max-width:640px;margin:44px auto 0;font-family:var(--display);font-size:clamp(1.06rem,2.4vw,1.2rem);line-height:2.15;text-align:center}
+h1{font-family:var(--brush);font-weight:400;font-size:clamp(2.6rem,8vw,4.4rem);line-height:1.15;margin:.2em 0 0;letter-spacing:0}
+.poem{max-width:640px;margin:44px auto 0;font-family:var(--poem);font-size:clamp(1.55rem,3.6vw,1.85rem);line-height:1.75;text-align:center;letter-spacing:.01em}
 .poem p{margin:0;min-height:1.1em}
 .note{max-width:640px;margin:34px auto 0;padding:14px 18px;border-left:3px solid var(--gold);background:var(--sheet);color:var(--muted);font-size:.93rem;line-height:1.75}
-.sign{text-align:center;margin-top:26px;color:var(--muted);font-family:var(--display)}
+.sign{text-align:center;margin-top:26px;color:var(--muted);font-family:var(--poem);font-size:1.4rem}
 .nav{max-width:760px;margin:44px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .nav a{display:grid;gap:2px;padding:14px 18px;border:1px solid var(--rule);border-radius:14px;background:var(--sheet);text-decoration:none;color:var(--ink)}
 .nav a small{color:var(--muted)}.nav .nx{text-align:right}
@@ -89,7 +90,7 @@ for i, p in enumerate(P):
 # ---------- 시집 목차 ----------
 ICSS = CSS + '''
 .cover{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center;margin-bottom:34px}
-.cover h1{font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.2;margin:.2em 0 .3em}
+.cover h1{font-family:var(--brush);font-weight:400;font-size:clamp(2.8rem,8vw,4.8rem);line-height:1.2;margin:.2em 0 .3em}
 .cover .eb{color:var(--gold);font-weight:700;letter-spacing:.16em;font-size:.82rem}
 .cover p{color:var(--muted);margin:0 0 .8em}
 .mosaic{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:110px;gap:8px}
@@ -106,7 +107,7 @@ h2 small{font-size:.55em;color:var(--muted);font-family:var(--body)}
 .grid .ph{aspect-ratio:4/3;background:radial-gradient(120% 90% at 85% 0%,var(--c1),transparent 60%),radial-gradient(100% 80% at 0% 100%,var(--c2),transparent 60%),var(--sheet);display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:1.25rem;padding:14px;text-align:center}
 .grid .ph.has{padding:0;overflow:hidden}.grid .ph img{display:block;width:100%;height:100%;object-fit:cover}
 .grid .tx{padding:12px 16px 16px;display:grid;gap:4px;align-content:start}
-.grid b{font-family:var(--display);font-size:1.05rem}
+.grid b{font-family:var(--poem);font-weight:400;font-size:1.5rem;line-height:1.3}
 .grid small{color:var(--muted);font-size:.8rem}
 .grid span{color:var(--muted);font-size:.88rem;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 @media (max-width:720px){.cover{grid-template-columns:1fr}}
