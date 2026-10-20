@@ -135,8 +135,10 @@ def render_index(groups):
 
 # ---------- 새로 쓴 예화(둘로스·sermon-jesus·설교·독후감에서 줄거리를 새로 쓴 것): 들어온 차례대로 10편씩 한 글 ----------
 YN_SIZE = 10
+# 목회 프리미엄 골드(USB)에서 고른 글은 출처를 '온라인에 공유된 감동적인 글'로 적는다
+def credit_txt(c): return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)' if '목회 프리미엄' in c else c
 def src_note(y):
-    if y.get('credit'): return f'📜 원글: {esc(y["credit"])} — 줄거리를 바탕으로 새로 써서 옮김'
+    if y.get('credit'): return f'📜 원글: {esc(credit_txt(y["credit"]))} — 줄거리를 바탕으로 새로 써서 옮김'
     if y.get('book'): return f'📚 독후감 「{esc(y["book"])}」에서'
     if y.get('origin'): return f'📜 출처: {esc(y["origin"])} (기록을 바탕으로 새로 씀)'
     return ''

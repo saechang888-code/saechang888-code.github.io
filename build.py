@@ -338,7 +338,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
     <div class="hero-main">
       <span class="eyebrow">새암교회 담임 · 이재선 목사의 서재</span>
       <h1>말씀을 읽고,<br><em>이야기</em>로 전하다</h1>
-      <p class="who">30년 강단에서 전한 설교, <b><!--YH-K-->153</b>가지 주제로 엮은 예화 <b><!--YH-N-->여러</b>편. 설교자료와 목회 자료집, 독후감에서 좋은 이야기를 골라 새 문장으로 다시 쓴 예화 <b><!--YH-NEW-->여러</b>편이 날마다 더해집니다. 설교를 준비하는 동역자와 말씀을 사랑하는 모든 분께 이 서재를 열어 둡니다.</p>
+      <p class="who">30년 강단에서 전한 설교, <b><!--YH-K-->153</b>가지 주제로 엮은 예화 <b><!--YH-N-->여러</b>편. 설교자료와 온라인에 공유된 감동적인 글, 독후감에서 좋은 이야기를 골라 새 문장으로 다시 쓴 예화 <b><!--YH-NEW-->여러</b>편이 날마다 더해집니다. 설교를 준비하는 동역자와 말씀을 사랑하는 모든 분께 이 서재를 열어 둡니다.</p>
       <!--YH-FIND-->
       <div class="cta"><a class="btn gold" href="yehwa/index.html">주제별 예화 →</a><a class="btn ghost" href="#sermon">설교 읽기</a><a class="btn ghost" href="{YT_URL}" target="_blank" rel="noopener">▶ 어음성경</a></div>
       <p class="motto">독서는 취미가 아닙니다. 특기를 넘어 주특기가 됩니다.</p>
