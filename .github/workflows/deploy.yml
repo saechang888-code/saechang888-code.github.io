@@ -37,6 +37,9 @@ jobs:
       # 예화 전체를 주제별로 (가 편 ~ 하 편)
       - name: Illustrations by topic
         run: python yehwa_site.py
+      # 뜻으로 찾기: 예화·설교·독후감·시를 뜻 벡터로 (search/)
+      - name: Meaning search
+        run: pip install -q numpy && python search_site.py
       # 안식월 시집 (시 한 편마다 한 쪽, 사진과 함께)
       - name: Sabbatical poems
         run: python poems_site.py
@@ -61,7 +64,7 @@ jobs:
             git pull --rebase -X ours origin main && git push
           fi
       - name: Prepare site
-        run: mkdir -p _site && cp -r index.html event.html privacy.html sitemap.xml robots.txt llms.txt assets writings yehwa anshik saeam blog _site/
+        run: mkdir -p _site && cp -r index.html event.html privacy.html sitemap.xml robots.txt llms.txt assets writings yehwa search anshik saeam blog _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

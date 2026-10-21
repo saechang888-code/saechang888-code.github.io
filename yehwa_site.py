@@ -186,19 +186,23 @@ SITE = 'https://saechang888-code.github.io/'
 T = {k: slug(k) for k in kws}
 POP = [k for k in '감사 기도 사랑 믿음 용서 고난 소망 겸손 가정 전도'.split() if k in by]
 find = ('<div class="finder"><label for="yq">어떤 주제의 예화가 필요하세요?</label>'
-        '<form id="yfind" role="search" action="yehwa/index.html"><input id="yq" name="q" list="ykws" placeholder="예: 감사, 용서, 고난, 부부" autocomplete="off" enterkeyhint="search">'
+        '<form id="yfind" role="search" action="yehwa/index.html"><input id="yq" name="q" list="ykws" placeholder="예: 감사, 용서 · 또는 풍랑 속에서 지킨 믿음" autocomplete="off" enterkeyhint="search">'
         '<button type="submit">예화 찾기</button></form>'
         '<datalist id="ykws">' + ''.join(f'<option value="{esc(k)}">' for k in kws) + '</datalist>'
-        '<div class="chips">' + ''.join(f'<a href="yehwa/{slug(k)}.html">{esc(k)}</a>' for k in POP) + f'<a href="yehwa/index.html">주제 {len(kws)}가지 모두</a></div>'
+        '<div class="chips">' + ''.join(f'<a href="yehwa/{slug(k)}.html">{esc(k)}</a>' for k in POP) + f'<a href="yehwa/index.html">주제 {len(kws)}가지 모두</a><a href="search/index.html">🔎 뜻으로 찾기</a></div>'
         '<p class="msg" id="ymsg" aria-live="polite"></p></div>\n'
         '<script>(function(){var T=' + json.dumps(T, ensure_ascii=False) + ';'
         "var f=document.getElementById('yfind'),q=document.getElementById('yq'),m=document.getElementById('ymsg');"
+        # 주제 이름이 아니거나 문장으로 적으면 뜻으로 찾기(search/)로 넘긴다
+        "var S=function(){location.href='search/index.html?q='+encodeURIComponent(q.value.trim());};"
         "f.addEventListener('submit',function(e){e.preventDefault();var s=q.value.replace(/[【】\\s]/g,'');if(!s)return;"
         "if(T[s]){location.href='yehwa/'+T[s]+'.html';return;}"
+        "if(/\\s/.test(q.value.trim())){S();return;}"
         "var k=Object.keys(T).filter(function(k){return k.indexOf(s)>=0||s.indexOf(k)>=0;});"
         "if(k.length===1){location.href='yehwa/'+T[k[0]]+'.html';return;}"
-        "m.innerHTML=k.length?'비슷한 주제: '+k.slice(0,8).map(function(x){return '<a href=\"yehwa/'+T[x]+'.html\" style=\"color:inherit\">'+x+'</a>';}).join(' · ')"
-        ":'「'+s.replace(/[<>&]/g,'')+'」 주제는 아직 없습니다. <a href=\"yehwa/index.html\" style=\"color:inherit\">주제 목록 보기 →</a>';});})();</script>")
+        "if(!k.length){S();return;}"
+        "m.innerHTML='비슷한 주제: '+k.slice(0,8).map(function(x){return '<a href=\"yehwa/'+T[x]+'.html\" style=\"color:inherit\">'+x+'</a>';}).join(' · ')"
+        "+' · <a href=\"search/index.html?q='+encodeURIComponent(q.value.trim())+'\" style=\"color:inherit\">내용으로 찾기 →</a>';});})();</script>")
 # 새로 쓴 예화: 온라인에 공개된 감동적인 예화 · 온라인에 공유된 감동적인 글 · 독후감 · 역사와 고전에서 골라 새 문장으로 쓴 것
 def is_new(x): return bool(x.get('credit') or x.get('book') or x.get('origin'))
 def src_of(x):
@@ -247,4 +251,7 @@ json.dump({'n': len(y), 'topics': [[k2, slug(k2), len(by[k2])] for k2 in kws], '
            'today': {'kw': k, 'title': x['title'], 'excerpt': excerpt, 'ref': ref, 'url': SITE + url, 'date': f'{KST.month}월 {KST.day}일'}},
           open(os.path.join(OUT, 'front.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 open(home, 'w', encoding='utf-8').write(h)
+# 뜻으로 찾기(search_site.py)가 쓸 예화 목록 — 배포하지 않는 작업 파일
+json.dump([{'t': x['title'], 'kw': k2, 'u': url_of(x), 'b': x['body']} for k2 in kws for x in by[k2]],
+          open(os.path.join(D, '_yehwa_list.json'), 'w', encoding='utf-8'), ensure_ascii=False)
 print('예화', len(y), '주제', len(kws))
