@@ -68,11 +68,33 @@ BLOG_ASK = ('<aside style="background:var(--sheet);border:1px solid var(--gold);
 FOOT = BLOG_ASK + '</div>\n</body>\n</html>\n'
 
 # 목회 프리미엄 골드(USB)에서 고른 글은 '온라인에 공유된 감동적인 글', 둘로스 자료는 '온라인에 공개된 감동적인 예화'로 적는다
+# 원글이 신문·잡지에 실린 것이면 매체 이름과 날짜로 적는다 (예: '(국민960930)' → '국민일보 1996.9.30', '(광야9811)' → '「광야」 1998년 11월호')
+PRESS = [('국민일보', '국민일보'), ('국민', '국민일보'), ('오늘의 ?양식', '「오늘의 양식」'), ('생명의 ?샘가', '「생명의 샘가」'), ('낮은 ?울타리', '「낮은울타리」'),
+         ('좋은 ?생각', '「좋은생각」'), ('가이드포스트', '「가이드포스트」'), ('광야', '「광야」'), ('작은창', '「작은창」'), ('목마르거든', '「목마르거든」'),
+         ('푸른직장', '「푸른직장」'), ('여의주', '「여의주」'), ('([가-힣 ]*(?:신문|일보))', None)]
+def press_date(t, mag):
+    d = re.sub(r'(월호|호)$', '', t.strip())
+    if not re.fullmatch(r'\d{4}|\d{6}|\d{8}', d): return ''      # 날짜를 확실히 읽을 수 없으면 매체 이름만
+    if len(d) == 6 and d[:2] in ('19', '20'): y, m, dd = d[:4], d[4:], None
+    elif len(d) == 8: y, m, dd = d[:4], d[4:6], d[6:]
+    else: y, m, dd = ('19' if int(d[:2]) >= 60 else '20') + d[:2], d[2:4], (d[4:] or None)
+    if not (1960 <= int(y) <= 2026 and 1 <= int(m) <= 12 and (dd is None or 1 <= int(dd) <= 31)): return ''
+    if mag and dd is None: return f' {y}년 {int(m)}월호'
+    return f' {y}.{int(m)}' + (f'.{int(dd)}' if dd else '')
+def press(c):
+    m = re.search(r'\(([^()]*)\)\s*$', c)
+    if not m or '게재' in m.group(1): return None
+    for p, name in PRESS:
+        k = re.match(p + r'(?![가-힣])\s*[,/]?\s*(.*)$', m.group(1).strip())
+        if k: name = name or k.group(1).strip(); return name + press_date(k.groups()[-1], name.startswith('「'))
+    return None
 def credit_txt(c):
     if '게재)' in c: return c   # 신문·잡지에 실린 글을 소재로 쓴 예화 (출처: 「원제」 (매체 게재))
     if '아름다운 글)' in c: return c   # 네이버·구글에 올라온 좋은 글을 소재로 쓴 예화 (출처: 온라인에 공유된 아름다운 글)
     if '목회 프리미엄' in c: return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)'
     if '설교 「' in c: return '온라인에 공유된 감동적인 예화'   # 둘로스 설교 원고 속에서 뽑은 예화
+    p = press(c)
+    if p: t = re.search(r'「[^」]*」', c); return (t.group(0) + ' ' if t else '') + f'({p} 게재)'
     # 둘로스 자료에서 고른 글은 원글 제목만 두고 출처는 '온라인에 공개된 감동적인 예화'로 적는다
     t = re.search(r'「[^」]*」', c)
     return (t.group(0) + ' ' if t else '') + '(온라인에 공개된 감동적인 예화)'
@@ -213,7 +235,7 @@ def is_new(x): return bool(x.get('credit') or x.get('book') or x.get('origin'))
 def src_of(x):
     if x.get('book'): return '독후감'
     if x.get('origin'): return '역사와 고전'
-    if '게재)' in x.get('credit', ''): return '신문·잡지에 실린 글'
+    if '게재)' in x.get('credit', '') or press(x.get('credit', '')): return '신문·잡지에 실린 글'
     if '아름다운 글)' in x.get('credit', ''): return '온라인에 공유된 아름다운 글'
     return '온라인에 공유된 감동적인 글' if '목회 프리미엄' in x.get('credit', '') else '온라인에 공개된 감동적인 예화'
 def excerpt_of(x, n=120):
