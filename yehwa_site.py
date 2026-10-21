@@ -69,6 +69,7 @@ FOOT = BLOG_ASK + '</div>\n</body>\n</html>\n'
 
 # 목회 프리미엄 골드(USB)에서 고른 글은 '온라인에 공유된 감동적인 글', 둘로스 자료는 '온라인에 공개된 감동적인 예화'로 적는다
 def credit_txt(c):
+    if '게재)' in c: return c   # 신문·잡지에 실린 글을 소재로 쓴 예화 (출처: 「원제」 (매체 게재))
     if '아름다운 글)' in c: return c   # 네이버·구글에 올라온 좋은 글을 소재로 쓴 예화 (출처: 온라인에 공유된 아름다운 글)
     if '목회 프리미엄' in c: return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)'
     if '설교 「' in c: return '온라인에 공유된 감동적인 예화'   # 둘로스 설교 원고 속에서 뽑은 예화
@@ -212,6 +213,7 @@ def is_new(x): return bool(x.get('credit') or x.get('book') or x.get('origin'))
 def src_of(x):
     if x.get('book'): return '독후감'
     if x.get('origin'): return '역사와 고전'
+    if '게재)' in x.get('credit', ''): return '신문·잡지에 실린 글'
     if '아름다운 글)' in x.get('credit', ''): return '온라인에 공유된 아름다운 글'
     return '온라인에 공유된 감동적인 글' if '목회 프리미엄' in x.get('credit', '') else '온라인에 공개된 감동적인 예화'
 def excerpt_of(x, n=120):
@@ -223,7 +225,7 @@ where = {id(x): (k2, i2) for k2 in kws for i2, x in enumerate(by[k2])}
 def url_of(x):
     k2, i2 = where[id(x)]; return f'yehwa/{pname(k2, i2 // PER + 1)}#y{i2 + 1}'
 newy = [x for x in y if is_new(x)]
-SRCS = ['온라인에 공개된 감동적인 예화', '온라인에 공유된 감동적인 글', '온라인에 공유된 아름다운 글', '독후감', '역사와 고전']
+SRCS = ['온라인에 공개된 감동적인 예화', '온라인에 공유된 감동적인 글', '온라인에 공유된 아름다운 글', '신문·잡지에 실린 글', '독후감', '역사와 고전']
 src_n = {s: sum(1 for x in newy if src_of(x) == s) for s in SRCS}
 # 가장 최근에 쓴 것: yehwa_ai.json 끝에서부터 (export.py가 새 예화를 뒤에 붙인다)
 recent = (json.load(open(ai, encoding='utf-8')) if os.path.exists(ai) else [])[::-1]
