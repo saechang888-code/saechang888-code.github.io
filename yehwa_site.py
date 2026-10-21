@@ -63,8 +63,12 @@ article p{{margin:0 0 .8em}}
 '''
 FOOT = '</div>\n</body>\n</html>\n'
 
-# 목회 프리미엄 골드(USB)에서 고른 글은 출처를 '온라인에 공유된 감동적인 글'로 적는다
-def credit_txt(c): return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)' if '목회 프리미엄' in c else c
+# 목회 프리미엄 골드(USB)에서 고른 글은 '온라인에 공유된 감동적인 글', 둘로스 자료는 '온라인에 공개된 감동적인 예화'로 적는다
+def credit_txt(c):
+    if '목회 프리미엄' in c: return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)'
+    # 둘로스 자료에서 고른 글은 원글 제목만 두고 출처는 '온라인에 공개된 감동적인 예화'로 적는다
+    t = re.search(r'「[^」]*」', c)
+    return (t.group(0) + ' ' if t else '') + '(온라인에 공개된 감동적인 예화)'
 def src_line(x):
     if x.get('credit'): return f'📜 원글: {esc(credit_txt(x["credit"]))} — 줄거리를 바탕으로 새로 써서 옮김'
     if x.get('sermon'): return f'📖 인용한 설교: {esc(x["sermon"])}'
@@ -193,12 +197,12 @@ find = ('<div class="finder"><label for="yq">어떤 주제의 예화가 필요�
         "if(k.length===1){location.href='yehwa/'+T[k[0]]+'.html';return;}"
         "m.innerHTML=k.length?'비슷한 주제: '+k.slice(0,8).map(function(x){return '<a href=\"yehwa/'+T[x]+'.html\" style=\"color:inherit\">'+x+'</a>';}).join(' · ')"
         ":'「'+s.replace(/[<>&]/g,'')+'」 주제는 아직 없습니다. <a href=\"yehwa/index.html\" style=\"color:inherit\">주제 목록 보기 →</a>';});})();</script>")
-# 새로 쓴 예화: 둘로스 설교자료 · 온라인에 공유된 감동적인 글 · 독후감 · 역사와 고전에서 골라 새 문장으로 쓴 것
+# 새로 쓴 예화: 온라인에 공개된 감동적인 예화 · 온라인에 공유된 감동적인 글 · 독후감 · 역사와 고전에서 골라 새 문장으로 쓴 것
 def is_new(x): return bool(x.get('credit') or x.get('book') or x.get('origin'))
 def src_of(x):
     if x.get('book'): return '독후감'
     if x.get('origin'): return '역사와 고전'
-    return '온라인에 공유된 감동적인 글' if '목회 프리미엄' in x.get('credit', '') else '둘로스 설교자료'
+    return '온라인에 공유된 감동적인 글' if '목회 프리미엄' in x.get('credit', '') else '온라인에 공개된 감동적인 예화'
 def excerpt_of(x, n=120):
     story = x['body'].split('\n\n')[0].strip()
     cut = story[:n]; dot = max(cut.rfind('다. '), cut.rfind('니다.'))
@@ -208,7 +212,7 @@ where = {id(x): (k2, i2) for k2 in kws for i2, x in enumerate(by[k2])}
 def url_of(x):
     k2, i2 = where[id(x)]; return f'yehwa/{pname(k2, i2 // PER + 1)}#y{i2 + 1}'
 newy = [x for x in y if is_new(x)]
-SRCS = ['둘로스 설교자료', '온라인에 공유된 감동적인 글', '독후감', '역사와 고전']
+SRCS = ['온라인에 공개된 감동적인 예화', '온라인에 공유된 감동적인 글', '독후감', '역사와 고전']
 src_n = {s: sum(1 for x in newy if src_of(x) == s) for s in SRCS}
 # 가장 최근에 쓴 것: yehwa_ai.json 끝에서부터 (export.py가 새 예화를 뒤에 붙인다)
 recent = (json.load(open(ai, encoding='utf-8')) if os.path.exists(ai) else [])[::-1]
@@ -219,7 +223,7 @@ fcards = ''.join(f'<li><a href="{url_of(x)}"><span class="fk">【{esc(x["kw"])}�
 fsrc = ''.join(f'<li><b>{src_n[s]:,}</b><span>{s}</span></li>' for s in SRCS if src_n[s])
 fresh = ('<section id="fresh" aria-labelledby="fresh-h"><div class="head"><span class="eyebrow">새로 쓴 예화</span>'
          f'<div class="row"><h2 id="fresh-h">좋은 이야기를 골라, 새 문장으로</h2><a href="yehwa/index.html">새로 쓴 예화 {len(newy):,}편 · 주제별로 보기 →</a></div>'
-         '<p class="lede">둘로스 설교자료와 온라인에 공유된 감동적인 글, 그리고 제가 읽은 책의 독후감에서 설교에 쓸 만한 이야기를 골라 사실을 확인하고 새 문장으로 다시 썼습니다. '
+         '<p class="lede">온라인에 공개된 감동적인 예화와 글, 그리고 제가 읽은 책의 독후감에서 설교에 쓸 만한 이야기를 골라 사실을 확인하고 새 문장으로 다시 썼습니다. '
          '편마다 적용과 개역개정 말씀을 붙이고, 원글의 저자와 출처를 밝혀 두었습니다.</p></div>'
          f'<ul class="fsrc">{fsrc}</ul><ul class="fcards">{fcards}</ul></section>')
 # 오늘의 예화: 새로 쓴 예화 가운데 날짜마다 하나
