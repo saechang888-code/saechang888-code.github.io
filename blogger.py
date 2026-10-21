@@ -66,8 +66,12 @@ def nav(cur):
             + ' &nbsp;·&nbsp; '.join(a) + '</p>')
 
 def badges(words): return '<p style="margin:0 0 1.4em">' + ''.join(f'<span style="{BADGE}">{esc(w)}</span>' for w in words) + '</p>'
+# 모든 글 맨 아래: 홈페이지 배너(누르면 홈페이지로)와 주소
+BANNER = (f'<p style="margin:2em 0 0;text-align:center"><a href="{SITE}"><img src="{SITE}assets/blog_banner.jpg" '
+          f'alt="독서주특기 홈페이지 바로가기" style="width:100%;max-width:680px;height:auto;border:0;border-radius:10px"></a></p>')
 def footer(extra=''):
-    return (f'<div style="{FOOT}">✍ 독서주특기 · 이재선 목사 (대한예수교장로회 새암교회)<br>'
+    return (BANNER + f'<div style="{FOOT}">✍ 독서주특기 · 이재선 목사 (대한예수교장로회 새암교회)<br>'
+            f'🏠 홈페이지 주소: <a href="{SITE}" style="color:{GREEN}">{SITE}</a><br>'
             f'{extra}<a href="{SITE}" style="color:{GREEN}">홈페이지</a> · <a href="https://blog.naver.com/saechang888" style="color:{GREEN}">네이버 블로그</a> · '
             f'<a href="https://www.youtube.com/@독서특기" style="color:{GREEN}">유튜브 「어음성경」</a></div>')
 
@@ -301,7 +305,12 @@ if os.environ.get('REFRESH_ONLY'):
     # 이미 올린 글의 제목·본문을 지금 디자인으로 다시 입힌다
     posted = {}
     url = f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/posts?maxResults=500&fetchBodies=false&status=live&status=scheduled'
-    for it in call(url, headers=AUTH).get('items', []): posted[it['url']] = it['id']
+    tok = ''
+    while True:  # 글이 500편을 넘어도 다 찾도록 쪽마다 넘겨 가며 읽는다
+        r = call(url + (f'&pageToken={tok}' if tok else ''), headers=AUTH)
+        for it in r.get('items', []): posted[it['url']] = it['id']
+        tok = r.get('nextPageToken')
+        if not tok: break
     n = 0
     for jid, u in done.items():
         j, pid = by_id.get(jid), posted.get(u)
