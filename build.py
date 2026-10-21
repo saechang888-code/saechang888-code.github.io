@@ -222,17 +222,17 @@ section{{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}}
 .theory strong{{font-family:var(--display);font-size:1.2rem;font-weight:600}}
 .theory span.q{{color:rgba(246,239,224,.75);font-size:.92rem}}
 .theory:hover strong{{color:var(--gold2)}}
-.shelf{{display:grid;gap:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:20px 22px 16px}}
-.shelf h3{{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weight:700;letter-spacing:.1em}}
-.books-scroll{{overflow-x:auto;padding-bottom:6px}}
-.books{{list-style:none;margin:0;padding:0;display:flex;gap:3px;align-items:flex-end;border-bottom:4px solid #6b4f2e;width:max-content;min-width:100%}}
-.spine{{width:23px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px 0 4px;font-size:.62rem;color:var(--muted);background:var(--tint);border-radius:3px 3px 0 0;text-decoration:none}}
-.spine span{{writing-mode:vertical-rl;overflow:hidden;max-height:calc(100% - 16px)}}
-.spine.on{{background:linear-gradient(180deg,var(--gold) 0 4px,var(--green) 4px);color:var(--cream)}}
-.books li:nth-child(3n+2) .spine.on{{background:linear-gradient(180deg,var(--gold) 0 4px,#355f52 4px)}}
-.books li:nth-child(3n) .spine.on{{background:linear-gradient(180deg,var(--gold) 0 4px,#1b382f 4px)}}
-.books .spine.on:hover{{background:var(--gold);color:#1d2a26}}
-.spine b{{font-size:.6rem;font-variant-numeric:tabular-nums}}
+/* 책꽂이 → 책 뒤의 찾아보기처럼: 주제·권 이름과 편 수를 차분한 글자 목록으로 (높이 막대는 쓰지 않는다) */
+.shelf{{display:grid;gap:14px;background:var(--sheet);border:1px solid var(--rule);border-top:2px solid var(--gold);border-radius:4px 4px 14px 14px;padding:22px 26px 24px}}
+.shelf h3{{font-family:var(--display);font-size:1.12rem;color:var(--ink);font-weight:700;letter-spacing:.02em;display:flex;align-items:baseline;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--rule)}}
+.books-scroll{{overflow:visible}}
+.books{{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:2px 0;align-items:baseline}}
+.books li{{display:flex;align-items:baseline}}
+.books li+li::before{{content:"·";color:var(--rule);padding:0 9px;font-weight:700}}
+.spine{{height:auto!important;display:inline-flex;align-items:baseline;gap:4px;padding:3px 0;font-size:.98rem;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;transition:color .15s,border-color .15s}}
+.spine.on{{color:var(--ink)}} .spine.big{{font-weight:700}}
+.spine.on:hover{{color:var(--green2);border-bottom-color:var(--gold)}}
+.spine b{{font-family:var(--body);font-size:.74rem;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums}}
 .cols{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}}
 .pcol,.rcol{{display:grid;gap:12px;align-content:start;background:var(--sheet);border:1px solid var(--rule);border-top:3px solid var(--green2);border-radius:14px;padding:22px}}
 .pcol-h{{display:flex;justify-content:space-between;align-items:baseline;gap:8px}}
@@ -302,10 +302,11 @@ footer a{{color:var(--gold2);text-decoration:none}}
   .notebook{{padding:4px 20px;background-image:none}}
 }}
 /* 새로 쓴 예화 */
-.fsrc{{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-wrap:wrap;gap:10px}}
-.fsrc li{{display:flex;align-items:baseline;gap:6px;background:var(--sheet);border:1px solid var(--rule);border-radius:99px;padding:6px 16px}}
-.fsrc b{{font-family:var(--display);font-size:1.15rem;color:var(--green);font-variant-numeric:tabular-nums}}
-.fsrc span{{font-size:.9rem;color:var(--muted)}}
+.fsrc{{list-style:none;margin:0 0 22px;padding:14px 0;display:flex;flex-wrap:wrap;gap:6px 0;border-block:1px solid var(--rule)}}
+.fsrc li{{display:flex;align-items:baseline;gap:6px;padding:0 18px 0 0}}
+.fsrc li+li{{padding-left:18px;border-left:1px solid var(--rule)}}
+.fsrc b{{font-family:var(--display);font-size:1.05rem;color:var(--green);font-variant-numeric:tabular-nums}}
+.fsrc span{{font-size:.84rem;color:var(--muted)}}
 .fcards{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}}
 .fcards a{{height:100%;display:grid;align-content:start;gap:8px;background:var(--sheet);border:1px solid var(--rule);border-top:3px solid var(--gold);border-radius:14px;padding:20px 22px;text-decoration:none;box-shadow:var(--shadow)}}
 .fcards a:hover{{border-color:var(--gold);transform:translateY(-2px)}}
@@ -354,9 +355,9 @@ footer a{{color:var(--gold2);text-decoration:none}}
     <p class="lede">주일낮예배와 금요기도회에서 전한 설교입니다. 아래 책장에서 성경 권별로 찾아 읽을 수 있습니다.</p></div>
     <a class="theory" href="{esc(url(theory))}" target="_blank" rel="noopener"><span class="ref">나의 설교론</span><strong>{esc(html.unescape(theory["title"]))}</strong><span class="q">{esc(clip(body(theory), 70))}</span></a>
     <ul class="cards">{sermons}</ul>
-    <div class="shelf"><h3>구약 39권 · 성경 책장</h3><div class="books-scroll"><ul class="books">{spines(bible[:split])}</ul></div></div>
+    <div class="shelf"><h3>구약 39권</h3><div class="books-scroll"><ul class="books">{spines(bible[:split])}</ul></div></div>
     <div class="shelf"><h3>신약 27권</h3><div class="books-scroll"><ul class="books">{spines(bible[split:])}</ul></div></div>
-    <p class="lede">66권 가운데 {covered}권을 설교했습니다. 책등이 높을수록 글이 많고, 책을 누르면 그 권의 설교 목록이 열립니다.</p>
+    <p class="lede">66권 가운데 {covered}권을 설교했습니다. 이름 옆의 숫자는 설교 편 수이고, 이름을 누르면 그 권의 설교 목록이 열립니다.</p>
   </section>
 
   <section id="youtube" class="yt" aria-labelledby="youtube-h">

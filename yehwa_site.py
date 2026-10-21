@@ -186,8 +186,8 @@ mx = max(len(v) for v in by.values())
 def spine(k):
     n = len(by[k]); hgt = 46 + round(100 * (n / mx) ** 0.6)
     tip = f'{k} 예화 {n}편' + (' · 새로 쓴 예화 포함' if k in new_kw else '')
-    return (f'<li><a class="spine on" style="height:{hgt}px" href="yehwa/{slug(k)}.html" title="{esc(tip)}">'
-            f'<span>{esc(k)}{"✦" if k in new_kw else ""}</span><b>{n}</b></a></li>')
+    return (f'<li><a class="spine on{" big" if n >= 200 else ""}" style="height:{hgt}px" href="yehwa/{slug(k)}.html" title="{esc(tip)}">'
+            f'<span>{esc(k)}</span><b>{n}</b></a></li>')
 cards = ''.join(f'<div class="shelf"' + (' style="grid-column:1/-1"' if len([k for k in ks.split() if k in by]) > 17 else '') + f'><h3>{g} · {sum(len(by[k]) for k in ks.split() if k in by):,}편</h3><div class="books-scroll"><ul class="books">'
                 + ''.join(spine(k) for k in ks.split() if k in by) + '</ul></div></div>' for g, ks in GROUPS)
 STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:14px;margin:6px 0 14px}'
@@ -196,7 +196,7 @@ m = re.search(r'(<section id="stories"[^>]*>.*?</div></div>\s*)(?:<style>\.ygrid
 if m:
     blog = re.search(r'<ul class="stories">.*?</ul>', h[m.start():], re.S).group(0)
     body = (STY + f'<div class="ygrid">{cards}</div>'
-            + f'<p class="ymore">✦ 표시는 새로 쓴 예화가 들어 있는 주제입니다. <a href="yehwa/index.html">주제 {len(kws)}가지 · 예화 {len(y):,}편 모두 보기 →</a></p>'
+            + f'<p class="ymore"><a href="yehwa/index.html">주제 {len(kws)}가지 · 예화 {len(y):,}편 모두 보기 →</a></p>'
             + f'<details class="yblog"><summary>블로그에 올린 예화 글 보기</summary>{blog}</details>')
     h = h[:m.start()] + m.group(1) + body + h[m.end():]
 h = re.sub(r'주제별 예화 [\d,]+편 →', f'주제별 예화 {len(y):,}편 →', h)
