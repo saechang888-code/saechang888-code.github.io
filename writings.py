@@ -60,7 +60,11 @@ input[type=search]{{font:inherit;padding:10px 14px;border:1px solid var(--rule);
 <div class="wrap">
 <div class="top"><a class="brand" href="{root}index.html">독서주특기</a><span><a href="{root}index.html">홈</a> · <a href="{root}writings/index.html">글 보관함</a></span></div>
 '''
-FOOT = '</div>\n</body>\n</html>\n'
+# 쪽 끝마다 블로그 이웃·공감·댓글을 권하는 안내 (막지 않고 권하기만 한다 · yehwa_site.py와 같다)
+BLOG_ASK = ('<aside style="background:var(--sheet);border:1px solid var(--gold);border-radius:12px;padding:18px 20px;display:grid;gap:10px;justify-items:start">'
+            '<p style="margin:0"><b>이 글이 도움이 되셨나요?</b> 네이버 블로그 「독서주특기」에서 <b>이웃</b>이 되어 주시고, ❤ 공감과 댓글로 마음을 나눠 주세요. 새 예화와 설교 소식을 가장 먼저 받아 보실 수 있습니다.</p>'
+            '<a href="https://blog.naver.com/saechang888" target="_blank" rel="noopener" style="text-decoration:none;font-weight:700;background:var(--green);color:var(--paper);border-radius:99px;padding:8px 18px">블로그 이웃 되기 →</a></aside>\n')
+FOOT = BLOG_ASK + '</div>\n</body>\n</html>\n'
 
 def render_body(text):
     out = []
