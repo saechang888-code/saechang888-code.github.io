@@ -61,9 +61,14 @@ input[type=search]{{font:inherit;padding:10px 14px;border:1px solid var(--rule);
 <div class="top"><a class="brand" href="{root}index.html">독서주특기</a><span><a href="{root}index.html">홈</a> · <a href="{root}writings/index.html">글 보관함</a></span></div>
 '''
 # 쪽 끝마다 블로그 이웃·공감·댓글을 권하는 안내 (막지 않고 권하기만 한다 · yehwa_site.py와 같다)
-BLOG_ASK = ('<aside style="background:var(--sheet);border:1px solid var(--gold);border-radius:12px;padding:18px 20px;display:grid;gap:10px;justify-items:start">'
-            '<p style="margin:0"><b>이 글이 도움이 되셨나요?</b> 네이버 블로그 「독서주특기」에서 <b>이웃</b>이 되어 주시고, ❤ 공감과 댓글로 마음을 나눠 주세요. 새 예화와 설교 소식을 가장 먼저 받아 보실 수 있습니다.</p>'
-            '<a href="https://blog.naver.com/saechang888" target="_blank" rel="noopener" style="text-decoration:none;font-weight:700;background:var(--green);color:var(--paper);border-radius:99px;padding:8px 18px">블로그 이웃 되기 →</a></aside>\n')
+CHB = 'text-decoration:none;font-weight:700;border-radius:99px;padding:9px 16px;font-size:.92rem;'
+BLOG_ASK = ('<aside style="background:linear-gradient(150deg,#1d3a32,#162c26);color:#f6efe0;border:1px solid #b08a3e;border-radius:14px;padding:22px clamp(18px,4vw,28px);display:grid;gap:12px">'
+            '<span style="font-size:.78rem;letter-spacing:.16em;color:#d9b86a">독서주특기를 더 가까이</span>'
+            '<p style="margin:0;font-family:\'Noto Serif KR\',serif;font-size:1.15rem;font-weight:700;line-height:1.5">이 글이 도움이 되셨나요? 블로그 이웃이 되어 ❤ 공감과 댓글로 마음을 나눠 주세요.</p>'
+            '<p style="margin:0;opacity:.8;font-size:.9rem">새 예화와 설교 소식을 가장 먼저 받아 보실 수 있습니다.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'
+            f'<a href="https://blog.naver.com/saechang888" target="_blank" rel="noopener" style="{CHB}background:#03c75a;color:#fff">N 네이버 블로그 이웃 되기</a>'
+            f'<a href="https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0?sub_confirmation=1" target="_blank" rel="noopener" style="{CHB}background:#e62117;color:#fff">▶ 유튜브 구독</a>'
+            f'<a href="https://saechang888-code.github.io/links.html" style="{CHB}border:1px solid #d9b86a;color:#d9b86a">모든 바로가기 →</a></div></aside>\n')
 FOOT = BLOG_ASK + '</div>\n</body>\n</html>\n'
 
 def render_body(text):

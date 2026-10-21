@@ -87,7 +87,21 @@
       var a = po.querySelector('h3.post-title a'), b = po.querySelector('.post-body');
       if (a && b && !po.querySelector('.dj-more')) { var m = el('a', '', '계속 읽기'); m.className = 'dj-more'; m.href = a.href; b.parentNode.insertBefore(m, b.nextSibling); }
     });
-    if (!home && !list) {} // 글 화면은 그대로
+    // 글 화면: 글 아래에 홈페이지 배너와 바로가기 (예전 글에도 붙도록 여기서 넣는다 · 글에 이미 배너가 있으면 바로가기만)
+    if (!home && !list) [].forEach.call(document.querySelectorAll('.post-body'), function (b) {
+      if (b.parentNode.querySelector('.dj-hpb')) return;
+      var HP = 'https://saechang888-code.github.io/', B = 'text-decoration:none;font-weight:700;border-radius:99px;padding:9px 16px;font-size:.92rem;';
+      var img = b.querySelector('img[src*="blog_banner"]') ? '' : '<a href="' + HP + '" style="display:block;margin-bottom:14px"><img src="' + HP + 'assets/blog_banner.jpg" alt="독서주특기 홈페이지 바로가기" style="width:100%;height:auto;border-radius:10px;display:block"></a>';
+      var d = el('aside', '', img + '<div style="background:linear-gradient(150deg,#1d3a32,#162c26);color:#f6efe0;border:1px solid #b08a3e;border-radius:14px;padding:20px 22px;display:grid;gap:10px">'
+        + '<span style="font-size:.78rem;letter-spacing:.16em;color:#d9b86a">독서주특기를 더 가까이</span>'
+        + '<p style="margin:0;font-weight:700;font-size:1.08rem;line-height:1.5;color:#f6efe0">설교 · 예화 1만 2천여 편 · 독후감 · 시를 홈페이지에서 모두 보실 수 있습니다.</p>'
+        + '<div style="display:flex;flex-wrap:wrap;gap:8px"><a href="' + HP + '" style="' + B + 'background:#b08a3e;color:#fff">🏠 홈페이지</a>'
+        + '<a href="' + HP + 'search/index.html" style="' + B + 'border:1px solid #d9b86a;color:#d9b86a">🔎 뜻으로 예화 찾기</a>'
+        + '<a href="https://blog.naver.com/saechang888" target="_blank" rel="noopener" style="' + B + 'background:#03c75a;color:#fff">N 네이버 블로그</a>'
+        + '<a href="https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0?sub_confirmation=1" target="_blank" rel="noopener" style="' + B + 'background:#e62117;color:#fff">▶ 유튜브 구독</a></div></div>');
+      d.className = 'dj-hpb'; d.style.margin = '28px 0 8px';
+      b.parentNode.insertBefore(d, b.nextSibling);
+    });
     if (list && !home) { document.body.className += ' dj-home'; var h = document.getElementById('dj-hero'), t = document.getElementById('dj-tiles'), n = document.querySelector('.dj-new'); if (h) h.style.display = 'none'; if (t) t.style.display = 'none'; if (n) n.style.display = 'none'; }
     // 맨 아래
     if (!document.getElementById('dj-foot')) {
