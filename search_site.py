@@ -61,7 +61,8 @@ if __name__ == '__main__':
     TODAY = datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d')
     KIND = {'설교': '설교', '독후감': '독후감', '시': '시', '예화': '예화', '팡세/예화': '팡세'}
     for p in json.load(open(os.path.join(D, 'posts.json'), encoding='utf-8')):
-        if p['date'] <= TODAY and p['kind'] in KIND:
+        # '설교에 인용한 예화 10편' 같은 묶음 글은 뺀다 — 안의 예화가 따로 들어 있어 결과만 흐린다
+        if p['date'] <= TODAY and p['kind'] in KIND and not re.search(r'예화 \d+편', p['title']):
             docs.append(dict(k=KIND[p['kind']], t=p['title'], kw='', u=f"writings/{p['id']}.html", b=p['body']))
     os.makedirs(OUT, exist_ok=True)
     texts = [d['t'] + ' ' + d['t'] + ' ' + d['b'] for d in docs]           # 제목을 두 번 넣어 조금 더 무겁게

@@ -126,6 +126,7 @@ async function run(q, kind) {
   if (!q.trim()) return;
   try { await ready; } catch (e) { st.textContent = '찾기 자료를 불러오지 못했습니다. 잠시 뒤 다시 해 보세요.'; return; }
   const qv = embed(q), bg = bigrams(q), N = DOCS.length;
+  const words = (q.match(/[가-힣A-Za-z0-9]{2,}/g) || []);   // 검색어 낱말이 제목에 그대로 있으면 앞으로
   const has = bg.map(() => []);
   for (let i = 0; i < N; i++) {
     const t = DOCS[i][1] + ' ' + DOCS[i][4];
@@ -140,6 +141,7 @@ async function run(q, kind) {
     let s = 0; const o = i * DIM;
     for (let k = 0; k < DIM; k++) s += qv[k] * DV[o + k];
     s = s / 127 + (tot ? 0.5 * lex[i] / tot : 0);     // 뜻 + 낱말 (search_site.py 시험에서 고른 비율)
+    if (words.length) s += 0.15 * words.filter(w => d[1].includes(w)).length / words.length;
     sc.push([s, i]);
   }
   sc.sort((a, b) => b[0] - a[0]);
