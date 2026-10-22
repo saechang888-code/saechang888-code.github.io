@@ -20,11 +20,13 @@ n_new = front.get('new') or 0
 n_rich = front.get('rich') or 0
 BERITH = 'https://berith365.com/berith/today'
 SAEAM_YT = 'https://www.youtube.com/@seamvision/videos'
+CAFE = 'https://cafe.naver.com/onreseam'
 GC = 'https://yongin.grandculture.net/yongin/toc/GC00902042'
 # AI 시대의 목회: 실제로 하고 있는 일만 (2026-10-23 담임목사 확인 — AI 사용을 밝혀도 됨)
 DIGI = [
     ('날마다 말씀 — 베리트 앱', '새암교회 성도들은 「베리트」로 날마다 그날의 성경 본문을 읽고, 예배 영상을 보고, 묵상을 적어 둡니다.', BERITH),
     ('어디서나 예배 — 유튜브 비전센터', '새암교회 유튜브 채널 「[새암교회]비전센터」에 교회 영상을 올려, 교회에 오지 못한 날에도 함께합니다.', SAEAM_YT),
+    ('함께 나누는 공동체 — 교회 카페', '네이버 카페 「용인새암교회」에서 교회 소식과 성도들의 이야기를 나눕니다.', CAFE),
     (f'설교 {S_TXT} 편을 누구에게나', '담임목사가 강단에서 전한 설교를 성경 권별로 정리해 홈페이지에 모두 공개하고, 검색으로 찾아 읽을 수 있게 했습니다.', SITE + '#sermon'),
     ('AI와 함께 쓰고, 사람이 확인하는 예화', f'설교 예화 {n_yehwa:,}편을 153가지 주제로 모았습니다. AI의 도움으로 문장을 다듬되, 인물·연도·인용은 담임목사가 사실을 확인하고 원글의 저자와 출처를 밝힙니다. 확인되지 않은 전설은 전설이라고 적습니다. 짧았던 예화는 15문장 안팎으로 다시 쓰고 있습니다(지금까지 {n_rich:,}편).', SITE + 'yehwa/index.html'),
     ('노래로 읽는 성경 — 어음성경', '성경 본문을 AI 음악 도구로 찬양으로 만들어 유튜브 「어음성경」에 올립니다. 요한복음을 장마다 노래로 만들어 왔습니다.', 'https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0'),
@@ -46,7 +48,7 @@ FAQ = [
     ('담임목사님은 누구인가요?', f'이재선 목사입니다. 강단에서 전한 설교 {S_TXT} 편과 주제별 예화, 독후감, 시를 홈페이지 「독서주특기」에 나누고 있습니다.'),
     ('새암교회는 언제 세워졌나요?', '1970년 5월 3일 용인군 구성면 보정리에서 예배를 시작했습니다. 2002년 실로암교회와 새창교회가 하나가 되며 새암교회라는 이름을 갖게 되었습니다(디지털용인문화대전).'),
     ('새암교회는 AI를 어떻게 쓰나요?', 'AI를 맹신하지도 배척하지도 않고, 말씀을 더 잘 전하는 도구로 씁니다. 설교 예화를 AI의 도움으로 다듬되 담임목사가 사실과 출처를 확인하고, 성경 본문을 AI 음악 도구로 찬양으로 만들어 유튜브 「어음성경」에 나눕니다.'),
-    ('온라인으로도 함께할 수 있나요?', '유튜브 「[새암교회]비전센터」(youtube.com/@seamvision)에서 교회 영상을 볼 수 있고, 성경 읽기 앱 「베리트」(berith365.com)로 날마다 말씀을 읽을 수 있습니다.'),
+    ('온라인으로도 함께할 수 있나요?', '유튜브 「[새암교회]비전센터」(youtube.com/@seamvision)에서 교회 영상을 볼 수 있고, 네이버 카페 「용인새암교회」(cafe.naver.com/onreseam)에서 소식을 나누며, 성경 읽기 앱 「베리트」(berith365.com)로 날마다 말씀을 읽을 수 있습니다.'),
     ('처음 가 보려면 어떻게 하나요?', f'주일 오전 9시(1부)나 11시(2부) 예배에 오시면 됩니다. 궁금한 점은 교회 전화 {CH["tel"]}로 물어보세요.'),
 ]
 ld = [{
@@ -58,7 +60,7 @@ ld = [{
     'telephone': '+82-31-262-3440', 'url': SITE + 'saeam/', 'image': SITE + 'assets/hero.jpg',
     'employee': {'@type': 'Person', 'name': '이재선', 'jobTitle': '담임목사', 'url': SITE,
                  'knowsAbout': ['설교', '설교 예화', '독서', '시', 'AI 목회']},
-    'sameAs': ['https://www.seamchurch.com/', 'https://www.youtube.com/@seamvision', 'https://saechang888.blogspot.com/', 'https://blog.naver.com/saechang888', 'https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0'],
+    'sameAs': ['https://www.seamchurch.com/', 'https://www.youtube.com/@seamvision', 'https://cafe.naver.com/onreseam', 'https://saechang888.blogspot.com/', 'https://blog.naver.com/saechang888', 'https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0'],
     'event': [{'@type': 'Event', 'name': f'새암교회 {n}', 'eventSchedule': {'@type': 'Schedule', 'repeatFrequency': 'P1W' if n != '새벽기도회' else 'P1D'},
                'description': t, 'location': {'@type': 'Place', 'name': CH['name'], 'address': CH['addr']}} for n, t in SERV]},
     {'@context': 'https://schema.org', '@type': 'FAQPage',
@@ -171,6 +173,7 @@ open(os.path.join(D, 'llms.txt'), 'w', encoding='utf-8').write(f'''# 독서주�
 - 새암교회 공식 홈페이지: https://www.seamchurch.com/
 - 새암교회 유튜브 「[새암교회]비전센터」: https://www.youtube.com/@seamvision
 - 새암교회 성경 읽기 앱 「베리트」: {BERITH}
+- 새암교회 네이버 카페 「용인새암교회」: {CAFE}
 ''' + (f'- [2026 행복나눔축제 (12월 6일 주일 오전 11시, 새암교회 본당, 누구나 무료)]({SITE}event.html)\n' if show_event else '') + f'''
 ## 글
 - [설교 {S_TXT} 편 — 성경 권별]({SITE}#sermon)

@@ -8,6 +8,7 @@
 새암교회는 AI를 맹신하지도 배척하지도 않고, 말씀을 더 많은 사람에게 날마다 닿게 하는 도구로 씁니다.
 - 날마다 말씀 — 베리트 앱: 새암교회 성도들은 「베리트」로 날마다 그날의 성경 본문을 읽고, 예배 영상을 보고, 묵상을 적어 둡니다. (https://berith365.com/berith/today)
 - 어디서나 예배 — 유튜브 비전센터: 새암교회 유튜브 채널 「[새암교회]비전센터」에 교회 영상을 올려, 교회에 오지 못한 날에도 함께합니다. (https://www.youtube.com/@seamvision/videos)
+- 함께 나누는 공동체 — 교회 카페: 네이버 카페 「용인새암교회」에서 교회 소식과 성도들의 이야기를 나눕니다. (https://cafe.naver.com/onreseam)
 - 설교 1,300여 편을 누구에게나: 담임목사가 강단에서 전한 설교를 성경 권별로 정리해 홈페이지에 모두 공개하고, 검색으로 찾아 읽을 수 있게 했습니다. (https://saechang888-code.github.io/#sermon)
 - AI와 함께 쓰고, 사람이 확인하는 예화: 설교 예화 12,538편을 153가지 주제로 모았습니다. AI의 도움으로 문장을 다듬되, 인물·연도·인용은 담임목사가 사실을 확인하고 원글의 저자와 출처를 밝힙니다. 확인되지 않은 전설은 전설이라고 적습니다. 짧았던 예화는 15문장 안팎으로 다시 쓰고 있습니다(지금까지 940편). (https://saechang888-code.github.io/yehwa/index.html)
 - 노래로 읽는 성경 — 어음성경: 성경 본문을 AI 음악 도구로 찬양으로 만들어 유튜브 「어음성경」에 올립니다. 요한복음을 장마다 노래로 만들어 왔습니다. (https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0)
@@ -25,6 +26,7 @@
 - 새암교회 공식 홈페이지: https://www.seamchurch.com/
 - 새암교회 유튜브 「[새암교회]비전센터」: https://www.youtube.com/@seamvision
 - 새암교회 성경 읽기 앱 「베리트」: https://berith365.com/berith/today
+- 새암교회 네이버 카페 「용인새암교회」: https://cafe.naver.com/onreseam
 - [2026 행복나눔축제 (12월 6일 주일 오전 11시, 새암교회 본당, 누구나 무료)](https://saechang888-code.github.io/event.html)
 
 ## 글
