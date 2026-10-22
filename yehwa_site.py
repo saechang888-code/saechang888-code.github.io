@@ -282,7 +282,7 @@ today = (f'<a class="today" href="{url}"><span class="tag">오늘의 예화<span
 h = (h.replace('<!--YH-N-->여러', f'{len(y):,}').replace('<!--YH-K-->153', f'{len(kws)}').replace('<!--YH-NEW-->여러', f'{len(newy):,}')
      .replace('<!--YH-FIND-->', find).replace('<!--YH-TODAY-->', today).replace('<!--YH-FRESH-->', fresh))
 json.dump({'n': len(y), 'topics': [[k2, slug(k2), len(by[k2])] for k2 in kws], 'pop': POP,
-           'new': len(newy), 'src': [[s, src_n[s]] for s in SRCS if src_n[s]],
+           'new': len(newy), 'rich': rich, 'src': [[s, src_n[s]] for s in SRCS if src_n[s]],
            'recent': [{'kw': x['kw'], 'title': x['title'], 'excerpt': excerpt_of(x, 90), 'src': src_of(x), 'url': SITE + url_of(x)} for x in recent],
            'today': {'kw': k, 'title': x['title'], 'excerpt': excerpt, 'ref': ref, 'url': SITE + url, 'date': f'{KST.month}월 {KST.day}일'}},
           open(os.path.join(OUT, 'front.json'), 'w', encoding='utf-8'), ensure_ascii=False)

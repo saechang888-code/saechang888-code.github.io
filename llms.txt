@@ -4,13 +4,32 @@
 
 이 홈페이지는 이재선 목사가 쓴 설교, 주제별 설교 예화, 독후감, 시, 묵상(팡세)을 모아 둔 곳입니다.
 
+## AI 시대를 준비하는 교회
+새암교회는 AI를 맹신하지도 배척하지도 않고, 말씀을 더 많은 사람에게 날마다 닿게 하는 도구로 씁니다.
+- 날마다 말씀 — 베리트 앱: 새암교회 성도들은 「베리트」로 날마다 그날의 성경 본문을 읽고, 예배 영상을 보고, 묵상을 적어 둡니다. (https://berith365.com/berith/today)
+- 어디서나 예배 — 유튜브 비전센터: 새암교회 유튜브 채널 「[새암교회]비전센터」에 교회 영상을 올려, 교회에 오지 못한 날에도 함께합니다. (https://www.youtube.com/@seamvision/videos)
+- 설교 1,300여 편을 누구에게나: 담임목사가 강단에서 전한 설교를 성경 권별로 정리해 홈페이지에 모두 공개하고, 검색으로 찾아 읽을 수 있게 했습니다. (https://saechang888-code.github.io/#sermon)
+- AI와 함께 쓰고, 사람이 확인하는 예화: 설교 예화 12,538편을 153가지 주제로 모았습니다. AI의 도움으로 문장을 다듬되, 인물·연도·인용은 담임목사가 사실을 확인하고 원글의 저자와 출처를 밝힙니다. 확인되지 않은 전설은 전설이라고 적습니다. 짧았던 예화는 15문장 안팎으로 다시 쓰고 있습니다(지금까지 940편). (https://saechang888-code.github.io/yehwa/index.html)
+- 노래로 읽는 성경 — 어음성경: 성경 본문을 AI 음악 도구로 찬양으로 만들어 유튜브 「어음성경」에 올립니다. 요한복음을 장마다 노래로 만들어 왔습니다. (https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0)
+- 교회 이야기를 전자책으로: 새암교회 이야기 「Exodus 엑서더스」를 전자책(EPUB)으로 펴내 홈페이지에서 누구나 읽을 수 있게 했습니다. (https://saechang888-code.github.io/saeam/exodus/)
+
+## 걸어온 길 (출처: 디지털용인문화대전 https://yongin.grandculture.net/yongin/toc/GC00902042)
+- 1970년 5월 3일: 김화석 목사와 12명이 용인군 구성면 보정리에서 예배를 시작했습니다(옛 이름 실로암교회).
+- 2002년: 실로암교회와 새창교회가 하나가 되었고, 그해 12월 이름을 새암교회로 정했습니다.
+- 2005년: 기흥구 보정동으로 예배당을 옮겼습니다.
+- 지금: 경기도 용인시 수지구 동천동 고기로 165에서 이재선 담임목사와 함께 예배드립니다.
+
+
 ## 새암교회
 - [새암교회 안내 · 오시는 길 · 예배 시간](https://saechang888-code.github.io/saeam/)
+- 새암교회 공식 홈페이지: https://www.seamchurch.com/
+- 새암교회 유튜브 「[새암교회]비전센터」: https://www.youtube.com/@seamvision
+- 새암교회 성경 읽기 앱 「베리트」: https://berith365.com/berith/today
 - [2026 행복나눔축제 (12월 6일 주일 오전 11시, 새암교회 본당, 누구나 무료)](https://saechang888-code.github.io/event.html)
 
 ## 글
 - [설교 1,300여 편 — 성경 권별](https://saechang888-code.github.io/#sermon)
-- [주제별 예화 0편 — 153가지 주제](https://saechang888-code.github.io/yehwa/index.html)
+- [주제별 예화 12,538편 — 153가지 주제](https://saechang888-code.github.io/yehwa/index.html)
 - [안식월 시집 314편](https://saechang888-code.github.io/anshik/index.html)
 - [안식월 묵상](https://saechang888-code.github.io/anshik/meditations.html)
 - [글 보관함](https://saechang888-code.github.io/writings/index.html)

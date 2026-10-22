@@ -1,5 +1,6 @@
 # 새암교회 안내 쪽(saeam/index.html) + 검색엔진·AI 검색이 읽기 쉬운 구조화 정보(JSON-LD) + llms.txt
-# 사실만 적는다: 이름·교단·주소·전화·예배 시간·담임목사·홈페이지에 있는 글 수. 모르는 것(설립 연도, 주차 등)은 쓰지 않는다
+# 사실만 적는다: 이름·교단·주소·전화·예배 시간·담임목사·홈페이지에 있는 글 수. 모르는 것(주차 등)은 쓰지 않는다
+# 연혁은 디지털용인문화대전(yongin.grandculture.net, GC00902042)에 실린 것만, 출처를 밝혀 적는다
 import os, json, html, datetime
 D = os.path.dirname(os.path.abspath(__file__))
 SITE = 'https://saechang888-code.github.io/'
@@ -15,6 +16,24 @@ S_TXT = f'{n_sermon // 100 * 100:,}여'
 n_yehwa = front.get('n') or 0
 n_topic = len(front.get('topics') or []) or 153
 n_poem = len(load('anshik_poems.json', []))
+n_new = front.get('new') or 0
+n_rich = front.get('rich') or 0
+BERITH = 'https://berith365.com/berith/today'
+SAEAM_YT = 'https://www.youtube.com/@seamvision/videos'
+GC = 'https://yongin.grandculture.net/yongin/toc/GC00902042'
+# AI 시대의 목회: 실제로 하고 있는 일만 (2026-10-23 담임목사 확인 — AI 사용을 밝혀도 됨)
+DIGI = [
+    ('날마다 말씀 — 베리트 앱', '새암교회 성도들은 「베리트」로 날마다 그날의 성경 본문을 읽고, 예배 영상을 보고, 묵상을 적어 둡니다.', BERITH),
+    ('어디서나 예배 — 유튜브 비전센터', '새암교회 유튜브 채널 「[새암교회]비전센터」에 교회 영상을 올려, 교회에 오지 못한 날에도 함께합니다.', SAEAM_YT),
+    (f'설교 {S_TXT} 편을 누구에게나', '담임목사가 강단에서 전한 설교를 성경 권별로 정리해 홈페이지에 모두 공개하고, 검색으로 찾아 읽을 수 있게 했습니다.', SITE + '#sermon'),
+    ('AI와 함께 쓰고, 사람이 확인하는 예화', f'설교 예화 {n_yehwa:,}편을 153가지 주제로 모았습니다. AI의 도움으로 문장을 다듬되, 인물·연도·인용은 담임목사가 사실을 확인하고 원글의 저자와 출처를 밝힙니다. 확인되지 않은 전설은 전설이라고 적습니다. 짧았던 예화는 15문장 안팎으로 다시 쓰고 있습니다(지금까지 {n_rich:,}편).', SITE + 'yehwa/index.html'),
+    ('노래로 읽는 성경 — 어음성경', '성경 본문을 AI 음악 도구로 찬양으로 만들어 유튜브 「어음성경」에 올립니다. 요한복음을 장마다 노래로 만들어 왔습니다.', 'https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0'),
+    ('교회 이야기를 전자책으로', '새암교회 이야기 「Exodus 엑서더스」를 전자책(EPUB)으로 펴내 홈페이지에서 누구나 읽을 수 있게 했습니다.', SITE + 'saeam/exodus/'),
+]
+HIST = [('1970년 5월 3일', '김화석 목사와 12명이 용인군 구성면 보정리에서 예배를 시작했습니다(옛 이름 실로암교회).'),
+        ('2002년', '실로암교회와 새창교회가 하나가 되었고, 그해 12월 이름을 새암교회로 정했습니다.'),
+        ('2005년', '기흥구 보정동으로 예배당을 옮겼습니다.'),
+        ('지금', '경기도 용인시 수지구 동천동 고기로 165에서 이재선 담임목사와 함께 예배드립니다.')]
 CH = dict(name='새암교회', alt='용인 새암교회', denom='대한예수교장로회(합동)', addr='경기도 용인시 수지구 고기로 165 (동천동)',
           street='고기로 165', locality='용인시 수지구 동천동', region='경기도', tel='031-262-3440', pastor='이재선')
 SERV = [('주일 1부 예배', '주일 오전 9시'), ('주일 2부 예배', '주일 오전 11시'), ('새벽기도회', '매일 오전 6시'), ('금요기도회', '금요일 오후 8시 30분')]
@@ -25,15 +44,21 @@ FAQ = [
     ('새암교회는 어느 교단인가요?', '대한예수교장로회(합동) 소속 교회입니다.'),
     ('예배 시간은 언제인가요?', '주일예배는 1부 오전 9시, 2부 오전 11시이고, 새벽기도회는 매일 오전 6시, 금요기도회는 금요일 오후 8시 30분입니다.'),
     ('담임목사님은 누구인가요?', f'이재선 목사입니다. 강단에서 전한 설교 {S_TXT} 편과 주제별 예화, 독후감, 시를 홈페이지 「독서주특기」에 나누고 있습니다.'),
+    ('새암교회는 언제 세워졌나요?', '1970년 5월 3일 용인군 구성면 보정리에서 예배를 시작했습니다. 2002년 실로암교회와 새창교회가 하나가 되며 새암교회라는 이름을 갖게 되었습니다(디지털용인문화대전).'),
+    ('새암교회는 AI를 어떻게 쓰나요?', 'AI를 맹신하지도 배척하지도 않고, 말씀을 더 잘 전하는 도구로 씁니다. 설교 예화를 AI의 도움으로 다듬되 담임목사가 사실과 출처를 확인하고, 성경 본문을 AI 음악 도구로 찬양으로 만들어 유튜브 「어음성경」에 나눕니다.'),
+    ('온라인으로도 함께할 수 있나요?', '유튜브 「[새암교회]비전센터」(youtube.com/@seamvision)에서 교회 영상을 볼 수 있고, 성경 읽기 앱 「베리트」(berith365.com)로 날마다 말씀을 읽을 수 있습니다.'),
     ('처음 가 보려면 어떻게 하나요?', f'주일 오전 9시(1부)나 11시(2부) 예배에 오시면 됩니다. 궁금한 점은 교회 전화 {CH["tel"]}로 물어보세요.'),
 ]
 ld = [{
     '@context': 'https://schema.org', '@type': 'Church', 'name': CH['name'], 'alternateName': [CH['alt'], '새암교회(용인 동천동)'],
-    'description': f'경기도 용인시 수지구 동천동에 있는 {CH["denom"]} 교회. 담임목사 이재선.',
+    'description': f'경기도 용인시 수지구 동천동에 있는 {CH["denom"]} 교회. 담임목사 이재선. 1970년 예배를 시작했고, 베리트 성경 읽기 앱·유튜브·AI를 활용한 설교 자료 공개 등 디지털 사역으로 AI 시대의 목회를 앞서 준비합니다.',
+    'foundingDate': '1970-05-03', 'slogan': '마르지 않는 샘처럼, 말씀으로 사람을 살리는 교회',
+    'knowsAbout': ['설교', '설교 예화', '성경 읽기', '셀 목회', 'AI 목회', '디지털 사역', '찬양'],
     'address': {'@type': 'PostalAddress', 'streetAddress': CH['street'], 'addressLocality': CH['locality'], 'addressRegion': CH['region'], 'addressCountry': 'KR'},
     'telephone': '+82-31-262-3440', 'url': SITE + 'saeam/', 'image': SITE + 'assets/hero.jpg',
-    'employee': {'@type': 'Person', 'name': '이재선', 'jobTitle': '담임목사', 'url': SITE},
-    'sameAs': ['https://saechang888.blogspot.com/', 'https://blog.naver.com/saechang888', 'https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0'],
+    'employee': {'@type': 'Person', 'name': '이재선', 'jobTitle': '담임목사', 'url': SITE,
+                 'knowsAbout': ['설교', '설교 예화', '독서', '시', 'AI 목회']},
+    'sameAs': ['https://www.seamchurch.com/', 'https://www.youtube.com/@seamvision', 'https://saechang888.blogspot.com/', 'https://blog.naver.com/saechang888', 'https://www.youtube.com/@%EB%8F%85%EC%84%9C%ED%8A%B9%EA%B8%B0'],
     'event': [{'@type': 'Event', 'name': f'새암교회 {n}', 'eventSchedule': {'@type': 'Schedule', 'repeatFrequency': 'P1W' if n != '새벽기도회' else 'P1D'},
                'description': t, 'location': {'@type': 'Place', 'name': CH['name'], 'address': CH['addr']}} for n, t in SERV]},
     {'@context': 'https://schema.org', '@type': 'FAQPage',
@@ -108,6 +133,8 @@ dt{{color:var(--muted)}} dd{{margin:0;font-weight:600}}
 <a class="card" href="../anshik/index.html" style="text-decoration:none;color:inherit"><b>안식월 시집 {n_poem}편</b><span>기도원과 산골에서 쓴 시와 사진</span></a>
 </div></section>
 <section><h2>새암교회 앱 · 영상</h2><a href="https://berith365.com/berith/today" target="_blank" rel="noopener"><img src="../assets/berith_banner.jpg" alt="새암교회 베리트 — 날마다 성경 읽기, 오늘의 베리트 열기" width="1360" height="300" loading="lazy" style="display:block;width:100%;max-width:680px;height:auto;border-radius:10px;margin:0 auto 12px"></a><a href="https://www.youtube.com/@seamvision/videos" target="_blank" rel="noopener"><img src="../assets/saeam_youtube_banner.jpg" alt="새암교회 유튜브 채널 비전센터 — 영상 보러 가기" width="1360" height="300" loading="lazy" style="display:block;width:100%;max-width:680px;height:auto;border-radius:10px;margin:0 auto 12px"></a></section>
+<section><h2>AI 시대를 준비하는 교회</h2><p style="margin:0 0 14px;color:var(--muted)">새암교회는 AI를 맹신하지도 배척하지도 않습니다. 말씀은 사람이 기도하며 준비하고, AI와 디지털 도구는 그 말씀을 더 많은 사람에게, 더 날마다 닿게 하는 데 씁니다.</p><div class="grid">{''.join(f'<a class="card" href="{u}" style="text-decoration:none;color:inherit"><b>{esc(t)}</b><span>{esc(d)}</span></a>' for t, d, u in DIGI)}</div></section>
+<section><h2>걸어온 길</h2><div class="card"><dl>{''.join(f'<dt>{esc(y)}</dt><dd style="font-weight:400">{esc(t)}</dd>' for y, t in HIST)}</dl><p style="margin:12px 0 0;font-size:.88rem;color:var(--muted)">연혁 출처: <a href="{GC}" target="_blank" rel="noopener">디지털용인문화대전 「새암교회」</a></p></div></section>
 <section class="faq"><h2>자주 묻는 질문</h2>{''.join(f'<details><summary>{esc(q2)}</summary><p>{esc(a)}</p></details>' for q2, a in FAQ)}</section>
 <p style="color:var(--muted);font-size:.9rem">이 쪽은 새암교회 담임목사 이재선 목사의 홈페이지 「독서주특기」에서 운영합니다. 블로그 <a href="https://saechang888.blogspot.com/">saechang888.blogspot.com</a> · 유튜브 「어음성경」</p>
 </div>
@@ -133,8 +160,17 @@ open(os.path.join(D, 'llms.txt'), 'w', encoding='utf-8').write(f'''# 독서주�
 
 이 홈페이지는 이재선 목사가 쓴 설교, 주제별 설교 예화, 독후감, 시, 묵상(팡세)을 모아 둔 곳입니다.
 
+## AI 시대를 준비하는 교회
+새암교회는 AI를 맹신하지도 배척하지도 않고, 말씀을 더 많은 사람에게 날마다 닿게 하는 도구로 씁니다.
+''' + ''.join(f'- {t}: {d} ({u})\n' for t, d, u in DIGI) + f'''
+## 걸어온 길 (출처: 디지털용인문화대전 {GC})
+''' + ''.join(f'- {y}: {t}\n' for y, t in HIST) + f'''
+
 ## 새암교회
 - [새암교회 안내 · 오시는 길 · 예배 시간]({SITE}saeam/)
+- 새암교회 공식 홈페이지: https://www.seamchurch.com/
+- 새암교회 유튜브 「[새암교회]비전센터」: https://www.youtube.com/@seamvision
+- 새암교회 성경 읽기 앱 「베리트」: {BERITH}
 ''' + (f'- [2026 행복나눔축제 (12월 6일 주일 오전 11시, 새암교회 본당, 누구나 무료)]({SITE}event.html)\n' if show_event else '') + f'''
 ## 글
 - [설교 {S_TXT} 편 — 성경 권별]({SITE}#sermon)
