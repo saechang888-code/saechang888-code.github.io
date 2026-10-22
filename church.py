@@ -17,15 +17,15 @@ n_topic = len(front.get('topics') or []) or 153
 n_poem = len(load('anshik_poems.json', []))
 CH = dict(name='새암교회', alt='용인 새암교회', denom='대한예수교장로회(합동)', addr='경기도 용인시 수지구 고기로 165 (동천동)',
           street='고기로 165', locality='용인시 수지구 동천동', region='경기도', tel='031-262-3440', pastor='이재선')
-SERV = [('주일예배', '주일 오전 11시'), ('새벽기도회', '매일 오전 6시'), ('금요기도회', '금요일 오후 8시 30분')]
+SERV = [('주일 1부 예배', '주일 오전 9시'), ('주일 2부 예배', '주일 오전 11시'), ('새벽기도회', '매일 오전 6시'), ('금요기도회', '금요일 오후 8시 30분')]
 EVENT = datetime.date(2026, 12, 6)
 show_event = KST.date() <= EVENT
 FAQ = [
     ('새암교회는 어디에 있나요?', f'경기도 용인시 수지구 동천동, 고기로 165에 있습니다. 전화는 {CH["tel"]}입니다.'),
     ('새암교회는 어느 교단인가요?', '대한예수교장로회(합동) 소속 교회입니다.'),
-    ('예배 시간은 언제인가요?', '주일예배는 오전 11시, 새벽기도회는 매일 오전 6시, 금요기도회는 금요일 오후 8시 30분입니다.'),
+    ('예배 시간은 언제인가요?', '주일예배는 1부 오전 9시, 2부 오전 11시이고, 새벽기도회는 매일 오전 6시, 금요기도회는 금요일 오후 8시 30분입니다.'),
     ('담임목사님은 누구인가요?', f'이재선 목사입니다. 강단에서 전한 설교 {S_TXT} 편과 주제별 예화, 독후감, 시를 홈페이지 「독서주특기」에 나누고 있습니다.'),
-    ('처음 가 보려면 어떻게 하나요?', f'주일 오전 11시 예배에 오시면 됩니다. 궁금한 점은 교회 전화 {CH["tel"]}로 물어보세요.'),
+    ('처음 가 보려면 어떻게 하나요?', f'주일 오전 9시(1부)나 11시(2부) 예배에 오시면 됩니다. 궁금한 점은 교회 전화 {CH["tel"]}로 물어보세요.'),
 ]
 ld = [{
     '@context': 'https://schema.org', '@type': 'Church', 'name': CH['name'], 'alternateName': [CH['alt'], '새암교회(용인 동천동)'],
@@ -52,9 +52,9 @@ page = f'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>새암교회 · 용인 수지 동천동 · 대한예수교장로회(합동)</title>
-<meta name="description" content="새암교회는 경기도 용인시 수지구 동천동 고기로 165에 있는 대한예수교장로회(합동) 교회입니다. 담임목사 이재선. 주일예배 오전 11시. 전화 031-262-3440.">
+<meta name="description" content="새암교회는 경기도 용인시 수지구 동천동 고기로 165에 있는 대한예수교장로회(합동) 교회입니다. 담임목사 이재선. 주일예배 1부 오전 9시·2부 오전 11시. 전화 031-262-3440.">
 <link rel="canonical" href="{SITE}saeam/">
-<meta property="og:type" content="website"><meta property="og:title" content="새암교회 — 용인 수지 동천동"><meta property="og:description" content="주일예배 오전 11시 · 경기도 용인시 수지구 고기로 165 · 031-262-3440">
+<meta property="og:type" content="website"><meta property="og:title" content="새암교회 — 용인 수지 동천동"><meta property="og:description" content="주일예배 1부 오전 9시·2부 11시 · 경기도 용인시 수지구 고기로 165 · 031-262-3440">
 <meta property="og:url" content="{SITE}saeam/"><meta property="og:image" content="{SITE}assets/hero.jpg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -96,7 +96,7 @@ dt{{color:var(--muted)}} dd{{margin:0;font-weight:600}}
 <div class="wrap">
 <div class="top"><a href="../index.html"><b>독서주특기</b> · 이재선 목사의 서재</a><a href="../index.html#church">홈으로</a></div>
 <header class="hero"><span class="eb">대한예수교장로회(합동) · 용인 수지 동천동</span><h1>새암교회</h1>
-<p>마르지 않는 샘처럼, 말씀으로 사람을 살리는 교회. 경기도 용인시 수지구 동천동, 고기로 165에 있습니다. 처음 오시는 분도 주일 오전 11시 예배에 편히 오세요.</p>
+<p>마르지 않는 샘처럼, 말씀으로 사람을 살리는 교회. 경기도 용인시 수지구 동천동, 고기로 165에 있습니다. 처음 오시는 분도 주일 오전 9시(1부)나 11시(2부) 예배에 편히 오세요.</p>
 <div class="cta"><a class="g" href="tel:0312623440">전화 031-262-3440</a><a href="https://map.naver.com/p/search/{q}" target="_blank" rel="noopener">네이버 지도</a><a href="https://map.kakao.com/?q={q}" target="_blank" rel="noopener">카카오맵</a></div></header>
 ''' + (f'<a class="ev" href="../event.html"><b>2026 행복나눔축제</b><span>12월 6일(주일) 오전 11시 · 새암교회 본당 · 누구나 무료</span><span style="margin-left:auto;font-weight:700">초대장 보기 →</span></a>' if show_event else '') + f'''
 <section><h2>예배 안내</h2><div class="grid">{''.join(f'<div class="card"><b>{n}</b><span>{t}</span></div>' for n, t in SERV)}</div></section>
@@ -129,7 +129,7 @@ open(home, 'w', encoding='utf-8').write(h)
 # llms.txt: AI 검색이 이 사이트를 요약할 때 읽는 안내문
 open(os.path.join(D, 'llms.txt'), 'w', encoding='utf-8').write(f'''# 독서주특기 — 새암교회 이재선 목사의 서재
 
-> 새암교회는 경기도 용인시 수지구 동천동 고기로 165에 있는 대한예수교장로회(합동) 교회입니다. 담임목사는 이재선 목사이고, 주일예배는 오전 11시, 새벽기도회는 매일 오전 6시, 금요기도회는 금요일 오후 8시 30분입니다. 전화 031-262-3440.
+> 새암교회는 경기도 용인시 수지구 동천동 고기로 165에 있는 대한예수교장로회(합동) 교회입니다. 담임목사는 이재선 목사이고, 주일예배는 1부 오전 9시·2부 오전 11시, 새벽기도회는 매일 오전 6시, 금요기도회는 금요일 오후 8시 30분입니다. 전화 031-262-3440.
 
 이 홈페이지는 이재선 목사가 쓴 설교, 주제별 설교 예화, 독후감, 시, 묵상(팡세)을 모아 둔 곳입니다.
 

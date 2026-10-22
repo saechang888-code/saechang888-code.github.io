@@ -308,10 +308,10 @@ for i, m in enumerate(json.load(open(mp, encoding='utf-8')) if os.path.exists(mp
 # 새암교회 안내 글 한 편 (검색에서 교회를 찾는 분들을 위해)
 def render_church():
     rows = [('교단', '대한예수교장로회(합동)'), ('담임목사', '이재선 목사'), ('주소', '경기도 용인시 수지구 고기로 165 (동천동)'), ('전화', '031-262-3440'),
-            ('주일예배', '주일 오전 11시'), ('새벽기도회', '매일 오전 6시'), ('금요기도회', '금요일 오후 8시 30분')]
+            ('주일 1부 예배', '주일 오전 9시'), ('주일 2부 예배', '주일 오전 11시'), ('새벽기도회', '매일 오전 6시'), ('금요기도회', '금요일 오후 8시 30분')]
     tb = ''.join(f'<tr><td style="padding:8px 14px 8px 0;color:{MUTED};white-space:nowrap">{a}</td><td style="padding:8px 0;font-weight:700">{b}</td></tr>' for a, b in rows)
     return (f'<div style="{WRAP}">' + nav('기타') + badges(['새암교회', '교회 안내']) +
-            f'<p style="{P}">새암교회는 경기도 용인시 수지구 동천동, 고기로 165에 있는 대한예수교장로회(합동) 교회입니다. 처음 오시는 분도 주일 오전 11시 예배에 편히 오세요.</p>'
+            f'<p style="{P}">새암교회는 경기도 용인시 수지구 동천동, 고기로 165에 있는 대한예수교장로회(합동) 교회입니다. 처음 오시는 분도 주일 오전 9시(1부)나 11시(2부) 예배에 편히 오세요.</p>'
             f'<table style="border-collapse:collapse;margin:0 0 1.4em;font-family:Noto Sans KR,Malgun Gothic,sans-serif;font-size:16px">{tb}</table>'
             f'<p style="{P}"><a href="{SITE}saeam/" style="color:{GREEN};font-weight:700">새암교회 안내 · 오시는 길 (지도) →</a></p>'
             f'<p style="{P}"><a href="{SITE}event.html" style="color:{GREEN}">2026 행복나눔축제 — 12월 6일(주일) 오전 11시, 새암교회 본당, 누구나 무료</a></p>' + footer() + '</div>')

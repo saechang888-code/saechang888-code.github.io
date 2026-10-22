@@ -410,7 +410,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
     <div class="head"><span class="eyebrow">섬기는 교회</span><h2 id="church-h">새암교회</h2></div>
     <div class="church">
       <dl><dt>교단</dt><dd>대한예수교장로회(합동)</dd><dt>주소</dt><dd>경기도 용인시 수지구 고기로 165<br>(동천동)</dd><dt>전화</dt><dd>031-262-3440</dd></dl>
-      <dl><dt>주일예배</dt><dd>오전 11시</dd><dt>새벽기도회</dt><dd>매일 오전 6시</dd><dt>금요기도회</dt><dd>금요일 오후 8시 30분</dd></dl>
+      <dl><dt>주일예배</dt><dd>1부 오전 9시<br>2부 오전 11시</dd><dt>새벽기도회</dt><dd>매일 오전 6시</dd><dt>금요기도회</dt><dd>금요일 오후 8시 30분</dd></dl>
     </div>
     <a class="berith" href="https://berith365.com/berith/today" target="_blank" rel="noopener" aria-label="새암교회 베리트 앱에서 오늘의 말씀 읽기 (새 창)"><span aria-hidden="true">📖</span><b>새암교회 베리트</b><span>날마다 성경 읽기 · 오늘의 말씀과 묵상</span><span class="go">오늘의 베리트 열기 →</span></a>
     <a class="berith yt" href="https://www.youtube.com/@seamvision/videos" target="_blank" rel="noopener" aria-label="새암교회 유튜브 채널 비전센터 (새 창)"><span aria-hidden="true">▶</span><b>새암교회 유튜브</b><span>[새암교회]비전센터 · 새암교회 영상 모아 보기</span><span class="go">영상 보러 가기 →</span></a>
