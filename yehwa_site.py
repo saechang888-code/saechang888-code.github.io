@@ -256,6 +256,8 @@ SRCS = ['온라인에 공개된 감동적인 예화', '온라인에 공유된 �
 src_n = {s: sum(1 for x in newy if src_of(x) == s) for s in SRCS}
 # 가장 최근에 쓴 것: yehwa_ai.json 끝에서부터 (export.py가 새 예화를 뒤에 붙인다)
 recent = (json.load(open(ai, encoding='utf-8')) if os.path.exists(ai) else [])[::-1]
+# 15문장 안팎으로 넉넉히 다시 쓴 예화 수 (expand.py 기준: 이야기 13문장 이상)
+rich = sum(len(re.findall(r'[.!?]["”’)]*(?=\s|$)', r['body'].split('\n\n▸ 적용:')[0])) >= 13 for r in recent)
 ttl = {(x.get('kw'), x['title']): x for x in newy}
 recent = [ttl[(r.get('kw'), r['title'])] for r in recent if (r.get('kw'), r['title']) in ttl][:6]
 fcards = ''.join(f'<li><a href="{url_of(x)}"><span class="fk">【{esc(x["kw"])}】</span><h3>{esc(x["title"])}</h3>'
@@ -264,7 +266,8 @@ fsrc = ''.join(f'<li><b>{src_n[s]:,}</b><span>{s}</span></li>' for s in SRCS if 
 fresh = ('<section id="fresh" aria-labelledby="fresh-h"><div class="head"><span class="eyebrow">새로 쓴 예화</span>'
          f'<div class="row"><h2 id="fresh-h">좋은 이야기를 골라, 새 문장으로</h2><a href="yehwa/index.html">새로 쓴 예화 {len(newy):,}편 · 주제별로 보기 →</a></div>'
          '<p class="lede">온라인에 공개된 감동적인 예화와 글, 그리고 제가 읽은 책의 독후감에서 설교에 쓸 만한 이야기를 골라 사실을 확인하고 새 문장으로 다시 썼습니다. '
-         '편마다 적용과 개역개정 말씀을 붙이고, 원글의 저자와 출처를 밝혀 두었습니다.</p></div>'
+         '편마다 적용과 개역개정 말씀을 붙이고, 원글의 저자와 출처를 밝혀 두었습니다. '
+         f'짧았던 예화는 사실을 더 확인해 15문장 안팎의 넉넉한 이야기로 다시 쓰고 있으며, 지금까지 <b>{rich:,}편</b>을 고쳤습니다.</p></div>'
          f'<ul class="fsrc">{fsrc}</ul><ul class="fcards">{fcards}</ul></section>')
 # 오늘의 예화: 새로 쓴 예화 가운데 날짜마다 하나
 pool = [(k2, i2) for k2 in kws for i2, x in enumerate(by[k2]) if is_new(x)]
