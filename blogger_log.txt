@@ -43,4 +43,4 @@ blogger: 실패 20261101-h1 403 {
   }
 }
 
-blogger: today 2026-10-21 posted 0 · waiting 12 · total done 125
+blogger: today 2026-10-22 posted 0 · waiting 12 · total done 125
