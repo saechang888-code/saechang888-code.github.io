@@ -286,6 +286,15 @@ json.dump({'n': len(y), 'topics': [[k2, slug(k2), len(by[k2])] for k2 in kws], '
            'recent': [{'kw': x['kw'], 'title': x['title'], 'excerpt': excerpt_of(x, 90), 'src': src_of(x), 'url': SITE + url_of(x)} for x in recent],
            'today': {'kw': k, 'title': x['title'], 'excerpt': excerpt, 'ref': ref, 'url': SITE + url, 'date': f'{KST.month}월 {KST.day}일'}},
           open(os.path.join(OUT, 'front.json'), 'w', encoding='utf-8'), ensure_ascii=False)
+# 대문 맨 위 알림 띠: 예화 전체 수 · 새로 쓴 예화 · 넉넉히 다시 쓴 예화 · 가장 최근에 올린 예화
+h = re.sub(r'<aside class="yhnews".*?</aside>\s*', '', h, flags=re.S)
+latest = recent[0] if recent else None
+news = ('<aside class="yhnews" aria-label="예화 새 소식" style="background:#f7f3ea;border-bottom:1px solid #e3ddd0;padding:10px max(24px,calc((100% - 1132px)/2));font-size:.93rem;line-height:1.6">'
+        f'<b style="color:#2f5d50">예화 새 소식</b> · {KST.month}월 {KST.day}일 기준 예화 <b>{len(y):,}편</b> — '
+        f'새로 쓴 예화 <b>{len(newy):,}편</b>, 짧았던 예화를 넉넉히 다시 쓴 것 <b>{rich:,}편</b>'
+        + (f' · 최근에 올린 예화 <a href="{url_of(latest)}" style="color:#2f5d50">「{esc(latest["title"])}」</a>' if latest else '')
+        + ' · <a href="#fresh" style="color:#2f5d50;font-weight:600">새로 올라온 예화 보기 →</a></aside>\n')
+h = h.replace('<main class="container">', news + '<main class="container">', 1)
 open(home, 'w', encoding='utf-8').write(h)
 # 뜻으로 찾기(search_site.py)가 쓸 예화 목록 — 배포하지 않는 작업 파일
 json.dump([{'t': x['title'], 'kw': k2, 'u': url_of(x), 'b': x['body']} for k2 in kws for x in by[k2]],
