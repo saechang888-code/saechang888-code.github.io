@@ -361,7 +361,7 @@ if os.environ.get('REFRESH_ONLY'):
         n += 1; time.sleep(2)
     print('blogger: refreshed', n); sys.exit(0)
 
-due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['date'], j['id']))
+due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['id'] != 'ebook-exodus', j['date'], j['id']))   # e북 소개 글은 맨 먼저
 n = fails = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
 reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn', 'an-'))][:MAX_PER_RUN]
