@@ -393,6 +393,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   <section id="works" aria-labelledby="works-h">
     <div class="head"><span class="eyebrow">작품</span><h2 id="works-h">만든 것들</h2></div>
     <ul class="works">
+      <li class="work"><a href="saeam/exodus/" style="text-decoration:none;color:inherit"><div class="song" style="background:linear-gradient(160deg,#3d5a3a,#20311f);color:#f4efe4"><span class="meta" style="color:#f4efe4;opacity:.85">새암교회 이야기 · e북</span><strong style="font-size:1.6em">Exodus 엑서더스</strong><span class="meta" style="color:#f4efe4;opacity:.85">이재선 목사 지음</span></div><h4>e북 「Exodus 엑서더스」</h4><p>홈페이지에서 읽기 · EPUB 내려받기</p></a></li>
       <li class="work"><img src="{img('invite.jpg')}" alt="행복나눔축제 초대장: 12월 6일 주일 오전 11시 새암교회 본당, 특별강사 이성미 집사" width="480" height="720"><h4>행복나눔축제 초대장</h4><p>2026 전도집회 · 새암교회 본당</p></li>
       <li class="work"><img src="{img('poster.jpg')}" alt="행복나눔축제 포스터: 함께 음식을 나누는 가족과 이웃 일러스트" width="480" height="679"><h4>행복나눔축제 포스터</h4><p>A3 인쇄용 · 일러스트</p></li>
       <li class="work"><div class="song"><span class="clef" aria-hidden="true">𝄞</span><strong>태초에 말씀이</strong><span class="meta">요한복음 1장 · G · ♩=76</span></div><h4>찬양 「태초에 말씀이」</h4><p>요한복음 1장 CCM 찬양</p></li>

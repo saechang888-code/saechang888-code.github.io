@@ -312,6 +312,19 @@ def render_church():
             f'<p style="{P}"><a href="{SITE}saeam/" style="color:{GREEN};font-weight:700">새암교회 안내 · 오시는 길 (지도) →</a></p>'
             f'<p style="{P}"><a href="{SITE}event.html" style="color:{GREEN}">2026 행복나눔축제 — 12월 6일(주일) 오전 11시, 새암교회 본당, 누구나 무료</a></p>' + footer() + '</div>')
 jobs.append(dict(id='church-guide', date='2026-10-20', title='새암교회 안내 — 용인 수지 동천동 · 예배 시간 · 오시는 길', render=render_church, labels=['기타', '새암교회']))
+# e북 「Exodus 엑서더스 — 새암교회 이야기」 소개 글 (본문은 홈페이지 saeam/exodus/, ebook_exodus.py로 만든다)
+def render_exodus():
+    L = [l.strip() for l in open(os.path.join(D, 'ebook_exodus.txt'), encoding='utf-8').read().split('\n')]
+    toc = L.index(next(t for t in L if re.sub(r'\s', '', t) == '목차'))
+    pro = [t for t in L[18:toc] if t and len(t) > 60][:4]       # 프롤로그 앞부분 몇 문단
+    url = SITE + 'saeam/exodus/'
+    return (f'<div style="{WRAP}">' + nav('기타') + badges(['e북', '새암교회', '전도', '간증']) +
+            f'<p style="{P}"><b>『Exodus 엑서더스 — 새암교회 이야기』</b>(이재선 목사 지음)를 e북으로 엮었습니다. 40년 된 교회가 무기력한 신앙생활을 벗고 영혼 구원하는 교회로 다시 태어난 이야기와, 새 가족·제자·사명자로 자라 간 성도들의 간증을 담았습니다.</p>'
+            f'<p style="{P}"><a href="{url}" style="color:{GREEN};font-weight:700">홈페이지에서 전체 읽기 →</a> · <a href="{url}exodus.epub" style="color:{GREEN};font-weight:700">전자책(EPUB) 내려받기</a></p>'
+            f'<h3 style="font-size:20px;margin:1.6em 0 .6em;color:{INK}">프롤로그에서</h3>' + ''.join(f'<p style="{P}">{esc(t)}</p>' for t in pro) +
+            f'<p style="{P}"><b>차례</b> — 출정식 · 제1장 엑서더스의 비법 · 제2장 애굽의 삶 · 제3장 광야의 삶 · 제1숙영지 새 가족들의 증언 · 제2숙영지 제자들의 증언 · 제3숙영지 사명자들의 증언 · 가나안에 도착하다</p>'
+            f'<p style="{P}"><a href="{url}" style="color:{GREEN};font-weight:700">이어서 읽기 →</a></p>' + footer() + '</div>')
+jobs.append(dict(id='ebook-exodus', date='2026-10-22', title='[e북] Exodus 엑서더스 — 새암교회 이야기 (이재선 목사)', render=render_exodus, labels=['기타', '새암교회', 'e북']))
 by_id = {j['id']: j for j in jobs}
 # 예전에 올린 예화 묶음 글도 디자인을 다시 입힐 수 있게
 for p in all_posts:
