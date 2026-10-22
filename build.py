@@ -145,6 +145,12 @@ nav.menu a:hover{{color:var(--ink);background:var(--tint)}}
 .evbanner b{{font-family:var(--display);font-size:1.05rem}}
 .evbanner .dd{{background:#fff;color:#a3324b;border-radius:99px;padding:1px 11px;font-weight:700;font-variant-numeric:tabular-nums}}
 .evbanner a{{color:#fff;font-weight:600;margin-left:auto;text-underline-offset:3px}}
+.berith{{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:20px;padding:16px 22px;border-radius:14px;background:linear-gradient(110deg,#20311f,#3d5a3a);color:#f4efe4;text-decoration:none}}
+.berith b{{font-family:var(--display);font-size:1.15rem}}
+.berith .go{{margin-left:auto;background:#f4efe4;color:#20311f;border-radius:99px;padding:4px 14px;font-weight:700;font-size:.9rem}}
+.berith:hover .go{{background:#fff}}
+.berith.yt{{margin-top:12px;background:linear-gradient(110deg,#5e1216,#a81e24)}}
+.berith.yt .go{{color:#5e1216}}
 
 /* 대문: 왼쪽 글·예화 찾기, 오른쪽 '오늘의 예화' 카드, 아래 숫자 띠 */
 .hero{{position:relative;color:var(--cream);background:#1d3530 url(assets/hero.jpg) 72% 50%/cover no-repeat;isolation:isolate}}
@@ -406,6 +412,8 @@ footer a{{color:var(--gold2);text-decoration:none}}
       <dl><dt>교단</dt><dd>대한예수교장로회(합동)</dd><dt>주소</dt><dd>경기도 용인시 수지구 고기로 165<br>(동천동)</dd><dt>전화</dt><dd>031-262-3440</dd></dl>
       <dl><dt>주일예배</dt><dd>오전 11시</dd><dt>새벽기도회</dt><dd>매일 오전 6시</dd><dt>금요기도회</dt><dd>금요일 오후 8시 30분</dd></dl>
     </div>
+    <a class="berith" href="https://berith365.com/berith/today" target="_blank" rel="noopener" aria-label="새암교회 베리트 앱에서 오늘의 말씀 읽기 (새 창)"><span aria-hidden="true">📖</span><b>새암교회 베리트</b><span>날마다 성경 읽기 · 오늘의 말씀과 묵상</span><span class="go">오늘의 베리트 열기 →</span></a>
+    <a class="berith yt" href="https://www.youtube.com/@seamvision/videos" target="_blank" rel="noopener" aria-label="새암교회 유튜브 채널 비전센터 (새 창)"><span aria-hidden="true">▶</span><b>새암교회 유튜브</b><span>[새암교회]비전센터 · 새암교회 영상 모아 보기</span><span class="go">영상 보러 가기 →</span></a>
   </section>
 </main>
 <footer><div class="container"><span><b>독서주특기</b> · 이재선 목사 · 대한예수교장로회 새암교회</span><a href="{BLOG}" target="_blank" rel="noopener">blog.naver.com/saechang888 →</a></div></footer>'''

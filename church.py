@@ -107,6 +107,7 @@ dt{{color:var(--muted)}} dd{{margin:0;font-weight:600}}
 <a class="card" href="../yehwa/index.html" style="text-decoration:none;color:inherit"><b>주제별 예화 {n_yehwa:,}편</b><span>설교와 교육에 쓰는 이야기, {n_topic}가지 주제</span></a>
 <a class="card" href="../anshik/index.html" style="text-decoration:none;color:inherit"><b>안식월 시집 {n_poem}편</b><span>기도원과 산골에서 쓴 시와 사진</span></a>
 </div></section>
+<section><h2>새암교회 앱 · 영상</h2><a href="https://berith365.com/berith/today" target="_blank" rel="noopener"><img src="../assets/berith_banner.jpg" alt="새암교회 베리트 — 날마다 성경 읽기, 오늘의 베리트 열기" width="1360" height="300" loading="lazy" style="display:block;width:100%;max-width:680px;height:auto;border-radius:10px;margin:0 auto 12px"></a><a href="https://www.youtube.com/@seamvision/videos" target="_blank" rel="noopener"><img src="../assets/saeam_youtube_banner.jpg" alt="새암교회 유튜브 채널 비전센터 — 영상 보러 가기" width="1360" height="300" loading="lazy" style="display:block;width:100%;max-width:680px;height:auto;border-radius:10px;margin:0 auto 12px"></a></section>
 <section class="faq"><h2>자주 묻는 질문</h2>{''.join(f'<details><summary>{esc(q2)}</summary><p>{esc(a)}</p></details>' for q2, a in FAQ)}</section>
 <p style="color:var(--muted);font-size:.9rem">이 쪽은 새암교회 담임목사 이재선 목사의 홈페이지 「독서주특기」에서 운영합니다. 블로그 <a href="https://saechang888.blogspot.com/">saechang888.blogspot.com</a> · 유튜브 「어음성경」</p>
 </div>

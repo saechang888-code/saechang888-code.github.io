@@ -69,8 +69,12 @@ def badges(words): return '<p style="margin:0 0 1.4em">' + ''.join(f'<span style
 # 모든 글 맨 아래: 홈페이지 배너(누르면 홈페이지로)와 주소
 BANNER = (f'<p style="margin:2em 0 0;text-align:center"><a href="{SITE}"><img src="{SITE}assets/blog_banner.jpg" '
           f'alt="독서주특기 홈페이지 바로가기" style="width:100%;max-width:680px;height:auto;border:0;border-radius:10px"></a></p>')
+# 새암교회 앱·영상 배너 (베리트 성경읽기 앱, 유튜브 비전센터)
+_BI = 'style="width:100%;max-width:680px;height:auto;border:0;border-radius:10px"'
+CHURCH_BANNERS = (f'<p style="margin:1em 0 0;text-align:center"><a href="https://berith365.com/berith/today"><img src="{SITE}assets/berith_banner.jpg" alt="새암교회 베리트 — 오늘의 말씀 읽기" {_BI}></a></p>'
+                  f'<p style="margin:.6em 0 0;text-align:center"><a href="https://www.youtube.com/@seamvision/videos"><img src="{SITE}assets/saeam_youtube_banner.jpg" alt="새암교회 유튜브 비전센터 — 영상 보러 가기" {_BI}></a></p>')
 def footer(extra=''):
-    return (BANNER + f'<div style="{FOOT}">✍ 독서주특기 · 이재선 목사 (대한예수교장로회 새암교회)<br>'
+    return (BANNER + CHURCH_BANNERS + f'<div style="{FOOT}">✍ 독서주특기 · 이재선 목사 (대한예수교장로회 새암교회)<br>'
             f'🏠 홈페이지 주소: <a href="{SITE}" style="color:{GREEN}">{SITE}</a><br>'
             f'{extra}<a href="{SITE}" style="color:{GREEN}">홈페이지</a> · <a href="https://blog.naver.com/saechang888" style="color:{GREEN}">네이버 블로그</a> · '
             f'<a href="https://www.youtube.com/@독서특기" style="color:{GREEN}">유튜브 「어음성경」</a></div>')
