@@ -20,6 +20,11 @@ ai = os.path.join(D, 'yehwa_ai.json')
 if os.path.exists(ai):
     n_hand = sum(1 for x in y if x.get('credit'))
     y = y[:n_hand] + json.load(open(ai, encoding='utf-8')) + y[n_hand:]
+# 주제를 sermon-jesus 예화 모음처럼 세밀하게(400여 주제) 다시 나눈다 — 원본 kw는 그대로, 나누는 규칙은 yehwa_topics.py
+from yehwa_topics import classify, ALIAS
+_old_kws = {x.get('kw') for x in y}
+_tm, _ = classify(y)
+for x in y: x['kw'] = _tm.get(f"{x.get('kw', '')}|{x['title']}", x.get('kw'))
 by = {}
 for x in y: by.setdefault(x.get('kw') or '지혜', []).append(x)
 
@@ -156,6 +161,13 @@ if(u){{q.value=u;q.dispatchEvent(new Event('input'));}}
 </script>
 ''' + FOOT
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(index)
+# 예전 153주제 가운데 이름이 사라진 주제의 주소는 가까운 새 주제로 넘겨준다 (블로그·검색에 걸린 옛 링크)
+for _k in _old_kws - set(kws):
+    _to = ALIAS.get(_k) if ALIAS.get(_k) in by else None
+    _href = f'{slug(_to)}.html' if _to else 'index.html'
+    open(os.path.join(OUT, slug(_k) + '.html'), 'w', encoding='utf-8').write(
+        f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url={_href}"><link rel="canonical" href="{_href}">'
+        f'<title>【{esc(_k)}】 예화 모음</title><p>주제가 새로 나뉘었습니다. <a href="{_href}">새 주제로 가기</a></p>')
 
 # 첫 화면: 메뉴에 '예화 모음', 예화 칸에 '주제별 예화' 버튼
 home = os.path.join(D, 'index.html')
