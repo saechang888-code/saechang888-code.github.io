@@ -249,12 +249,11 @@ def url_of(x):
 newy = [x for x in y if is_new(x)]
 SRCS = ['온라인에 공개된 감동적인 예화', '온라인에 공유된 감동적인 글', '온라인에 공유된 아름다운 글', '신문·잡지에 실린 글', '독후감', '역사와 고전']
 src_n = {s: sum(1 for x in newy if src_of(x) == s) for s in SRCS}
-# 가장 최근에 쓴 것: yehwa_ai.json 끝에서부터 (export.py가 새 예화를 뒤에 붙인다)
-recent = (json.load(open(ai, encoding='utf-8')) if os.path.exists(ai) else [])[::-1]
-# 15문장 안팎으로 넉넉히 다시 쓴 예화 수 (expand.py 기준: 이야기 13문장 이상)
-rich = sum(len(re.findall(r'[.!?]["”’)]*(?=\s|$)', r['body'].split('\n\n▸ 적용:')[0])) >= 13 for r in recent)
-ttl = {(x.get('kw'), x['title']): x for x in newy}
-recent = [ttl[(r.get('kw'), r['title'])] for r in recent if (r.get('kw'), r['title']) in ttl][:6]
+# 짧았던 예화를 15문장 안팎으로 넉넉히 다시 쓴 것: expand.py가 고칠 때 적는 다시 쓴 때(re)로 센다 — 가장 최근에 다시 쓴 것이 맨 앞
+rewritten = sorted((x for x in newy if x.get('re')), key=lambda x: x['re'], reverse=True)
+rich = len(rewritten)
+rich_today = sum(1 for x in rewritten if x['re'].startswith(KST.strftime('%Y-%m-%d')))
+recent = rewritten[:6]
 fcards = ''.join(f'<li><a href="{url_of(x)}"><span class="fk">【{esc(x["kw"])}】</span><h3>{esc(x["title"])}</h3>'
                  f'<p>{esc(excerpt_of(x, 90))}</p><span class="fs">{esc(src_of(x))}에서</span></a></li>' for x in recent)
 fsrc = ''.join(f'<li><b>{src_n[s]:,}</b><span>{s}</span></li>' for s in SRCS if src_n[s])
@@ -277,7 +276,7 @@ today = (f'<a class="today" href="{url}"><span class="tag">오늘의 예화<span
 h = (h.replace('<!--YH-N-->여러', f'{len(y):,}').replace('<!--YH-K-->153', f'{len(kws)}').replace('<!--YH-NEW-->여러', f'{len(newy):,}')
      .replace('<!--YH-FIND-->', find).replace('<!--YH-TODAY-->', today).replace('<!--YH-FRESH-->', fresh))
 json.dump({'n': len(y), 'topics': [[k2, slug(k2), len(by[k2])] for k2 in kws], 'pop': POP,
-           'new': len(newy), 'rich': rich, 'src': [[s, src_n[s]] for s in SRCS if src_n[s]],
+           'new': len(newy), 'rich': rich, 'rich_today': rich_today, 'src': [[s, src_n[s]] for s in SRCS if src_n[s]],
            'recent': [{'kw': x['kw'], 'title': x['title'], 'excerpt': excerpt_of(x, 90), 'src': src_of(x), 'url': SITE + url_of(x)} for x in recent],
            'today': {'kw': k, 'title': x['title'], 'excerpt': excerpt, 'ref': ref, 'url': SITE + url, 'date': f'{KST.month}월 {KST.day}일'}},
           open(os.path.join(OUT, 'front.json'), 'w', encoding='utf-8'), ensure_ascii=False)
@@ -286,8 +285,8 @@ h = re.sub(r'<aside class="yhnews".*?</aside>\s*', '', h, flags=re.S)
 latest = recent[0] if recent else None
 news = ('<aside class="yhnews" aria-label="예화 새 소식" style="background:#f7f3ea;border-bottom:1px solid #e3ddd0;padding:10px max(24px,calc((100% - 1132px)/2));font-size:.93rem;line-height:1.6">'
         f'<b style="color:#2f5d50">예화 새 소식</b> · {KST.month}월 {KST.day}일 기준 예화 <b>{len(y):,}편</b> — '
-        f'새로 쓴 예화 <b>{len(newy):,}편</b>, 짧았던 예화를 넉넉히 다시 쓴 것 <b>{rich:,}편</b>'
-        + (f' · 최근에 올린 예화 <a href="{url_of(latest)}" style="color:#2f5d50">「{esc(latest["title"])}」</a>' if latest else '')
+        f'새로 쓴 예화 <b>{len(newy):,}편</b>, 짧았던 예화를 넉넉히 다시 쓴 것 <b>{rich:,}편</b>' + (f'(오늘 {rich_today:,}편)' if rich_today else '')
+        + (f' · 최근에 다시 쓴 예화 <a href="{url_of(latest)}" style="color:#2f5d50">「{esc(latest["title"])}」</a>' if latest else '')
         + ' · <a href="#fresh" style="color:#2f5d50;font-weight:600">새로 올라온 예화 보기 →</a></aside>\n')
 h = h.replace('<main class="container">', news + '<main class="container">', 1)
 open(home, 'w', encoding='utf-8').write(h)
