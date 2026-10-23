@@ -1,5 +1,5 @@
 # 개인 홈페이지 시안: blog.json(카테고리·대표글) + 작품 이미지 -> index.html (단일 파일)
-import json, base64, html, os, re
+import json, base64, html, os, re, datetime, urllib.parse
 
 D = os.path.dirname(os.path.abspath(__file__))
 BLOG = 'https://blog.naver.com/saechang888'
@@ -43,6 +43,15 @@ theory = P[179][0]
 
 # ---------- 성경 책장 ----------
 bible = [c for c in data['cats'] if c['parent'] == 101 and c['name'] not in ('구분선', '게시판', '나의 설교론')]
+# 네이버 블로그 칸에 아직 안 올린 권도 홈페이지 글 보관함(posts.json)에 설교가 있으면 그 수로 센다 — 그때는 보관함으로 잇는다
+_today = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).strftime('%Y-%m-%d')
+_home = {}
+for _p in json.load(open(os.path.join(D, 'posts.json'), encoding='utf-8')):
+    if _p['kind'] == '설교' and _p['date'] <= _today and _p['category'].startswith('성경연구와설교 > '):
+        _b = _p['category'].split('>')[-1].strip(); _home[_b] = _home.get(_b, 0) + 1
+for c in bible:
+    c['home'] = _home.get(c['name'], 0)
+    if c['home'] > c['cnt']: c['cnt'], c['link'] = c['home'], f'writings/index.html?k=설교&q={urllib.parse.quote(c["name"])}'
 names = [c['name'] for c in bible]
 split = names.index('마태복음')
 mx = max(c['cnt'] for c in bible)
@@ -51,7 +60,8 @@ def spines(lst):
     for c in lst:
         h = 46 + round(100 * (c['cnt'] / mx) ** 0.6) if c['cnt'] else 46
         cls = 'spine on' if c['cnt'] else 'spine'
-        out.append(f'<li><a class="{cls}" style="height:{h}px" href="{caturl(c["no"])}" target="_blank" rel="noopener" title="{esc(c["name"])} {c["cnt"]}편"><span>{esc(c["name"])}</span><b>{c["cnt"] or ""}</b></a></li>')
+        href = f'href="{c["link"]}"' if c.get('link') else f'href="{caturl(c["no"])}" target="_blank" rel="noopener"'
+        out.append(f'<li><a class="{cls}" style="height:{h}px" {href} title="{esc(c["name"])} {c["cnt"]}편"><span>{esc(c["name"])}</span><b>{c["cnt"] or ""}</b></a></li>')
     return ''.join(out)
 covered = sum(1 for c in bible if c['cnt'])
 
