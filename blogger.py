@@ -4,6 +4,8 @@
 # 열쇠(BLOGGER_CLIENT_ID / BLOGGER_CLIENT_SECRET / BLOGGER_REFRESH_TOKEN)가 없으면 아무것도 하지 않는다.
 # REFRESH_ONLY=1 이면 이미 올린 글의 본문만 지금 디자인으로 다시 입힌다.
 import os, re, json, html, datetime, urllib.request, urllib.parse, urllib.error, time, sys
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from credit_author import credit_txt_with
 
 D = os.path.dirname(os.path.abspath(__file__))
 BLOG = '5791371153360346841'
@@ -165,15 +167,8 @@ def press(c):
         if k: name = name or k.group(1).strip(); return name + press_date(k.groups()[-1], name.startswith('「'))
     return None
 def credit_txt(c):
-    if '게재)' in c: return c   # 신문·잡지에 실린 글을 소재로 쓴 예화 (출처: 「원제」 (매체 게재))
-    if '아름다운 글)' in c: return c   # 네이버·구글에 올라온 좋은 글을 소재로 쓴 예화 (출처: 온라인에 공유된 아름다운 글)
-    if '목회 프리미엄' in c: return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)'
-    if '설교 「' in c: return '온라인에 공유된 감동적인 예화'   # 둘로스 설교 원고 속에서 뽑은 예화
-    p = press(c)
-    if p: t = re.search(r'「[^」]*」', c); return (t.group(0) + ' ' if t else '') + f'({p} 게재)'
-    # 둘로스 자료에서 고른 글은 원글 제목만 두고 출처는 '온라인에 공개된 감동적인 예화'로 적는다
-    t = re.search(r'「[^」]*」', c)
-    return (t.group(0) + ' ' if t else '') + '(온라인에 공개된 감동적인 예화)'
+    # 저자·원제·매체·책이 분명하면 그대로 밝히고, 불분명할 때만 '온라인에 공개된 감동적인 예화'로 적는다
+    return credit_txt_with(c, press)
 def src_note(y):
     if y.get('credit'): return f'📜 원글: {esc(credit_txt(y["credit"]))} — 줄거리를 바탕으로 새로 써서 옮김'
     if y.get('book'): return f'📚 독후감 「{esc(y["book"])}」에서'

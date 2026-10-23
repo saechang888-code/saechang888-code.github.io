@@ -1,6 +1,8 @@
 # 예화 전체(blogger_yehwa.json)를 홈페이지에 주제별로: yehwa/index.html(가 편 ~ 하 편 목차) + 주제마다 한 쪽
 # 블로그 예화 모음과 같은 분류(낱말 주제 kw)를 쓴다. 첫 화면 메뉴와 예화 칸에 링크를 단다.
 import os, re, json, html, shutil
+import sys; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from credit_author import credit_txt_with
 
 D = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(D, 'yehwa')
@@ -94,15 +96,8 @@ def press(c):
         if k: name = name or k.group(1).strip(); return name + press_date(k.groups()[-1], name.startswith('「'))
     return None
 def credit_txt(c):
-    if '게재)' in c: return c   # 신문·잡지에 실린 글을 소재로 쓴 예화 (출처: 「원제」 (매체 게재))
-    if '아름다운 글)' in c: return c   # 네이버·구글에 올라온 좋은 글을 소재로 쓴 예화 (출처: 온라인에 공유된 아름다운 글)
-    if '목회 프리미엄' in c: return re.sub(r'\s*\(목회 프리미엄.*\)$', '', c) + ' (온라인에 공유된 감동적인 글)'
-    if '설교 「' in c: return '온라인에 공유된 감동적인 예화'   # 둘로스 설교 원고 속에서 뽑은 예화
-    p = press(c)
-    if p: t = re.search(r'「[^」]*」', c); return (t.group(0) + ' ' if t else '') + f'({p} 게재)'
-    # 둘로스 자료에서 고른 글은 원글 제목만 두고 출처는 '온라인에 공개된 감동적인 예화'로 적는다
-    t = re.search(r'「[^」]*」', c)
-    return (t.group(0) + ' ' if t else '') + '(온라인에 공개된 감동적인 예화)'
+    # 저자·원제·매체·책이 분명하면 그대로 밝히고, 불분명할 때만 '온라인에 공개된 감동적인 예화'로 적는다
+    return credit_txt_with(c, press)
 def src_line(x):
     if x.get('credit'): return f'📜 원글: {esc(credit_txt(x["credit"]))} — 줄거리를 바탕으로 새로 써서 옮김'
     if x.get('sermon'): return f'📖 인용한 설교: {esc(x["sermon"])}'
