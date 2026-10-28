@@ -306,3 +306,9 @@ h3.post-title a:hover{color:#2f5d50!important}
 #dj-fresh .s{font-size:12px;color:#8a928e;border-top:1px dashed #e5dece;padding-top:7px}
 #dj-fresh .all{margin:0}
 #dj-fresh .all a{font-weight:700;color:#23443a}
+/* 새암교회 새 홈페이지 배너 (주인님 지시 2026-10-28) */
+.dj-church{display:flex;align-items:flex-end;min-height:170px;margin:0 0 30px;padding:22px 26px;border-radius:18px;text-decoration:none!important;color:#fff!important;background:linear-gradient(90deg,rgba(10,22,34,.82),rgba(10,22,34,.35)),url(https://saechang888-code.github.io/seamchurch/images/hero-night.jpg) center/cover;box-shadow:0 14px 34px rgba(35,68,58,.18);transition:transform .2s}
+.dj-church:hover{transform:translateY(-2px)}
+.dj-church small{display:block;color:#d9b86a;letter-spacing:.08em;font-size:13px}
+.dj-church b{display:block;font:900 clamp(20px,3.4vw,27px) "Noto Serif KR",serif;margin:4px 0 6px;color:#fff}
+.dj-church em{font-style:normal;font-size:15px;color:#f1e7cf}

@@ -114,6 +114,15 @@ if os.path.isdir(OUT): shutil.rmtree(OUT)
 os.makedirs(OUT)
 kws = sorted(by)
 PER = 100                                     # 한 쪽에 예화 100편씩, 넘으면 2쪽·3쪽…
+def paras(body):     # 문단 없이 길게 이어진 이야기는 문장 4개 안팎씩 문단으로 나눠 읽기 좋게 (주인님 지시 2026-10-28)
+    out = []
+    for l in (l.strip() for l in body.split('\n')):
+        if not l: continue
+        ss = re.split(r'(?<=[.!?][”"’)])\s+|(?<=[.!?])\s+(?=\S)', l)
+        if l.startswith('▸') or len(ss) < 7: out.append(l); continue
+        n = -(-len(ss) // 4); k = -(-len(ss) // n)
+        out += [' '.join(ss[i:i + k]) for i in range(0, len(ss), k)]
+    return out
 def pname(kw, p): return slug(kw) + ('' if p == 1 else f'-{p}') + '.html'
 for i, kw in enumerate(kws):
     allit = by[kw]; npg = (len(allit) + PER - 1) // PER
@@ -121,7 +130,7 @@ for i, kw in enumerate(kws):
         items = allit[(p - 1) * PER:p * PER]; base = (p - 1) * PER
         toc = ''.join(f'<a href="#y{base + j + 1}">{base + j + 1}. {esc(x["title"])}</a>' for j, x in enumerate(items))
         arts = ''.join(f'<article id="y{base + j + 1}"><h3>{base + j + 1}. {esc(x["title"])}</h3>'
-                       + ''.join(f'<p>{esc(l.strip())}</p>' for l in x['body'].split('\n') if l.strip())
+                       + ''.join(f'<p>{esc(l)}</p>' for l in paras(x['body']))
                        + (f'<p class="src">{src_line(x)}</p>' if src_line(x) else '') + '</article>' for j, x in enumerate(items))
         pager = '' if npg == 1 else '<nav class="jump" aria-label="쪽">' + ''.join(
             f'<a href="{pname(kw, q)}"' + (' style="border-color:var(--gold);font-weight:700"' if q == p else '') + f'>{(q - 1) * PER + 1}~{min(q * PER, len(allit))}</a>' for q in range(1, npg + 1)) + '</nav>'

@@ -132,6 +132,11 @@ html{{scroll-behavior:smooth;scroll-padding-top:84px}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.75;word-break:keep-all;-webkit-font-smoothing:antialiased}}
 a{{color:inherit}}
 a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}}
+.church-banner{{display:flex;align-items:flex-end;min-height:190px;margin:28px 0 8px;padding:24px 28px;border-radius:18px;text-decoration:none;color:#fff;background:linear-gradient(90deg,rgba(10,22,34,.82),rgba(10,22,34,.35)),url(https://saechang888-code.github.io/seamchurch/images/hero-night.jpg) center/cover;box-shadow:var(--shadow);transition:transform .2s}}
+.church-banner:hover{{transform:translateY(-2px)}}
+.church-banner small{{display:block;color:var(--gold2);letter-spacing:.08em;font-size:.82rem}}
+.church-banner b{{display:block;font-family:var(--display);font-size:clamp(1.3rem,3.6vw,1.8rem);margin:4px 0 6px;color:#fff}}
+.church-banner em{{font-style:normal;font-size:.95rem;color:#f1e7cf}}
 .container{{max-width:1180px;margin:0 auto;padding-inline:24px}}
 h1,h2,h3{{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.02em}}
 h4{{margin:0}}
@@ -365,6 +370,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   </div>
 </header>
 <main class="container">
+  <a class="church-banner" href="https://saechang888-code.github.io/seamchurch/" target="_blank" rel="noopener"><span><small>새암교회 새 홈페이지</small><b>용인 새암교회에 오신 것을 환영합니다</b><em>예배 안내 · 교회 소개 · 오시는 길 · 설교 영상 →</em></span></a>
   <!--YH-FRESH-->
   <section id="sermon" aria-labelledby="sermon-h">
     <div class="head"><span class="eyebrow">성경연구와 설교</span><div class="row"><h2 id="sermon-h">강단에서 전한 말씀</h2><a href="{caturl(101)}" target="_blank" rel="noopener">설교 전체 {cnt(101):,}편 →</a></div>
