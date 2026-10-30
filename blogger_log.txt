@@ -43,4 +43,4 @@ blogger: 실패 20261016-o114 403 {
   }
 }
 
-blogger: today 2026-10-29 posted 0 · waiting 12 · total done 125
+blogger: today 2026-10-30 posted 0 · waiting 12 · total done 125
