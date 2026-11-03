@@ -436,6 +436,6 @@ footer a{{color:var(--gold2);text-decoration:none}}
 if not PREVIEW:
     page = ('<!doctype html>\n<html lang="ko">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<meta name="description" content="이재선 목사의 서재 — 주제별 설교 예화, 설교와 성경연구, 독후감, 시와 팡세, 유튜브 어음성경">\n'
-            + page.replace('</style>', '</style>\n<link rel="stylesheet" href="assets/home-premium.css">\n</head>\n<body>', 1) + '\n</body>\n</html>\n')
+            + page.replace('</style>', '</style>\n<link rel="stylesheet" href="assets/home-premium.css?v=7d223f4a">\n</head>\n<body>', 1) + '\n</body>\n</html>\n')
 open(os.path.join(D, 'index.html'), 'w', encoding='utf-8').write(page)
 print('ok total', TOTAL, 'bible books covered', covered, 'of', len(bible))
