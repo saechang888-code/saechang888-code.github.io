@@ -204,11 +204,11 @@ mx = max(len(v) for v in by.values())
 def spine(k):
     n = len(by[k]); hgt = 46 + round(100 * (n / mx) ** 0.6)
     tip = f'{k} 예화 {n}편' + (' · 새로 쓴 예화 포함' if k in new_kw else '')
-    return (f'<li><a class="spine on{" big" if n >= 200 else ""}" style="height:{hgt}px" href="yehwa/{slug(k)}.html" title="{esc(tip)}">'
+    return (f'<li><a class="spine on{" big" if n >= 200 else ""}" style="--book-h:{hgt}px" href="yehwa/{slug(k)}.html" title="{esc(tip)}">'
             f'<span>{esc(k)}</span><b>{n}</b></a></li>')
 cards = ''.join(f'<div class="shelf"' + (' style="grid-column:1/-1"' if len([k for k in ks.split() if k in by]) > 17 else '') + f'><h3>{g} · {sum(len(by[k]) for k in groups[g]):,}편</h3><div class="books-scroll"><ul class="books">'
                 + ''.join(spine(k) for k in ks.split() if k in by)
-                + (f'<li><a class="spine" style="height:84px" href="yehwa/index.html#{g[0]}" title="{g} 주제 모두 보기"><span>더보기</span><b>+{len(groups[g]) - SHELF}</b></a></li>' if len(groups[g]) > SHELF else '')
+                + (f'<li><a class="spine" style="--book-h:84px" href="yehwa/index.html#{g[0]}" title="{g} 주제 모두 보기"><span>더보기</span><b>+{len(groups[g]) - SHELF}</b></a></li>' if len(groups[g]) > SHELF else '')
                 + '</ul></div></div>' for g, ks in GROUPS)
 STY = ('<style>.ygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:14px;margin:6px 0 14px}'
        '.yblog summary{cursor:pointer;color:var(--muted);margin:4px 0 10px}.ymore{margin:0 0 12px;font-size:.92rem}</style>')
