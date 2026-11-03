@@ -105,3 +105,44 @@ main.library-main>section{padding:clamp(22px,3vw,38px);border:1px solid #ded4c2;
 #stories .ygrid .shelf[style*="grid-column:1/-1"] .books-scroll{padding-inline:17px}
 @media(max-width:980px){.hero-copy{padding-block:56px}.hero h1{font-size:clamp(3rem,7vw,5rem)}#stories .ygrid{grid-template-columns:1fr}}
 @media(max-width:680px){.hero-copy{padding:48px 19px 36px}.hero h1{font-size:clamp(2.9rem,11vw,4.25rem);line-height:1.2}.hero .who{color:#fff8e9}.hero .eyebrow{color:#f0cb91}.hero .btn.ghost{color:#fffaf0}.hero-art::after{top:44px;right:19px;width:82%;height:180px;opacity:.88}.hero-art{min-height:450px}.hero-art-story{margin-bottom:9px}#stories .ygrid{gap:12px}#stories .ygrid .shelf h3{padding:11px 13px}#stories .ygrid .shelf .books-scroll{padding:12px 8px 9px}}
+
+
+/* READABLE MASTHEAD + SERMON BOOKSHELVES */
+.hero-copy{background:radial-gradient(ellipse at 10% 15%,rgba(90,117,82,.2),transparent 42%),linear-gradient(145deg,#17271c 0%,#213528 64%,#2b3d2d 100%);color:#fffaf0}
+.hero-copy::before{border-color:rgba(235,205,153,.23);box-shadow:0 0 0 17px rgba(235,205,153,.035),0 0 0 39px rgba(235,205,153,.023)}
+.hero .eyebrow{border-color:rgba(235,204,151,.54);background:rgba(8,17,10,.34);color:#ffe0ac;font-weight:750}
+.hero .eyebrow::before{background:#e2b775}
+.hero h1{color:#fffdf6;font-size:clamp(3.5rem,6vw,6.1rem);line-height:1.22;letter-spacing:-.065em;text-shadow:0 3px 22px rgba(0,0,0,.26)}
+.hero h1 em{color:#ffd28e;text-shadow:0 2px 16px rgba(210,155,80,.24)}
+.hero .who{color:#fff9ec;font-size:1.06rem;line-height:1.95;text-shadow:0 1px 2px rgba(0,0,0,.14)}
+.hero .who b{color:#ffe0ad;font-weight:750}
+.finder label{color:#fff8e8;font-weight:700}
+.finder form{border-color:#e4c995;background:#fffdf7;box-shadow:0 10px 26px rgba(0,0,0,.22),inset 0 0 0 1px rgba(255,255,255,.72)}
+.finder input{color:#252820;font-weight:600}
+.finder input::placeholder{color:#696c63;opacity:1}
+.finder button{background:linear-gradient(135deg,#405b3d,#23382a);color:#fffdf3}
+.finder .chips a{border-color:rgba(250,239,214,.55);background:rgba(255,251,239,.13);color:#fffaf0;font-weight:550}
+.finder .chips a:hover{border-color:#f0cc8a;background:rgba(220,171,100,.2);color:#ffe7bb}
+.hero .motto{color:#f5ead2}
+.hero .btn.ghost{border-color:rgba(255,249,233,.78);background:rgba(255,255,255,.11);color:#fffdf5}
+.hero .btn.ghost:hover{border-color:#f1c980;background:rgba(255,255,255,.2)}
+#sermon .shelf{position:relative;overflow:hidden;gap:0;padding:0;border:1px solid #b7a17a;border-top:3px solid #73816a;border-radius:4px;background:linear-gradient(180deg,#f7eedc 0%,#eee1c9 84%,#b08a5b 84%,#765436 92%,#d7bc8e 93%,#f0e5d0 100%);box-shadow:0 12px 26px rgba(42,36,26,.11),inset 0 1px 0 #fffaf0}
+#sermon .shelf h3{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 17px 11px;border-bottom:1px solid #d5c6a9;color:#354435;font-family:var(--display);font-size:.97rem;letter-spacing:-.025em}
+#sermon .shelf .books-scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#9b7a4e #eadfcb;padding:15px 13px 11px}
+#sermon .shelf .books{display:flex;flex-flow:row nowrap;align-items:flex-end;gap:3px;width:max-content;min-width:100%;margin:0;padding:0 5px 4px;border:0;border-bottom:8px solid #765635;box-shadow:0 4px 0 #d5b885;list-style:none}
+#sermon .shelf .books li{display:flex;flex:0 0 auto;align-items:flex-end;margin:0;padding:0}
+#sermon .shelf .spine{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;flex:none;width:31px;min-height:46px;margin:0 0 2px;padding:9px 2px 5px;overflow:hidden;border:0;border-left:1px solid rgba(255,255,255,.22);border-right:1px solid rgba(0,0,0,.19);border-radius:3px 3px 0 0;background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#536249!important;box-shadow:inset 1px 0 0 rgba(255,255,255,.12),2px 1px 4px rgba(32,29,22,.22);color:#fff8e9;font-size:.62rem;text-decoration:none;transition:transform .18s,filter .18s}
+#sermon .shelf .books li:nth-child(6n+1) .spine{background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#41543f!important}
+#sermon .shelf .books li:nth-child(6n+2) .spine{background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#7b4837!important}
+#sermon .shelf .books li:nth-child(6n+3) .spine{background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#786745!important}
+#sermon .shelf .books li:nth-child(6n+4) .spine{background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#46515c!important}
+#sermon .shelf .books li:nth-child(6n+5) .spine{background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#916846!important}
+#sermon .shelf .books li:nth-child(6n) .spine{background:linear-gradient(90deg,rgba(0,0,0,.2),transparent 18%,rgba(255,255,255,.14) 53%,rgba(0,0,0,.13)),#344a3c!important}
+#sermon .shelf .spine::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#b08a52,#f0d6a5,#a17c48)}
+#sermon .shelf .spine span{display:block;max-width:100%;max-height:calc(100% - 18px);overflow:hidden;writing-mode:vertical-rl;white-space:nowrap;color:#fff9ed;font-family:var(--display);font-size:.7rem;font-weight:650;line-height:1.2;letter-spacing:.015em}
+#sermon .shelf .spine b{display:block;writing-mode:horizontal-tb;color:#f3dfb7;font-family:ui-monospace,Consolas,monospace;font-size:.54rem;font-weight:750;line-height:1}
+#sermon .shelf .spine:not(.on){background:linear-gradient(90deg,#68685d,#8b8776)!important;color:#fff;font-weight:500}
+#sermon .shelf .spine:not(.on) b{color:#eee7d8}
+#sermon .shelf .spine:hover{z-index:2;transform:translateY(-5px);filter:brightness(1.12)}
+#sermon>.lede{max-width:72ch;margin-top:-7px;color:#6a6459;font-size:.85rem}
+@media(max-width:680px){.hero-copy{padding:46px 19px 34px}.hero h1{font-size:clamp(2.85rem,11vw,4.2rem);line-height:1.2}.hero .who{color:#fff9eb}.hero .eyebrow{color:#ffe0ac}.hero .btn.ghost{color:#fffdf5}#sermon .shelf h3{padding:11px 13px}#sermon .shelf .books-scroll{padding:12px 8px 9px}#sermon .shelf .spine{width:29px}}
