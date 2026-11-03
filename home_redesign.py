@@ -40,6 +40,13 @@ def extract_section(markup, section_id):
 
 head = extract_element(source, "head")
 topbar = extract_element(source, "header", "class", "topbar")
+menu = re.search(r'(<nav class="menu"[^>]*>\s*<ol>)([\s\S]*?)(</ol>\s*</nav>)', topbar)
+if not menu:
+    raise ValueError("The generated homepage menu is missing.")
+items = re.sub(r'<li>\s*<a href="#stories"[^>]*>[\s\S]*?</a>\s*</li>\s*', "", menu.group(2))
+items = re.sub(r'<li>\s*<a href="#new"[^>]*>[\s\S]*?</a>\s*</li>\s*', "", items)
+ordered = menu.group(1) + '\n    <li><a href="#stories">예화</a></li>\n    ' + items.strip() + '\n  ' + menu.group(3)
+topbar = topbar[:menu.start()] + ordered + topbar[menu.end():]
 hero_main = extract_element(source, "div", "class", "hero-main")
 today = extract_element(source, "a", "class", "today")
 stats = extract_element(source, "ul", "class", "stats")
