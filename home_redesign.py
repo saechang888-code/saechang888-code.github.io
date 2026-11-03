@@ -105,9 +105,9 @@ body = f'''<body class="reading-room">
     <div><span class="section-kicker">THE COLLECTION</span><h2>오래 읽고, 깊이 남기는<br>한 사람의 서재</h2></div>
     <p>강단에서 전한 말씀과 삶에서 건져 올린 이야기, 읽고 쓴 기록을 한곳에 모았습니다.<br>필요한 주제에서 시작해 천천히 둘러보세요.</p>
   </div>
+  {sections["stories"]}
   {quicknav}
   {sections["fresh"]}
-  {sections["stories"]}
   {sections["sermon"]}
   {sections["youtube"]}
   <div class="reader-spread" aria-label="시와 생각의 노트">
