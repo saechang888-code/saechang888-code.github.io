@@ -51,7 +51,7 @@ sections = {name: extract_section(source, name) for name in ("fresh", "stories",
 # Replace the previous visual layer with the new complete page treatment.
 head = re.sub(r"<link\b(?=[^>]*\brel=[\"']stylesheet[\"'])(?=[^>]*\bhref=[\"']assets/home-premium\.css[^\"']*[\"'])[^>]*>\s*", "", head, flags=re.I)
 head = re.sub(r"<link\b(?=[^>]*\bhref=[\"']assets/library-luxe\.css[^\"']*[\"'])[^>]*>\s*", "", head, flags=re.I)
-head = head.replace("</head>", '<link rel="stylesheet" href="assets/library-luxe.css?v=sermon-shelf-08">\n</head>', 1)
+head = head.replace("</head>", '<link rel="stylesheet" href="assets/library-luxe.css?v=search-round-09">\n</head>', 1)
 html_tag = re.search(r"<html\b[^>]*>", source, re.I)
 if not html_tag:
     raise ValueError("The generated page has no html root.")
