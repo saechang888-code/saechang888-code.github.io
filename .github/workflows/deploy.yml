@@ -52,6 +52,9 @@ jobs:
       # 검색엔진용 sitemap.xml · robots.txt · 공유 카드 태그
       - name: SEO
         run: python seo.py
+      # 생성된 글을 새 편집형 서재 레이아웃으로 조립
+      - name: Redesign library homepage
+        run: python home_redesign.py
       # 저장소에 최신 글 목록을 남긴다(실패해도 배포는 계속한다)
       - name: Save updated blog data
         continue-on-error: true
