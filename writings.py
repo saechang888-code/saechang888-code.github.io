@@ -1,4 +1,4 @@
-﻿# posts.json 중 예약일(한국 시간)이 된 글만 공개: writings/ 글 페이지·보관함 + 첫 화면 '새로 올라온 글'
+# posts.json 중 예약일(한국 시간)이 된 글만 공개: writings/ 글 페이지·보관함 + 첫 화면 '새로 올라온 글'
 import os, re, json, html, datetime, shutil, sys
 
 D = os.path.dirname(os.path.abspath(__file__))
@@ -141,7 +141,6 @@ section = f'''<section id="new" aria-labelledby="new-h">
   ''' if posts else ''
 h = re.sub(r'<section id="new".*?</section>\s*', '', h, flags=re.S)
 h = h.replace('<section id="sermon"', section + '<section id="sermon"', 1)
-if 'href="#new"' not in h:
-    h = h.replace('<li><a href="#sermon">', '<li><a href="#new">새 글</a></li>\n    <li><a href="#sermon">', 1)
+# Keep the latest-writing section on the page without adding a top-level menu link.
 open(home, 'w', encoding='utf-8').write(h)
 print('today', TODAY, 'published', len(posts), 'of', len(json.load(open(os.path.join(D, 'posts.json'), encoding='utf-8'))))
