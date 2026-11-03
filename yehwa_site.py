@@ -238,7 +238,7 @@ SITE = 'https://saechang888-code.github.io/'
 T = {k: slug(k) for k in kws}
 POP = [k for k in '감사 기도 사랑 믿음 용서 고난 소망 겸손 가정 전도'.split() if k in by]
 find = ('<div class="finder"><label for="yq">어떤 주제의 예화가 필요하세요?</label>'
-        '<form id="yfind" role="search" action="yehwa/index.html"><input id="yq" name="q" list="ykws" placeholder="예: 감사, 용서 · 또는 풍랑 속에서 지킨 믿음" autocomplete="off" enterkeyhint="search">'
+        '<form id="yfind" role="search" action="yehwa/index.html"><input id="yq" name="q" list="ykws" placeholder="찾고 싶은 내용을 단어나 문장으로 검색해 보세요" autocomplete="off" enterkeyhint="search">'
         '<button type="submit">예화 찾기</button></form>'
         '<datalist id="ykws">' + ''.join(f'<option value="{esc(k)}">' for k in kws) + '</datalist>'
         '<div class="chips">' + ''.join(f'<a href="yehwa/{slug(k)}.html">{esc(k)}</a>' for k in POP) + f'<a href="yehwa/index.html">주제 {len(kws)}가지 모두</a><a href="search/index.html">🔎 뜻으로 찾기</a></div>'
