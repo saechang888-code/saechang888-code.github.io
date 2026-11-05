@@ -1,0 +1,26 @@
+[
+ {
+  "relation": [
+   "delegate_permission/common.handle_all_urls"
+  ],
+  "target": {
+   "namespace": "android_app",
+   "package_name": "io.github.saechang888.seamapp",
+   "sha256_cert_fingerprints": [
+    "62:2B:56:70:34:56:5F:16:36:87:FE:AF:1F:ED:F0:87:8C:E4:C3:82:46:CB:83:C9:6D:06:F5:E6:E9:1E:9E:42"
+   ]
+  }
+ },
+ {
+  "relation": [
+   "delegate_permission/common.handle_all_urls"
+  ],
+  "target": {
+   "namespace": "android_app",
+   "package_name": "io.github.saechang888.berith",
+   "sha256_cert_fingerprints": [
+    "6E:BD:87:E0:37:46:D5:EE:D4:BF:F0:BD:2B:DC:EF:B5:41:6D:86:DF:D8:1D:55:6D:00:41:60:95:53:35:5C:60"
+   ]
+  }
+ }
+]
