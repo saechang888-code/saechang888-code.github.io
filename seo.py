@@ -31,6 +31,7 @@ def tag_page(path, url):
 
 urls = [(SITE, '1.0'), (SITE + 'writings/index.html', '0.9'), (SITE + 'yehwa/index.html', '0.9'), (SITE + 'event.html', '0.6')]
 urls.append((SITE + 'anshik/index.html', '0.8')); urls.append((SITE + 'saeam/', '1.0')); urls.append((SITE + 'anshik/meditations.html', '0.7'))
+urls.append((SITE + 'berith/', '0.9')); urls.append((SITE + 'seamapp/', '0.9'))   # 베리트365·새암교회 앱 (11-05 주인님)
 for sub, pr in (('writings', '0.6'), ('yehwa', '0.7'), ('anshik', '0.6')):
     for f in sorted(glob.glob(os.path.join(D, sub, '*.html'))):
         name = os.path.basename(f)
