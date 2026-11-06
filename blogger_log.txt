@@ -13,7 +13,7 @@ blogger: 실패 ebook-exodus 403 {
   }
 }
 
-blogger: 실패 20261016-o113 403 {
+blogger: 실패 book-genesis1 403 {
   "error": {
     "code": 403,
     "message": "The caller does not have permission",
@@ -28,7 +28,7 @@ blogger: 실패 20261016-o113 403 {
   }
 }
 
-blogger: 실패 20261016-o114 403 {
+blogger: 실패 book-genesis2 403 {
   "error": {
     "code": 403,
     "message": "The caller does not have permission",
