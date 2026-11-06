@@ -82,9 +82,10 @@ body{{margin:0;background:var(--bg);color:var(--ink)}}{CSS.replace("#26231e", "v
 .cover .sub{{font-size:17px;opacity:.92}}.cover .au{{margin-top:1.4em;font-weight:700}}.dl{{display:inline-block;margin-top:1.4em;padding:10px 20px;border-radius:999px;background:#f4efe4;color:#20311f;font-family:"Noto Sans KR",sans-serif;font-weight:700;text-decoration:none}}
 #toc{{font-family:"Noto Sans KR",sans-serif;border:1px solid var(--rule);border-radius:14px;padding:18px 22px}}#toc ul{{margin:.4em 0 0;padding:0;list-style:none;line-height:2}}
 .ch{{padding-top:40px;border-top:1px solid var(--rule);margin-top:40px}}.top{{font-family:"Noto Sans KR",sans-serif;font-size:14px;text-align:right}}
+.cimg{{display:block;width:300px;max-width:70vw;height:auto;margin:0 auto 26px;border-radius:6px;box-shadow:0 14px 34px rgba(0,0,0,.45)}}
 @media (max-width:520px){{.cover h1{{font-size:34px}}}}</style></head><body><div class="wrap">
 <div class="bar"><a href="../../index.html">← 독서주특기 홈</a><a href="../">새암교회 안내</a></div>
-<div class="cover"><div class="tag">신앙생활에 활력을</div><h1>{TITLE}</h1><div class="sub">{esc(SUB)}</div><div class="au">{AUTHOR} 지음 · 새암교회</div>
+<div class="cover"><img class="cimg" src="cover_s.jpg" srcset="cover_s.jpg 600w, cover.jpg 1600w" sizes="(max-width:520px) 70vw, 300px" alt="『{TITLE}』 표지" width="600" height="900"><div class="tag">신앙생활에 활력을</div><h1>{TITLE}</h1><div class="sub">{esc(SUB)}</div><div class="au">{AUTHOR} 지음 · 새암교회</div>
 <a class="dl" href="exodus.epub" download>전자책(EPUB) 내려받기</a></div>
 <nav id="toc" aria-label="차례"><b>차례</b><ul>{toc}</ul></nav>
 {secs}
@@ -97,8 +98,7 @@ def xhtml(title, body):
     return (f'<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko" xml:lang="ko">'
             f'<head><meta charset="utf-8"/><title>{esc(title)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head><body>{body}</body></html>')
 uid = 'urn:uuid:5a1d0e6c-2020-4e00-9e1a-000000000001'
-files = {'cover.xhtml': xhtml(TITLE, '<div style="text-align:center;margin-top:30%"><p style="text-align:center;color:#7a6a4f">신앙생활에 활력을</p>' +
-                              f'<h1 style="font-size:2.2em">{TITLE}</h1><p style="text-align:center">{esc(SUB)}</p><p style="text-align:center;margin-top:3em"><b>{AUTHOR}</b><br/>새암교회</p></div>')}
+files = {'cover.xhtml': xhtml(TITLE, f'<div style="text-align:center"><img src="cover.jpg" alt="{TITLE} 표지" style="max-width:100%;max-height:100%"/></div>')}   # 표지 그림 (11-06)
 for i, (a, b, it) in enumerate(chapters):
     files[f'c{i:02d}.xhtml'] = xhtml(b, f'<h2>{f"<small>{esc(a)}</small>" if a else ""}{esc(b)}</h2>' + render(it, True))
 nav = xhtml('차례', '<nav epub:type="toc" id="toc"><h2>차례</h2><ol>' + ''.join(
@@ -109,7 +109,7 @@ opf = f'''<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bid" xml:lang="ko">
 <metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bid">{uid}</dc:identifier><dc:title>{TITLE} — 새암교회 이야기</dc:title>
 <dc:creator>{AUTHOR}</dc:creator><dc:language>ko</dc:language><dc:publisher>새암교회</dc:publisher><meta property="dcterms:modified">{now}</meta></metadata>
-<manifest><item id="css" href="style.css" media-type="text/css"/><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+<manifest><item id="cover-img" href="cover.jpg" media-type="image/jpeg" properties="cover-image"/><item id="css" href="style.css" media-type="text/css"/><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
 {''.join(f'<item id="{f[:-6]}" href="{f}" media-type="application/xhtml+xml"/>' for f in files)}</manifest>
 <spine>{''.join(f'<itemref idref="{"nav" if f == "nav.xhtml" else f[:-6]}"/>' for f in spine)}</spine></package>'''
 ep = os.path.join(OUT, 'exodus.epub')
@@ -118,6 +118,7 @@ with zipfile.ZipFile(ep, 'w') as z:
     z.writestr('META-INF/container.xml', '<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>', zipfile.ZIP_DEFLATED)
     z.writestr('OEBPS/content.opf', opf, zipfile.ZIP_DEFLATED)
     z.writestr('OEBPS/style.css', CSS, zipfile.ZIP_DEFLATED)
+    z.write(os.path.join(OUT, 'cover.jpg'), 'OEBPS/cover.jpg')
     z.writestr('OEBPS/nav.xhtml', nav, zipfile.ZIP_DEFLATED)
     for f, s in files.items(): z.writestr('OEBPS/' + f, s, zipfile.ZIP_DEFLATED)
 print('e북', len(chapters), '장', nchar, '자 · EPUB', os.path.getsize(ep), '바이트')
