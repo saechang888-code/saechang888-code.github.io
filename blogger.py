@@ -14,7 +14,7 @@ MAX_PER_RUN = int(os.environ.get('BLOGGER_MAX', '30'))       # 밀린 글이 많
 TODAY = os.environ.get('TODAY') or (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=9)).strftime('%Y-%m-%d')
 KIND_LABEL = {'행사': '교회 소식', '설교': '설교', '예화': '예화', '독후감': '독후감', '팡세/예화': '팡세', '시': '시'}
 # 블로그 카테고리(= 첫 번째 라벨). 글 맨 위 메뉴도 이 순서로 보인다
-CATS = ['예화', '설교', '묵상', '팡세', '독후감', '시', '기타']
+CATS = ['예화', '설교', '묵상', '팡세', '독후감', '시', '작품', '기타']   # 작품: 책(e북·설교집·시집) — 11-06 주인님
 CAT_OF = {'예화': '예화', '설교': '설교', '독후감': '독후감', '팡세/예화': '팡세', '묵상': '묵상', '시': '시', '행사': '기타'}
 BLOG_URL = 'https://saechang888.blogspot.com/'
 YEHWA_INDEX = BLOG_URL + '2026/10/blog-post_16.html'   # [예화] 주제별 예화 목차 — 가 편 ~ 하 편
@@ -358,7 +358,45 @@ def render_exodus():
             f'<h3 style="font-size:20px;margin:1.6em 0 .6em;color:{INK}">프롤로그에서</h3>' + ''.join(f'<p style="{P}">{esc(t)}</p>' for t in pro) +
             f'<p style="{P}"><b>차례</b> — 출정식 · 제1장 엑서더스의 비법 · 제2장 애굽의 삶 · 제3장 광야의 삶 · 제1숙영지 새 가족들의 증언 · 제2숙영지 제자들의 증언 · 제3숙영지 사명자들의 증언 · 가나안에 도착하다</p>'
             f'<p style="{P}"><a href="{url}" style="color:{GREEN};font-weight:700">이어서 읽기 →</a></p>' + footer() + '</div>')
-jobs.append(dict(id='ebook-exodus', date='2026-10-22', title='[e북] Exodus 엑서더스 — 새암교회 이야기 (이재선 목사)', render=render_exodus, labels=['기타', '새암교회', 'e북']))
+jobs.append(dict(id='ebook-exodus', date='2026-10-22', title='[e북] Exodus 엑서더스 — 새암교회 이야기 (이재선 목사)', render=render_exodus, labels=['작품', '기타', '새암교회', 'e북']))
+
+# ---------- 작품: 설교집·시집 소개 글과 작품 책꽂이 (본문은 홈페이지 books/·anshik/, book_genesis.py·book_poems.py로 만든다) ----------
+BOOKS = [('genesis1', 'books/genesis1/', '설교집'), ('genesis2', 'books/genesis2/', '설교집'), ('nature1', 'anshik/nature1/', '시집'), ('nature2', 'anshik/nature2/', '시집')]
+def book_toc(path): return json.load(open(os.path.join(D, path, 'toc.json'), encoding='utf-8'))
+def render_book(key, path, kind):
+    t, url = book_toc(path), SITE + path
+    out = [f'<div style="{WRAP}">', nav('작품'), badges([kind, '작품', '이재선']),
+           f'<p style="margin:0 0 1.4em;text-align:center"><a href="{url}"><img src="{url}cover_s.jpg" alt="『{esc(t["title"])}』 표지" style="width:300px;max-width:80%;height:auto;border-radius:6px;box-shadow:0 10px 26px rgba(0,0,0,.3)"></a></p>']
+    out += [f'<p style="{P}">{esc(x)}</p>' for x in t['intro']]
+    out.append(f'<p style="{P};text-align:center"><a href="{url}" style="color:{GREEN};font-weight:700">홈페이지에서 전체 읽기 →</a> · '
+               f'<a href="{url}{key}.epub" style="color:{GREEN};font-weight:700">EPUB</a> · <a href="{url}{key}.pdf" style="color:{GREEN};font-weight:700">PDF</a></p>')
+    out.append(f'<h3 style="font-size:20px;margin:1.6em 0 .6em;color:{INK}">차례</h3>')
+    for part, items in t['parts']:
+        out.append(f'<p style="margin:1.2em 0 .4em;font-weight:700;color:{GREEN}">{esc(part)}</p>')
+        if kind == '설교집':
+            out += [f'<p style="margin:0 0 .5em;font-size:15px"><b>창세기 {c}장</b> — {esc(" · ".join(ts))}</p>' for c, ts in items]
+        else:
+            out.append(f'<p style="margin:0 0 .5em;font-size:15px">{esc(" · ".join(items))}</p>')
+    for x in t.get('sample', []):          # 시집은 앞의 두 편을 그림과 함께 보여 준다
+        out.append(f'<p style="margin:2em 0 .8em;text-align:center"><img src="{url}{x["art"]}" alt="" style="width:100%;height:auto;border-radius:8px"></p>'
+                   f'<h3 style="font-size:20px;margin:0 0 .8em;color:{INK}">{esc(x["title"])}</h3>'
+                   + ''.join(f'<p style="{P}">' + '<br>'.join(esc(l) for l in st) + '</p>' for st in x['stanzas'])
+                   + ''.join(f'<p style="{P};font-size:14px;color:{MUTED}">{esc(n)}</p>' for n in x['notes']))
+    out.append(f'<p style="{P};text-align:center"><a href="{url}" style="color:{GREEN};font-weight:700">이어서 읽기 →</a></p>' + footer() + '</div>')
+    return ''.join(out)
+BOOK_TITLE = {'genesis1': '[설교집] 창세기 강해 1 『태초에 복이 있었다』 (이재선 목사)', 'genesis2': '[설교집] 창세기 강해 2 『돌베개가 변하여』 (이재선 목사)',
+              'nature1': '[시집] 자연시 1 『기도원 오솔길에서』 (이재선)', 'nature2': '[시집] 자연시 2 『솔숲에 부는 바람』 (이재선)'}
+for key, path, kind in BOOKS:
+    jobs.append(dict(id='book-' + key, date='2026-11-06', title=BOOK_TITLE[key], render=lambda key=key, path=path, kind=kind: render_book(key, path, kind),
+                     labels=['작품', kind, '창세기 설교' if kind == '설교집' else '시']))
+def render_works():   # 작품 책꽂이 — 표지를 나란히
+    items = [(SITE + 'saeam/exodus/', 'Exodus 엑서더스', 'e북 · 새암교회 이야기')] + [(SITE + p, book_toc(p)['title'], f'{k} · {book_toc(p)["sub"]}') for _, p, k in BOOKS]
+    cells = ''.join(f'<a href="{u}" style="display:inline-block;width:150px;margin:0 8px 22px;vertical-align:top;text-decoration:none;color:{INK};font-family:Noto Sans KR,Malgun Gothic,sans-serif">'
+                    f'<img src="{u}cover_s.jpg" alt="『{esc(t)}』 표지" style="width:150px;height:225px;object-fit:cover;border-radius:4px;box-shadow:0 8px 18px rgba(0,0,0,.28)">'
+                    f'<span style="display:block;font-size:14px;font-weight:700;margin-top:10px;line-height:1.4">{esc(t)}</span><span style="display:block;font-size:12px;color:{MUTED};line-height:1.4">{esc(d)}</span></a>' for u, t, d in items)
+    return (f'<div style="{WRAP}">' + nav('작품') + f'<p style="{P}">이재선 목사(새암교회)가 펴낸 책을 한 곳에 꽂았습니다. 표지를 누르면 홈페이지에서 바로 읽을 수 있고, 전자책(EPUB)과 인쇄용 PDF로 내려받을 수도 있습니다.</p>'
+            f'<div style="text-align:center;padding:24px 4px 4px;background:{SOFT};border-top:4px solid {GREEN};border-bottom:9px solid #8a6a45;border-radius:4px">{cells}</div>' + footer() + '</div>')
+jobs.append(dict(id='works-shelf', date='2026-11-06', title='[작품] 이재선 목사의 책 — 설교집 · 시집 · e북 책꽂이', render=render_works, labels=['작품']))
 by_id = {j['id']: j for j in jobs}
 # 예전에 올린 예화 묶음 글도 디자인을 다시 입힐 수 있게
 for p in all_posts:
@@ -397,7 +435,7 @@ if os.environ.get('REFRESH_ONLY'):
         n += 1; time.sleep(2)
     print('blogger: refreshed', n); sys.exit(0)
 
-due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['id'] not in ('ebook-exodus', 'sermon-shelf'), j['date'], j['id']))   # e북 소개 글은 맨 먼저
+due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['id'] not in ('ebook-exodus', 'sermon-shelf', 'works-shelf') and not j['id'].startswith('book-'), j['date'], j['id']))   # e북 소개 글은 맨 먼저
 n = fails = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
 reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn', 'an-'))][:MAX_PER_RUN]
