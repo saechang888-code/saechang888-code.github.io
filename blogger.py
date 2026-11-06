@@ -396,6 +396,16 @@ def render_works():   # 작품 책꽂이 — 표지를 나란히
                     f'<span style="display:block;font-size:14px;font-weight:700;margin-top:10px;line-height:1.4">{esc(t)}</span><span style="display:block;font-size:12px;color:{MUTED};line-height:1.4">{esc(d)}</span></a>' for u, t, d in items)
     return (f'<div style="{WRAP}">' + nav('작품') + f'<p style="{P}">이재선 목사(새암교회)가 펴낸 책을 한 곳에 꽂았습니다. 표지를 누르면 홈페이지에서 바로 읽을 수 있고, 전자책(EPUB)과 인쇄용 PDF로 내려받을 수도 있습니다.</p>'
             f'<div style="text-align:center;padding:24px 4px 4px;background:{SOFT};border-top:4px solid {GREEN};border-bottom:9px solid #8a6a45;border-radius:4px">{cells}</div>' + footer() + '</div>')
+def render_works_page():   # 블로그 '작품' 페이지 — 책꽂이 + 책마다 소개와 차례
+    body = render_works()
+    head, foot = body[:body.index(BANNER)], body[body.index(BANNER):]
+    parts = []
+    for key, path, kind in BOOKS:
+        x = render_book(key, path, kind)
+        x = x[x.index(badges([kind, '작품', '이재선'])):x.index(BANNER)]
+        parts.append(f'<h2 style="font-size:24px;margin:2.4em 0 .8em;padding-top:1.2em;border-top:1px solid #e3ddd0;color:{INK}">{esc(book_toc(path)["title"])}</h2>' + x)
+    return head + ''.join(parts) + foot
+jobs.append(dict(id='works-page', date='2099-01-01', title='작품', render=render_works_page, labels=['작품']))   # 페이지로만 올림 (날짜를 멀리 두어 글로는 안 올라감)
 jobs.append(dict(id='works-shelf', date='2026-11-06', title='[작품] 이재선 목사의 책 — 설교집 · 시집 · e북 책꽂이', render=render_works, labels=['작품']))
 by_id = {j['id']: j for j in jobs}
 # 예전에 올린 예화 묶음 글도 디자인을 다시 입힐 수 있게
@@ -414,6 +424,22 @@ def add_more(s, n=4):
 
 done_path = os.path.join(D, 'blogger_done.json')
 done = json.load(open(done_path, encoding='utf-8')) if os.path.exists(done_path) else {}
+
+if os.environ.get('PAGES_ONLY'):
+    # 블로그 '페이지'(메뉴 고정 쪽)로 올린다 — 10-19 이후 새 글(posts) 만들기가 403으로 막혀 있어서 작품란은 페이지로 (11-06)
+    pp = os.path.join(D, 'blogger_pages.json')
+    pages = json.load(open(pp, encoding='utf-8')) if os.path.exists(pp) else {}
+    for jid in open(os.path.join(D, 'pages_request.txt'), encoding='utf-8').read().split():
+        j = by_id[jid]; body = json.dumps(dict(title=j['title'], content=j['render']()), ensure_ascii=False).encode('utf-8')
+        try:
+            if jid in pages: r = call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/pages/{pages[jid]["id"]}', body, AUTH, 'PATCH')
+            else: r = call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/pages', body, AUTH, 'POST')
+            pages[jid] = dict(id=r['id'], url=r.get('url', '')); print('blogger page:', jid, r.get('url'))
+        except urllib.error.HTTPError as e:
+            print('blogger page: 실패', jid, e.code, e.read()[:200].decode('utf-8', 'replace'))
+        time.sleep(3)
+    json.dump(pages, open(pp, 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+    sys.exit(0)
 
 if os.environ.get('REFRESH_ONLY'):
     # 이미 올린 글의 제목·본문을 지금 디자인으로 다시 입힌다

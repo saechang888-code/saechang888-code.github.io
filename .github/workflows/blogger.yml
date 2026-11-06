@@ -39,6 +39,21 @@ jobs:
           git config user.email "homepage-bot@users.noreply.github.com"
           git rm -q refresh_request.txt
           git commit -m "이미 올린 글 디자인 다시 입힘" && git pull --rebase -X ours origin main && git push
+      # pages_request.txt 에 적힌 글을 블로그 '페이지'(메뉴 고정 쪽)로 올리거나 고친다 (작품란 — 11-06)
+      - name: Publish blog pages (once)
+        if: hashFiles('pages_request.txt') != ''
+        env:
+          BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+          BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+          BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+          PAGES_ONLY: "1"
+        run: |
+          python blogger.py
+          git config user.name "homepage-bot"
+          git config user.email "homepage-bot@users.noreply.github.com"
+          git rm -q pages_request.txt
+          git add blogger_pages.json
+          git commit -m "블로그 페이지 올림" && git pull --rebase -X ours origin main && git push
       - name: Post to Blogger
         env:
           BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
