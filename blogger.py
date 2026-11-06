@@ -131,15 +131,34 @@ def render_group(g):
                f'<a href="{label_url(g["pyeon"])}" style="color:{GREEN}">{esc(g["pyeon"])} 주제 모두 보기</a></p>')
     out.append(footer())
     return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
+# ---------- 책꽂이 (홈페이지 대문처럼 책등이 꽂힌 모양 — 주인님 11-06) ----------
+SPINE_COLORS = ['#3e5a48', '#7a4a3c', '#7d6a43', '#45506a', '#8a5a3a']
+def shelf(title, books, sub=''):
+    # books: [(이름, 편수, 주소)] — 책등 높이는 편수에 따라 (적어도 70px, 많아야 170px)
+    mx = max([n for _, n, _ in books] or [1])
+    sp = []
+    for i, (name, n, url) in enumerate(books):
+        h = 70 + int(100 * (n / mx) ** 0.5)
+        sp.append(f'<span style="display:inline-flex;align-items:flex-end;height:178px;padding:0 3px;border-bottom:9px solid #8a6a45;box-shadow:0 5px 0 -1px #c9a961">'
+                  f'<a href="{url}" title="{esc(name)} {n}편" style="display:inline-flex;flex-direction:column;justify-content:space-between;align-items:center;'
+                  f'width:30px;height:{h}px;padding:8px 0 6px;background:{SPINE_COLORS[i % len(SPINE_COLORS)]};color:#f6efe0;text-decoration:none;'
+                  f'border-radius:3px 3px 1px 1px;border-top:3px solid #c9a961;box-shadow:inset -3px 0 0 rgba(0,0,0,.18);vertical-align:bottom;'
+                  f'font-family:Noto Sans KR,Malgun Gothic,sans-serif">'
+                  f'<span style="writing-mode:vertical-rl;font-size:13px;font-weight:700;letter-spacing:1px;line-height:1">{esc(name)}</span>'
+                  f'<span style="font-size:10px;opacity:.85">{n}</span></a></span>')
+    return (f'<div style="background:#f6efe0;border:1px solid #e3ddd0;border-top:3px solid {GREEN};border-radius:4px 4px 10px 10px;margin:1.4em 0;padding:14px 16px 0">'
+            f'<div style="font-size:17px;font-weight:700;color:{INK};margin-bottom:12px">{title}'
+            + (f' <span style="font-size:13px;color:{MUTED};font-weight:400">{sub}</span>' if sub else '') + '</div>'
+            f'<div style="display:flex;flex-wrap:wrap;align-items:flex-end;row-gap:18px">' + ''.join(sp) + '</div><div style="height:14px"></div></div>')
 def render_index(groups):
     n = sum(len(g['items']) for g in groups); kws = {}
     for g in groups: kws[g['kw']] = g['total']
-    out = [nav('예화'), f'<p style="{P}">설교 중에 인용한 예화 {n:,}편을 {len(kws)}가지 주제로 모았습니다. 주제는 가나다순, 가 편부터 하 편까지입니다. 주제를 누르면 그 주제의 예화 모음이 열립니다.</p>']
+    out = [nav('예화'), f'<p style="{P}">설교 중에 인용한 예화 {n:,}편을 {len(kws)}가지 주제로 모아 책꽂이에 꽂았습니다. 가 편부터 하 편까지 가나다순이고, 책등을 누르면 그 주제의 예화 모음이 열립니다.</p>']
     by = {}
     for kw in sorted(kws): by.setdefault(pyeon(kw), []).append(kw)
     for p in sorted(by):
-        out.append(f'<h3 style="{H3}"><a href="{label_url(p)}" style="color:{GREEN};text-decoration:none">{esc(p)}</a> <span style="font-size:14px;color:{MUTED}">{len(by[p])}가지 주제</span></h3>')
-        out.append(f'<p style="{P};line-height:2.2">' + ' &nbsp;'.join(f'<a href="{label_url(kw + " 예화")}" style="color:{INK};text-decoration:none;white-space:nowrap">【{esc(kw)}】<span style="font-size:13px;color:{MUTED}">{kws[kw]}편</span></a>' for kw in by[p]) + '</p>')
+        out.append(shelf(f'<a href="{label_url(p)}" style="color:{INK};text-decoration:none">{esc(p)}</a>',
+                         [(kw, kws[kw], label_url(kw + ' 예화')) for kw in by[p]], f'{sum(kws[kw] for kw in by[p]):,}편 · {len(by[p])}가지 주제'))
     out.append(footer())
     return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
 
@@ -249,6 +268,22 @@ def render_any(p):
     if p['kind'] == '시': return render_poem(dict(sub=p['category'].split('>')[-1].strip(), title=p['title'], body=p['body']))
     return render_post(p)
 jobs = [dict(id=p['id'], date=bdate[p['id']], title=p['title'], render=lambda p=p: render_any(p), labels=labels_post(p)) for p in posts]
+OT = '창세기 출애굽기 레위기 민수기 신명기 여호수아 사사기 룻기 사무엘상 사무엘하 열왕기상 열왕기하 역대상 역대하 에스라 느헤미야 에스더 욥기 시편 잠언 전도서 아가 이사야 예레미야 예레미야애가 에스겔 다니엘 호세아 요엘 아모스 오바댜 요나 미가 나훔 하박국 스바냐 학개 스가랴 말라기'.split()
+NT = '마태복음 마가복음 누가복음 요한복음 사도행전 로마서 고린도전서 고린도후서 갈라디아서 에베소서 빌립보서 골로새서 데살로니가전서 데살로니가후서 디모데전서 디모데후서 디도서 빌레몬서 히브리서 야고보서 베드로전서 베드로후서 요한일서 요한이서 요한삼서 유다서 요한계시록'.split()
+def render_sermon_shelf():
+    # 오늘까지 블로그에 올라간 설교만 센다 (라벨 쪽에 실제로 보이는 수와 맞게)
+    cnt = {}
+    for p in posts:
+        if p['kind'] == '설교' and bdate[p['id']] <= TODAY:
+            l = labels_post(p)[-1]; cnt[l] = cnt.get(l, 0) + 1
+    out = [nav('설교'), f'<p style="{P}">새암교회 강단에서 전한 설교를 성경 권별로 책꽂이에 꽂았습니다. 책등을 누르면 그 권의 설교 목록이 열립니다. 설교는 날마다 조금씩 더 올라옵니다.</p>']
+    for name, books in (('구약', OT), ('신약', NT)):
+        bs = [(b, cnt[b + ' 설교'], label_url(b + ' 설교')) for b in books if cnt.get(b + ' 설교')]
+        if bs: out.append(shelf(name, bs, f'{sum(n for _, n, _ in bs):,}편 · {len(bs)}권'))
+    if cnt.get('주제 설교'): out.append(shelf('주제 설교', [('주제 설교', cnt['주제 설교'], label_url('주제 설교'))]))
+    out.append(footer())
+    return f'<div style="{WRAP}">' + '\n'.join(out) + '</div>'
+jobs.append(dict(id='sermon-shelf', date='2026-11-06', title='[설교] 성경 권별 설교 책꽂이', render=render_sermon_shelf, labels=['설교', '설교 책꽂이']))
 # 예화는 낱개 대신 주제별 모음 글로 모두 올린다 (목차 1편 + 소주제별 모음). 하루 YG_PER편씩 YG_START부터
 YG_START, YG_PER = datetime.date(2026, 10, 17), 8
 groups = yehwa_groups(yehwa)
@@ -353,14 +388,16 @@ if os.environ.get('REFRESH_ONLY'):
         tok = r.get('nextPageToken')
         if not tok: break
     n = 0
+    rp = os.path.join(D, 'refresh_request.txt')   # 파일에 글 id를 적어 두면 그 글만 다시 입힌다 (비어 있으면 전부)
+    only = set(open(rp, encoding='utf-8').read().split()) if os.path.exists(rp) else set()
     for jid, u in done.items():
         j, pid = by_id.get(jid), posted.get(u)
-        if not (j and pid): continue
+        if not (j and pid) or (only and jid not in only): continue
         call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/posts/{pid}', json.dumps(dict(title=j['title'], content=add_more(j['render']()), labels=j['labels']), ensure_ascii=False).encode('utf-8'), AUTH, 'PATCH')
         n += 1; time.sleep(2)
     print('blogger: refreshed', n); sys.exit(0)
 
-due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['id'] != 'ebook-exodus', j['date'], j['id']))   # e북 소개 글은 맨 먼저
+due = sorted((j for j in jobs if j['date'] <= TODAY and j['id'] not in done), key=lambda j: (j['id'] not in ('ebook-exodus', 'sermon-shelf'), j['date'], j['id']))   # e북 소개 글은 맨 먼저
 n = fails = 0
 # 예화 모음 글은 따로 하루 YG_PER편까지 (다른 글의 MAX_PER_RUN 몫을 빼앗지 않게)
 reg = [j for j in due if not j['id'].startswith(('yg', 'yk', 'yn', 'an-'))][:MAX_PER_RUN]
