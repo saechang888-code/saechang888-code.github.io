@@ -429,6 +429,9 @@ if os.environ.get('PAGES_ONLY'):
     # 블로그 '페이지'(메뉴 고정 쪽)로 올린다 — 10-19 이후 새 글(posts) 만들기가 403으로 막혀 있어서 작품란은 페이지로 (11-06)
     pp = os.path.join(D, 'blogger_pages.json')
     pages = json.load(open(pp, encoding='utf-8')) if os.path.exists(pp) else {}
+    have = {it['title'].strip(): it for it in call(f'https://www.googleapis.com/blogger/v3/blogs/{BLOG}/pages?fetchBodies=false&status=live&status=draft', headers=AUTH).get('items', [])}
+    for jid in open(os.path.join(D, 'pages_request.txt'), encoding='utf-8').read().split():   # 주인님이 블로거에서 같은 제목의 빈 페이지를 만들어 두면 그 페이지를 채운다
+        if jid not in pages and by_id[jid]['title'] in have: pages[jid] = dict(id=have[by_id[jid]['title']]['id'], url=have[by_id[jid]['title']].get('url', ''))
     for jid in open(os.path.join(D, 'pages_request.txt'), encoding='utf-8').read().split():
         j = by_id[jid]; body = json.dumps(dict(title=j['title'], content=j['render']()), ensure_ascii=False).encode('utf-8')
         try:
