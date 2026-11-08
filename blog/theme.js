@@ -165,7 +165,7 @@
 (function () {
   var HP = 'https://saechang888-code.github.io/', p = location.pathname;
   var home = (p === '/' || p === '') && !/[?&](q|updated-max|max-results)=/.test(location.search);
-  var SEC = { '/search/label/%EC%84%A4%EA%B5%90': 'sermon', '/p/blog-page.html': 'works' }[p];   // 분류 쪽에는 홈페이지의 같은 칸만 (설교 → 책꽂이)
+  var SEC = { '/search/label/%EC%84%A4%EA%B5%90': 'sermon', '/p/blog-page.html': 'works', '/search/label/%EC%98%88%ED%99%94%20%EC%A3%BC%EC%A0%9C%20%EB%AA%A9%EC%B0%A8': 'stories', '/search/label/%EC%98%88%ED%99%94': 'stories' }[p];   // 분류 쪽에는 홈페이지의 같은 칸만 (설교 → 책꽂이)
   if (!(home || SEC) || !document.body.attachShadow || !window.fetch) return;
   function go() {
     fetch(HP + 'index.html', { cache: 'no-cache' }).then(function (r) { return r.text(); }).then(function (src) {
