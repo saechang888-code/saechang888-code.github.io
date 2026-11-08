@@ -184,7 +184,7 @@
       });
       return Promise.all(parts).then(function (css) { css = css.join('\n');
       var b = doc.body;
-      if (SEC) { var one = b.querySelector('section#' + SEC); if (!one) return; b = doc.createElement('main'); b.style.cssText = 'max-width:1180px;margin:0 auto;padding:28px 20px 8px'; b.appendChild(one); document.body.className += ' dj-sec'; }
+      if (SEC) { var one = b.querySelector('section#' + SEC); if (!one) return; b = doc.createElement('main'); b.className = 'container library-main'; b.style.paddingBottom = '10px'; b.appendChild(one); document.body.className += ' dj-sec'; }
       Array.prototype.forEach.call(b.querySelectorAll('script, header.topbar, body > footer'), function (n) { n.remove(); });
       Array.prototype.forEach.call(b.querySelectorAll('[href],[src]'), function (n) {
         ['href', 'src'].forEach(function (a) { var v = n.getAttribute(a); if (v && !/^(https?:|mailto:|tel:|#|data:)/.test(v)) n.setAttribute(a, new URL(v, HP).href); });
