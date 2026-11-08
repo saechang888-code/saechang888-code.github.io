@@ -169,12 +169,19 @@
   function go() {
     fetch(HP + 'index.html', { cache: 'no-cache' }).then(function (r) { return r.text(); }).then(function (src) {
       var doc = new DOMParser().parseFromString(src, 'text/html');
-      var css = Array.prototype.map.call(doc.querySelectorAll('style'), function (s) { return s.textContent; }).join('\n')
-        .replace(/@media \(prefers-color-scheme:dark\)\{/g, '@media (max-width:0){').replace(/:root\[data-theme="dark"\]/g, ':host(.no)')
-        .replace(/:root:not\(\[data-theme="light"\]\)/g, ':host(.no)').replace(/:root/g, ':host').replace(/(^|[}\s,])html(?=[\s,{])/g, '$1:host').replace(/(^|[}\s,])body(?=[\s,{])/g, '$1.hpb');
-      Array.prototype.forEach.call(doc.querySelectorAll('link[rel=stylesheet]'), function (l) {
-        if (!document.querySelector('link[href="' + l.href + '"]')) { var n = document.createElement('link'); n.rel = 'stylesheet'; n.href = l.getAttribute('href'); document.head.appendChild(n); }
+      function fx(c, base) {   // 그림자 칸에 맞게: 상대 주소는 홈페이지 주소로, :root·html·body는 칸 자신으로, 어두운 모드는 끔
+        return c.replace(/url\((['"]?)(?!data:|https?:|\/\/)([^'")]+)\1\)/g, function (m, q, u) { return 'url("' + new URL(u, base).href + '")'; })
+          .replace(/@media ?\(prefers-color-scheme: ?dark\)\{/g, '@media (max-width:0){').replace(/:root\[data-theme="dark"\]/g, ':host(.no)')
+          .replace(/:root:not\(\[data-theme="light"\]\)/g, ':host(.no)').replace(/:root/g, ':host').replace(/(^|[}\s,])html(?=[\s,{])/g, '$1:host').replace(/(^|[}\s,])body(?=[\s,{])/g, '$1.hpb');
+      }
+      var parts = [];
+      Array.prototype.forEach.call(doc.querySelectorAll('style, link[rel=stylesheet]'), function (n) {
+        if (n.tagName === 'STYLE') { parts.push(Promise.resolve(fx(n.textContent, HP))); return; }
+        var u = new URL(n.getAttribute('href'), HP).href;
+        if (u.indexOf(HP) === 0) parts.push(fetch(u).then(function (r) { return r.text(); }).then(function (c) { return fx(c, u); }).catch(function () { return ''; }));
+        else if (!document.querySelector('link[href="' + u + '"]')) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = u; document.head.appendChild(l); }   // 글꼴은 문서에
       });
+      return Promise.all(parts).then(function (css) { css = css.join('\n');
       var b = doc.body;
       Array.prototype.forEach.call(b.querySelectorAll('script, header.topbar, body > footer'), function (n) { n.remove(); });
       Array.prototype.forEach.call(b.querySelectorAll('[href],[src]'), function (n) {
@@ -193,7 +200,7 @@
       var f = sh.getElementById('yfind'), q = sh.getElementById('yq');   // 예화 찾기는 홈페이지 검색으로
       if (f && q) f.addEventListener('submit', function (e) { e.preventDefault(); var v = q.value.trim(); if (v) location.href = HP + 'search/index.html?q=' + encodeURIComponent(v); });
       document.body.className += ' dj-hpok';
-    }).catch(function () {});
+    }); }).catch(function () {});
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
