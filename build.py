@@ -351,6 +351,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
     <li><a href="#stories">예화 <small>{cnt(161)}</small></a></li>
     <li><a href="#works">작품</a></li>
     <li><a href="#church">새암교회</a></li>
+    <li><a href="en/" lang="en">English</a></li>
   </ol>
   </nav>
 </div>
