@@ -316,3 +316,4 @@ h3.post-title a:hover{color:#2f5d50!important}
 body:not(.dj-home) .dj-wrap{display:none}
 .dj-hpok #dj-hero,.dj-hpok .dj-wrap>*:not(.dj-new){display:none!important}
 .dj-hpok .dj-new{max-width:1180px;margin:40px auto 10px}
+.dj-sec .dj-wrap{display:none!important}
