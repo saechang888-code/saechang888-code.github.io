@@ -165,7 +165,8 @@
 (function () {
   var HP = 'https://saechang888-code.github.io/', p = location.pathname;
   var home = (p === '/' || p === '') && !/[?&](q|updated-max|max-results)=/.test(location.search);
-  if (!home || !document.body.attachShadow || !window.fetch) return;
+  var SEC = { '/search/label/%EC%84%A4%EA%B5%90': 'sermon' }[p];   // 분류 쪽에는 홈페이지의 같은 칸만 (설교 → 책꽂이)
+  if (!(home || SEC) || !document.body.attachShadow || !window.fetch) return;
   function go() {
     fetch(HP + 'index.html', { cache: 'no-cache' }).then(function (r) { return r.text(); }).then(function (src) {
       var doc = new DOMParser().parseFromString(src, 'text/html');
@@ -183,6 +184,7 @@
       });
       return Promise.all(parts).then(function (css) { css = css.join('\n');
       var b = doc.body;
+      if (SEC) { var one = b.querySelector('section#' + SEC); if (!one) return; b = doc.createElement('main'); b.className = 'container'; b.style.paddingTop = '24px'; b.appendChild(one); }
       Array.prototype.forEach.call(b.querySelectorAll('script, header.topbar, body > footer'), function (n) { n.remove(); });
       Array.prototype.forEach.call(b.querySelectorAll('[href],[src]'), function (n) {
         ['href', 'src'].forEach(function (a) { var v = n.getAttribute(a); if (v && !/^(https?:|mailto:|tel:|#|data:)/.test(v)) n.setAttribute(a, new URL(v, HP).href); });
@@ -199,7 +201,7 @@
       });
       var f = sh.getElementById('yfind'), q = sh.getElementById('yq');   // 예화 찾기는 홈페이지 검색으로
       if (f && q) f.addEventListener('submit', function (e) { e.preventDefault(); var v = q.value.trim(); if (v) location.href = HP + 'search/index.html?q=' + encodeURIComponent(v); });
-      document.body.className += ' dj-hpok';
+      if (home) document.body.className += ' dj-hpok';
     }); }).catch(function () {});
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
