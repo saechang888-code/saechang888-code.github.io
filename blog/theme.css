@@ -317,3 +317,4 @@ body:not(.dj-home) .dj-wrap{display:none}
 .dj-hpok #dj-hero,.dj-hpok .dj-wrap>*:not(.dj-new){display:none!important}
 .dj-hpok .dj-new{max-width:1180px;margin:40px auto 10px}
 .dj-sec .dj-wrap{display:none!important}
+.dj-sec-works .post-outer{display:none!important}   /* 작품 쪽: 홈페이지 작품 칸이 위에 나오므로 옛 소개 글은 숨김 */
