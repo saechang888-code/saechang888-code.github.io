@@ -3,7 +3,7 @@
 (function () {
   var MENU = [['예화', '/search/label/%EC%98%88%ED%99%94%20%EC%A3%BC%EC%A0%9C%20%EB%AA%A9%EC%B0%A8'], ['설교', '/search/label/%EC%84%A4%EA%B5%90'],
               ['독후감', '/search/label/%EB%8F%85%ED%9B%84%EA%B0%90'], ['시', '/search/label/%EC%8B%9C'],
-              ['팡세', '/search/label/%ED%8C%A1%EC%84%B8'], ['묵상', '/search/label/%EB%AC%B5%EC%83%81']];
+              ['팡세', '/search/label/%ED%8C%A1%EC%84%B8'], ['묵상', '/search/label/%EB%AC%B5%EC%83%81'], ['작품', '/p/blog-page.html']];
   var p = location.pathname, home = (p === '/' || p === '') && !/[?&](q|updated-max|max-results)=/.test(location.search);
   var list = !/\/\d{4}\/\d{2}\/.+\.html$/.test(p);
   function el(t, id, h) { var e = document.createElement(t); if (id) e.id = id; if (h != null) e.innerHTML = h; return e; }
