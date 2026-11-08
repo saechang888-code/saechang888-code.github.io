@@ -312,3 +312,7 @@ h3.post-title a:hover{color:#2f5d50!important}
 .dj-church small{display:block;color:#d9b86a;letter-spacing:.08em;font-size:13px}
 .dj-church b{display:block;font:900 clamp(20px,3.4vw,27px) "Noto Serif KR",serif;margin:4px 0 6px;color:#fff}
 .dj-church em{font-style:normal;font-size:15px;color:#f1e7cf}
+/* 블로그 첫 화면이 홈페이지 구성을 불러오면 옛 첫 화면 칸은 숨기고, 글 화면에서는 첫 화면 칸을 아예 보이지 않게 (11-08) */
+body:not(.dj-home) .dj-wrap{display:none}
+.dj-hpok #dj-hero,.dj-hpok .dj-wrap>*:not(.dj-new){display:none!important}
+.dj-hpok .dj-new{max-width:1180px;margin:40px auto 10px}

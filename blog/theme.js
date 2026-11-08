@@ -161,3 +161,39 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(fill, 0); }); else setTimeout(fill, 0);
 })();
+// 블로그 첫 화면을 홈페이지(saechang888-code.github.io)와 같은 구성으로 — 홈페이지 본문을 그대로 불러와 그림자 칸(shadow DOM)에 앉힌다 (11-08 주인님)
+(function () {
+  var HP = 'https://saechang888-code.github.io/', p = location.pathname;
+  var home = (p === '/' || p === '') && !/[?&](q|updated-max|max-results)=/.test(location.search);
+  if (!home || !document.body.attachShadow || !window.fetch) return;
+  function go() {
+    fetch(HP + 'index.html', { cache: 'no-cache' }).then(function (r) { return r.text(); }).then(function (src) {
+      var doc = new DOMParser().parseFromString(src, 'text/html');
+      var css = Array.prototype.map.call(doc.querySelectorAll('style'), function (s) { return s.textContent; }).join('\n')
+        .replace(/@media \(prefers-color-scheme:dark\)\{/g, '@media (max-width:0){').replace(/:root\[data-theme="dark"\]/g, ':host(.no)')
+        .replace(/:root:not\(\[data-theme="light"\]\)/g, ':host(.no)').replace(/:root/g, ':host').replace(/(^|[}\s,])html(?=[\s,{])/g, '$1:host').replace(/(^|[}\s,])body(?=[\s,{])/g, '$1.hpb');
+      Array.prototype.forEach.call(doc.querySelectorAll('link[rel=stylesheet]'), function (l) {
+        if (!document.querySelector('link[href="' + l.href + '"]')) { var n = document.createElement('link'); n.rel = 'stylesheet'; n.href = l.getAttribute('href'); document.head.appendChild(n); }
+      });
+      var b = doc.body;
+      Array.prototype.forEach.call(b.querySelectorAll('script, header.topbar, body > footer'), function (n) { n.remove(); });
+      Array.prototype.forEach.call(b.querySelectorAll('[href],[src]'), function (n) {
+        ['href', 'src'].forEach(function (a) { var v = n.getAttribute(a); if (v && !/^(https?:|mailto:|tel:|#|data:)/.test(v)) n.setAttribute(a, new URL(v, HP).href); });
+      });
+      Array.prototype.forEach.call(b.querySelectorAll('a[href^="http"]'), function (n) { if (n.href.indexOf(location.host) < 0) n.target = '_blank'; });
+      var host = document.createElement('div'); host.id = 'dj-hp';
+      var top = document.getElementById('dj-top');
+      if (top && top.nextSibling) top.parentNode.insertBefore(host, top.nextSibling); else document.body.insertBefore(host, document.body.firstChild);
+      var sh = host.attachShadow({ mode: 'open' });
+      sh.innerHTML = '<style>' + css + ':host{display:block}.hpb{margin:0}</style><div class="hpb">' + b.innerHTML + '</div>';
+      sh.addEventListener('click', function (e) {   // 같은 쪽 안의 #칸 이동
+        var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+        var t = sh.getElementById(a.getAttribute('href').slice(1)); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+      });
+      var f = sh.getElementById('yfind'), q = sh.getElementById('yq');   // 예화 찾기는 홈페이지 검색으로
+      if (f && q) f.addEventListener('submit', function (e) { e.preventDefault(); var v = q.value.trim(); if (v) location.href = HP + 'search/index.html?q=' + encodeURIComponent(v); });
+      document.body.className += ' dj-hpok';
+    }).catch(function () {});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
