@@ -361,7 +361,7 @@ def render_exodus():
 jobs.append(dict(id='ebook-exodus', date='2026-10-22', title='[e북] Exodus 엑서더스 — 새암교회 이야기 (이재선 목사)', render=render_exodus, labels=['작품', '기타', '새암교회', 'e북']))
 
 # ---------- 작품: 설교집·시집 소개 글과 작품 책꽂이 (본문은 홈페이지 books/·anshik/, book_genesis.py·book_poems.py로 만든다) ----------
-BOOKS = [('genesis1', 'books/genesis1/', '설교집'), ('genesis2', 'books/genesis2/', '설교집'), ('nature1', 'anshik/nature1/', '시집'), ('nature2', 'anshik/nature2/', '시집')]
+BOOKS = [('genesis1', 'books/genesis1/', '설교집'), ('genesis2', 'books/genesis2/', '설교집'), ('nature1', 'anshik/nature1/', '시집'), ('nature2', 'anshik/nature2/', '시집'), ('gitanjali', 'anshik/gitanjali/', '찬양시집')]
 def book_toc(path): return json.load(open(os.path.join(D, path, 'toc.json'), encoding='utf-8'))
 def render_book(key, path, kind):
     t, url = book_toc(path), SITE + path
@@ -385,9 +385,9 @@ def render_book(key, path, kind):
     out.append(f'<p style="{P};text-align:center"><a href="{url}" style="color:{GREEN};font-weight:700">이어서 읽기 →</a></p>' + footer() + '</div>')
     return ''.join(out)
 BOOK_TITLE = {'genesis1': '[설교집] 창세기 강해 1 『태초에 복이 있었다』 (이재선 목사)', 'genesis2': '[설교집] 창세기 강해 2 『돌베개가 변하여』 (이재선 목사)',
-              'nature1': '[시집] 자연시 1 『기도원 오솔길에서』 (이재선)', 'nature2': '[시집] 자연시 2 『솔숲에 부는 바람』 (이재선)'}
+              'nature1': '[시집] 자연시 1 『기도원 오솔길에서』 (이재선)', 'nature2': '[시집] 자연시 2 『솔숲에 부는 바람』 (이재선)', 'gitanjali': '[시집] 찬양시집 『아침 파도』 — 기탄잘리 (이재선)'}
 for key, path, kind in BOOKS:
-    jobs.append(dict(id='book-' + key, date='2026-11-06', title=BOOK_TITLE[key], render=lambda key=key, path=path, kind=kind: render_book(key, path, kind),
+    jobs.append(dict(id='book-' + key, date='2026-11-06' if key != 'gitanjali' else '2099-01-01', title=BOOK_TITLE[key], render=lambda key=key, path=path, kind=kind: render_book(key, path, kind),
                      labels=['작품', kind, '창세기 설교' if kind == '설교집' else '시']))
 def render_works():   # 작품 책꽂이 — 표지를 나란히
     items = [(SITE + 'saeam/exodus/', 'Exodus 엑서더스', 'e북 · 새암교회 이야기')] + [(SITE + p, book_toc(p)['title'], f'{k} · {book_toc(p)["sub"]}') for _, p, k in BOOKS]
