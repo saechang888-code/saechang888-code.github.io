@@ -15,7 +15,7 @@ os.makedirs(OUT, exist_ok=True)
 esc = lambda s: html.escape(s, quote=False)
 B = json.load(open(os.path.join(H, 'plan.json'), encoding='utf-8'))['books'][VOL - 1]
 SRC = {x['key']: x for x in json.load(open(os.path.join(H, 'src.json'), encoding='utf-8'))}
-ART = os.path.join(BK, '그림', 'reflect')
+ART = B['art_dir']   # 1권 고흐 · 2권 렘브란트 (퍼블릭 도메인 명화)
 TITLE, AUTHOR = B['title'], '이재선'
 SUB = f'이재선 자아성찰시집 {VOL}'
 INTRO = B['intro']
@@ -48,14 +48,14 @@ cv.resize((600, 900), Image.LANCZOS).save(os.path.join(OUT, 'cover_s.jpg'), qual
 parts, n = [], 0
 ps = []
 for pk in B['poems']:
-    n += 1; x = parse(SRC[str(pk)]['body'] if str(pk) in SRC else SRC[pk]['body']); x['art'] = f'p{n:02d}.jpg'
-    jpg(os.path.join(ART, f'r{VOL}-{n:02d}.jpg'), os.path.join(OUT, x['art']), 900); ps.append(x)
+    n += 1; x = parse(SRC[str(pk)]['body'] if str(pk) in SRC else SRC[pk]['body']); x['art'] = f'p{n:02d}.jpg'; x['cap'] = (B.get('captions') or [None] * 99)[n - 1]
+    jpg(os.path.join(ART, f'{B["art_prefix"]}{n:02d}.jpg'), os.path.join(OUT, x['art']), 900); ps.append(x)
 parts.append(('', None, ps))
 poems = [x for _, _, ps in parts for x in ps]
 
 def poem_html(x, x_ml=False, base=''):
     br = '<br/>' if x_ml else '<br>'
-    art = f'<div class="art"><img src="{base}{x["art"]}" alt="「{esc(x["title"])}」 그림"{"/" if x_ml else ""}></div>'
+    art = f'<div class="art"><img src="{base}{x["art"]}" alt="「{esc(x["title"])}」 그림"{"/" if x_ml else ""}>' + (f'<p class="cap">{esc(x["cap"])}</p>' if x.get('cap') else '') + '</div>'
     st = ''.join(f'<p class="st">{br.join(esc(l) for l in s)}</p>' for s in x['stanzas'])
     nt = ''.join(f'<p class="note">{esc(n)}</p>' for n in x['notes'])
     return f'{art}<h3>{esc(x["title"])}</h3>{st}{nt}'
@@ -63,7 +63,7 @@ def poem_html(x, x_ml=False, base=''):
 CSS = '''body{font-family:"Nanum Myeongjo","Noto Serif KR",serif;line-height:1.95;color:#2e2a22}
 h2{font-size:1.5em;text-align:center;margin:.4em 0 .2em;letter-spacing:.1em}h3{font-size:1.25em;margin:0 0 1.1em;letter-spacing:.04em}
 .st{margin:0 0 1.2em;word-break:keep-all}.note{font-size:.84em;color:#857a63;margin:1.6em 0 0;line-height:1.7;word-break:keep-all}
-.season{text-align:center}.season img{width:100%;max-width:420px;height:auto;border-radius:6px}.art{margin:0 auto 1.2em;max-width:420px}.art img{width:100%;height:auto;border-radius:6px}'''
+.season{text-align:center}.season img{width:100%;max-width:420px;height:auto;border-radius:6px}.art{margin:0 auto 1.2em;max-width:420px}.art img{width:100%;height:auto;border-radius:6px}.cap{font-size:.74em;color:#857a63;text-align:center;margin:.5em 0 0;line-height:1.5}'''
 
 # ---------- 홈페이지에서 읽는 쪽 ----------
 n = 0; toc = []; secs = []
@@ -91,7 +91,8 @@ body{{margin:0;background:var(--bg);color:var(--ink)}}{CSS.replace("#2e2a22", "v
 {''.join(f'<p class="intro">{esc(t)}</p>' for t in INTRO)}
 <nav id="toc" aria-label="차례"><b>차례</b><ul>{''.join(toc)}</ul></nav>
 {''.join(secs)}
-<p style="font-family:Noto Sans KR,sans-serif;font-size:13px;color:var(--muted);margin-top:40px">© {AUTHOR} · 새암교회(경기도 용인시 수지구 고기로 165). 그림: 시마다 다른 추상화(파이썬으로 직접 그림). 무단 전재를 삼가 주세요.</p>
+<p style="font-family:Noto Sans KR,sans-serif;font-size:13px;color:var(--muted);margin-top:40px">© {AUTHOR} · 새암교회(경기도 용인시 수지구 고기로 165). 무단 전재를 삼가 주세요.</p>
+<details style="font-family:Noto Sans KR,sans-serif;font-size:13px;color:var(--muted);margin-top:24px"><summary><b>{esc(B['colophon'][0])}</b></summary>{''.join(f'<p style="margin:.4em 0">{esc(t)}</p>' for t in B['colophon'][1:])}</details>
 </div></body></html>'''
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(page)
 
@@ -107,7 +108,7 @@ for name, key, ps in parts:
     for x in ps:
         n += 1; files[f'p{n:02d}.xhtml'] = xhtml(x['title'], poem_html(x, True)); sub.append(f'<li><a href="p{n:02d}.xhtml">{esc(x["title"])}</a></li>')
     navl.extend(sub)
-files['colophon.xhtml'] = xhtml('판권', f'<p><b>{TITLE}</b> — {SUB}</p><p>지은이 {AUTHOR} (새암교회 목사)</p><p>새암교회 · 경기도 용인시 수지구 고기로 165</p><p>그림: 시마다 다른 추상화(파이썬으로 직접 그림)</p><p>© 이재선. 무단 전재를 삼가 주세요.</p>')
+files['colophon.xhtml'] = xhtml('판권', f'<p><b>{TITLE}</b> — {SUB}</p><p>지은이 {AUTHOR} (새암교회 목사)</p><p>새암교회 · 경기도 용인시 수지구 고기로 165</p>' + ''.join(f'<p>{esc(t)}</p>' for t in B['colophon']) + f'<p>© 이재선. 무단 전재를 삼가 주세요.</p>')
 nav = xhtml('차례', f'<nav epub:type="toc" id="toc"><h2>차례</h2><ol>{"".join(navl)}</ol></nav>')
 now = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 imgs = ['cover.jpg'] + [x['art'] for x in poems]
