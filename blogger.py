@@ -296,6 +296,11 @@ newy = []
 for f in ('doulos_yehwa.json', 'yehwa_ai.json'):
     fp = os.path.join(D, f)
     if os.path.exists(fp): newy += json.load(open(fp, encoding='utf-8'))
+# 11-26 짧은 예화(휴대폰 10줄 미만)를 홈페이지에서 뺀 뒤에도 이미 올린 묶음(yn-0001~0054)의 차례·내용이 그대로이게: 그때 올린 540편을 고정해 앞에 두고 나머지는 그 뒤로
+sp = os.path.join(D, 'blogger_yn_sent.json')
+if os.path.exists(sp):
+    sent = json.load(open(sp, encoding='utf-8')); st = {x['title'] for x in sent}
+    newy = sent + [x for x in newy if x['title'] not in st]
 for k in range(len(newy) // YN_SIZE):
     part = newy[k * YN_SIZE:(k + 1) * YN_SIZE]
     jobs.append(dict(id=f'yn-{k + 1:04d}', date=YN_START.isoformat(), title=f'[새로 쓴 예화 {k + 1}] ' + ' · '.join(dict.fromkeys(y['kw'] for y in part)),
