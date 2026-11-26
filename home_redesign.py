@@ -52,6 +52,7 @@ today = extract_element(source, "a", "class", "today")
 stats = extract_element(source, "ul", "class", "stats")
 event = extract_element(source, "aside", "class", "evbanner", required=False)
 church_banner = extract_element(source, "a", "class", "church-banner", required=False)
+intro_vid = extract_element(source, "section", "class", "intro-vid", required=False)   # 11-26 소개 영상(build.py)
 footer = extract_element(source, "footer")
 sections = {name: extract_section(source, name) for name in ("fresh", "stories", "sermon", "youtube", "poems", "pensees", "reading", "works", "church")}
 
@@ -101,6 +102,7 @@ body = f'''<body class="reading-room">
   <div class="hero-metrics"><div class="container">{stats}</div></div>
 </header>
 <main class="container library-main" id="main">
+  {intro_vid}
   <div class="library-intro">
     <div><span class="section-kicker">THE COLLECTION</span><h2>오래 읽고, 깊이 남기는<br>한 사람의 서재</h2></div>
     <p>강단에서 전한 말씀과 삶에서 건져 올린 이야기, 읽고 쓴 기록을 한곳에 모았습니다.<br>필요한 주제에서 시작해 천천히 둘러보세요.</p>
