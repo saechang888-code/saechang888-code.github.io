@@ -172,6 +172,7 @@ nav.menu a:hover{{color:var(--ink);background:var(--tint)}}
 .hero::before{{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(14,28,24,.96) 0%,rgba(14,28,24,.86) 42%,rgba(14,28,24,.42) 70%,rgba(14,28,24,.2) 100%),linear-gradient(0deg,rgba(14,28,24,.92),rgba(14,28,24,0) 38%)}}
 .hero .container{{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);align-items:center;gap:40px 56px;padding-block:clamp(56px,9vh,104px) 36px}}
 .hero-main{{display:grid;gap:24px;align-content:center}}
+.intro-vid{{margin:28px auto 8px;max-width:960px;text-align:center}}.intro-vid video{{width:100%;height:auto;border-radius:14px;background:#111;box-shadow:0 10px 30px rgba(0,0,0,.18)}}.intro-vid .iv-v{{display:none;max-width:420px}}.intro-vid p{{margin:8px 0 0;font-size:.9rem;color:var(--muted,#666)}}@media (max-width:700px){{.intro-vid .iv-h{{display:none}}.intro-vid .iv-v{{display:block;margin:0 auto}}}}
 .hero .eyebrow{{color:var(--gold2)}}
 .hero .eyebrow::before{{background:var(--gold2)}}
 .hero h1{{font-size:clamp(2.5rem,5.8vw,4.6rem);line-height:1.16;font-weight:700;text-shadow:0 2px 24px rgba(0,0,0,.3)}}
@@ -371,6 +372,7 @@ footer a{{color:var(--gold2);text-decoration:none}}
   </div>
 </header>
 <main class="container">
+  <section class="intro-vid" aria-label="이재선 목사 소개 영상"><video class="iv-v" controls playsinline preload="none" poster="assets/intro_v.jpg" width="540" height="960"><source src="assets/intro_v.mp4" type="video/mp4"></video><video class="iv-h" controls playsinline preload="none" poster="assets/intro_h.jpg" width="960" height="540"><source src="assets/intro_h.mp4" type="video/mp4"></video><p>이재선 목사 소개 영상 · 55초 · 누르면 재생</p></section>   <!-- 11-26 주인님 "올려줘": 휴대폰은 세로판, 컴퓨터는 가로판 -->
   <a class="church-banner" href="https://saechang888-code.github.io/seamchurch/" target="_blank" rel="noopener"><span><small>새암교회 새 홈페이지</small><b>용인 새암교회에 오신 것을 환영합니다</b><em>예배 안내 · 교회 소개 · 오시는 길 · 설교 영상 →</em></span></a>
   <!--YH-FRESH-->
   <section id="sermon" aria-labelledby="sermon-h">
